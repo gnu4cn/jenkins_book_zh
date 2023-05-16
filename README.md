@@ -6,7 +6,11 @@
 > 
 > [维基百科：Jenkins (软件)](https://zh.wikipedia.org/zh-cn/Jenkins_(%E8%BD%AF%E4%BB%B6))
 
+---
+
 [在线阅读：jenkins.xfoss.com](https://jenkins.xfoss.com/)
+
+---
 
 ## 用户手册概述
 

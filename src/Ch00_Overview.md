@@ -10,12 +10,12 @@
 
 本页提供了 Jenkins 用户手册中的文档概述。
 
-如果你想启动并运行 Jenkins，请参阅 [安装 Jenkins](src/Ch01_Installing_Jenkins.md)，了解如何在你选择的支持平台上安装 Jenkins 的程序。
+如果你想启动并运行 Jenkins，请参阅 [安装 Jenkins](Ch01_Installing_Jenkins.md)，了解如何在你选择的支持平台上安装 Jenkins 的程序。
 
-如果你是一名典型的 Jenkins 用户（任何技能水平），想了解更多关于 Jenkins 的使用，请看 [使用 Jenkins](src/Ch02_Using_Jenkins.md)。也可以参考单独的 [Pipeline](src/Ch03_Using_Jenkins.md) 和 [Blue Ocean](src/Ch04_Blue_Ocean.md) 章节，了解有关这些 Jenkins 核心功能的更多信息。
+如果你是一名典型的 Jenkins 用户（任何技能水平），想了解更多关于 Jenkins 的使用，请看 [使用 Jenkins](Ch02_Using_Jenkins.md)。也可以参考单独的 [Pipeline](Ch03_Using_Jenkins.md) 和 [Blue Ocean](Ch04_Blue_Ocean.md) 章节，了解有关这些 Jenkins 核心功能的更多信息。
 
-如果你是一名 Jenkins 管理员，想知道更多关于管理 Jenkins 节点和实例的信息，请看 [管理 Jenkins](src/Ch05_Managing_Jenkins.md)。
+如果你是一名 Jenkins 管理员，想知道更多关于管理 Jenkins 节点和实例的信息，请看 [管理 Jenkins](Ch05_Managing_Jenkins.md)。
 
-如果你是一名系统管理员，想学习如何执行 Jenkins 服务器和节点的备份、恢复、维护，请看 [Jenkins 系统管理](src/Ch06_System_Administration.md)。
+如果你是一名系统管理员，想学习如何执行 Jenkins 服务器和节点的备份、恢复、维护，请看 [Jenkins 系统管理](Ch06_System_Administration.md)。
 
 其余章节设计 Jenkins 集群与故障排除等方面。最后章节是个词汇表。

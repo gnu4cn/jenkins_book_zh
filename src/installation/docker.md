@@ -67,15 +67,15 @@ docker run \
   --storage-driver overlay2
 ```
 
-    1. （可选的）`--name jenkins-docer` 命令行标志，指定运行镜像时要使用的 Docker 容器名称。默认情况下，Docker 将为该容器生成一个唯一的名称；
-    2. （可选的）`--rm` 命令行开关，关闭时自动删除 Docker 容器（Docker 镜像的实例）；
-    3. （可选的） `--detach` 命令行开关，在后台运行 Docker 容器。稍后可以通过运行 `docker stop jenkins-docker` 停止此实例；
-    4. `--privileged` 命令行开关，在 Docker 中运行 Docker 目前需要特权访问才能正常运行。较新的 Linux 内核版本可能会放宽此要求；
-    5. `--network jenkins` 命令行参数，这与前面步骤中创建的网络相对应；
-    6. `--network alias docker` 命令行参数，使 Docker 容器中的 Docker 在 `jenkins` 网络中作为主机名 `docker` 可用；
-    7. `--env DOCKER_TLS_CERTDIR=/certs` 命令行参数，在 Docker 服务器中启用 TLS。由于使用了特权容器，因此建议这样做，尽管他需要使用下面会描述的共享卷。此环境变量控制管理 Docker TLS 证书的根目录；
-    8. `--volume jenkins-docker-certs:/certs/client` 命令行参数，将容器内的 `/certs/client` 目录映射到上面创建的名为 `jenkins-docker-certs` 的 Docker 卷；
-    9. `--volume jenkins-data:/var/jenkins_home` 命令行参数，将容器内的 `/var/jenkins_home` 目录映射到名为 `jenkins-data` 的 Docker 卷。这将允许由该 Docker 容器的 Docker 守护进程控制的其他 Docker 容器从 Jenkins 挂载数据；
-    10. （可选的）`--publish 2376:2376` 命令行参数，在主机上暴露 Docker 守护程序端口。这对于在主机上执行 docker 命令以控制此内部 Docker 守护进程很有用；
-    11. `docker:dind` 命令行参数，`docker:dind` 镜像本身。这个镜像可以在运行前通过以下命令下载：`docker image pull docker:dind`；
-    12. Docker 卷的存储驱动。参见 ["Docker存储驱动"](https://docs.docker.com/storage/storagedriver/select-storage-driver)，了解支持的选项。
+1. （可选的）`--name jenkins-docer` 命令行标志，指定运行镜像时要使用的 Docker 容器名称。默认情况下，Docker 将为该容器生成一个唯一的名称；
+2. （可选的）`--rm` 命令行开关，关闭时自动删除 Docker 容器（Docker 镜像的实例）；
+3. （可选的） `--detach` 命令行开关，在后台运行 Docker 容器。稍后可以通过运行 `docker stop jenkins-docker` 停止此实例；
+4. `--privileged` 命令行开关，在 Docker 中运行 Docker 目前需要特权访问才能正常运行。较新的 Linux 内核版本可能会放宽此要求；
+5. `--network jenkins` 命令行参数，这与前面步骤中创建的网络相对应；
+6. `--network alias docker` 命令行参数，使 Docker 容器中的 Docker 在 `jenkins` 网络中作为主机名 `docker` 可用；
+7. `--env DOCKER_TLS_CERTDIR=/certs` 命令行参数，在 Docker 服务器中启用 TLS。由于使用了特权容器，因此建议这样做，尽管他需要使用下面会描述的共享卷。此环境变量控制管理 Docker TLS 证书的根目录；
+8. `--volume jenkins-docker-certs:/certs/client` 命令行参数，将容器内的 `/certs/client` 目录映射到上面创建的名为 `jenkins-docker-certs` 的 Docker 卷；
+9. `--volume jenkins-data:/var/jenkins_home` 命令行参数，将容器内的 `/var/jenkins_home` 目录映射到名为 `jenkins-data` 的 Docker 卷。这将允许由该 Docker 容器的 Docker 守护进程控制的其他 Docker 容器从 Jenkins 挂载数据；
+10. （可选的）`--publish 2376:2376` 命令行参数，在主机上暴露 Docker 守护程序端口。这对于在主机上执行 docker 命令以控制此内部 Docker 守护进程很有用；
+11. `docker:dind` 命令行参数，`docker:dind` 镜像本身。这个镜像可以在运行前通过以下命令下载：`docker image pull docker:dind`；
+12. Docker 卷的存储驱动。参见 ["Docker存储驱动"](https://docs.docker.com/storage/storagedriver/select-storage-driver)，了解支持的选项。

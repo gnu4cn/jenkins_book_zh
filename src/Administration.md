@@ -11,7 +11,7 @@ Jenkins 安装分别有单独的运行和作业执行两方面的要求。
 
 > *将 Java 版本升级到 11*
 >
-> 将现有的 Jenkins 设置从 Java 8 升级到 Java 11？请参考 [升级指南](#upgrade-java-guidelines)。
+> 将现有的 Jenkins 设置从 Java 8 升级到 Java 11？请参考 [升级指南](#把-jenkins-的-java-版本从-8-升级到-11)。
 
 
 ### 在 Docker 中的 Java 11 上运行 Jenkins
@@ -59,7 +59,7 @@ Jenkins 项目使用 [Eclipse Temurin](https://projects.eclipse.org/projects/ado
 - 在多种平台上的可用性，包括不同的操作系统和体系结构，以及许多不同的 Java SE 版本；
 - 由 Eclipse 基金会提供定期维护和长期支持。
 
-### 把 Jenkins 的 Java 版本从 8 升级到 11
+## 把 Jenkins 的 Java 版本从 8 升级到 11
 
 有一些细节和步骤来升级用于运行 Jenkins 的 JVM，更具体地说是从 Java 8 到 Java 11。
 

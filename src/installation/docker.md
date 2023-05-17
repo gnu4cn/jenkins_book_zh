@@ -79,3 +79,71 @@ docker run \
 - （可选的）`--publish 2376:2376` 命令行参数，在主机上暴露 Docker 守护程序端口。这对于在主机上执行 docker 命令以控制此内部 Docker 守护进程很有用；
 - `docker:dind` 命令行参数，`docker:dind` 镜像本身。这个镜像可以在运行前通过以下命令下载：`docker image pull docker:dind`；
 - Docker 卷的存储驱动。参见 ["Docker存储驱动"](https://docs.docker.com/storage/storagedriver/select-storage-driver)，了解支持的选项。
+
+**注意**：如果复制和粘贴上面的命令片段不起作用，请尝试复制和粘贴下面的无注释版本：
+
+```bash
+docker run --name jenkins-docker --rm --detach \
+  --privileged --network jenkins --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind --storage-driver overlay2
+```
+
+4. 通过执行以下两个步骤，定制官方Jenkins Docker镜像：
+
+a. 使用以下内容创建 Dockerfile：
+
+```dockerfile
+FROM jenkins/jenkins:2.387.3
+USER root
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+  https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+  https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+```
+
+
+b. 从这个 Docker 文件构建一个新的 docker 镜像，并给这个镜像起一个有意义的名字，例如 "myjenkins-blueocean:2.387.3-1"：
+
+```bash
+docker build -t myjenkins-blueocean:2.387.3-1 .
+```
+
+请记住，如果以前没有做过，上述过程将自动下载官方的 Jenkins Docker 镜像。
+
+5. 使用以下 `docker run` 命令在 Docker 中作为容器运行咱们自己的 `myjenkins-blueocean:2.387.3-1` 镜像：
+
+```bash
+docker run \
+  --name jenkins-blueocean \
+  --restart=on-failure \
+  --detach \
+  --network jenkins \
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.387.3-1
+```
+
+- （可选的） `--name jenkins-blueocean` 命令行参数，指定 Docker 镜像的这个实例的 Docker 容器名称；
+- `--restart=on-failure` 命令行开关，如果容器停止了，总是要重新启动他。如果他被手动停止，则只有当 Docker 守护进程重新启动或容器本身被手动重新启动时，他才会被重新启动；
+- （可选的） `--detach` 命令行开关，在后台运行当前的容器（即 "detached" 模式）并输出容器的 ID。如果你不指定这个选项，那么这个容器的运行 Docker 日志会在终端窗口中输出；
+- `--network jenkins` 命令行参数，将这个容器连接到前面步骤中定义的 `jenkins` 网络。这使得上一步骤中的Docker 守护程序通过主机名 `docker` 对这个 Jenkins 容器可用；
+- `--env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PAT=/certs/client --env DOCKER_TLS_VERIFY=1` 命令行参数，指定由 `docker`、`docker-compose` 和其他 Docker 工具使用的环境变量，以连接到上一步的 Docker 守护进程；
+- `--publish 8080:8080` 命令行参数，将当前容器的 `8080` 端口映射（即 "发布"）到主机上的 `8080` 端口。第一个数字代表主机上的端口，而最后一个数字代表容器的端口。因此，如果你为这个选项指定了 `-p 49000:8080`，那么咱们将通过 `49000` 端口访问主机上的 Jenkins；
+- （可选的） `--publish 50000:50000` 命令行参数，将当前容器的 `50000` 端口映射到主机上的 `50000` 端口。只有当你在其他机器上设置了一个或多个入站的 Jenkins 代理，而这些代理又与你的 `jenkins-blueocean` 容器（Jenkins "控制器"）交互时，这才是必要的。入站的 Jenkins 代理默认通过 TCP `50000` 端口与 Jenkins 控制器通信。你可以通过 [安全，Security](https://www.jenkins.io/doc/book/managing/security/) 页面在你的 Jenkins 控制器上改变这个端口号。如果你想把你的 Jenkins 控制器的 **入站 Jenkins 代理的 TCP 端口** 改为`51000`（比如），那么你需要重新运行 Jenkins （通过这个 `docker run ...` 命令）并以类似 `--publish 52000:51000` 的命令行参数，指定这个 "发布" 选项，其中最后一个值与 Jenkins 控制器上的这个变化值一致，第一个值是承载 Jenkins 控制器的机器上的端口号。入站的 Jenkins 代理在该端口（本例中为 `52000`）与 Jenkins 控制器通信。注意，[WebSocket 代理](https://www.jenkins.io/blog/2020/02/02/web-socket/) 不需要这种配置；
+- `--volume jenkins-data:/var/jenkins_home` 命令行参数，将容器中的 `/var/jenkins_home` 目录映射到名为 `jenkins-data` 的 [Docker 卷](https://docs.docker.com/engine/admin/volumes/volumes/)。除了将 `/var/jenkins_home` 目录映射到 Docker 卷之外，咱们还可以将此目录映射到计算机本地文件系统上的一个目录。例如，指定选项 `--volume $HOME/jenkins:/var/jenkins_home` 会将容器的 `/var/jenkins_home` 目录映射到本地计算机上 `$HOME` 目录中的 `jenkins` 子目录，通常是 `/Users/<your-username>/jenkins` 或 `/home/<你的用户名>/jenkins`。注意，如果你改变了这个源卷或目录，上面的 `docker:dind` 容器的卷需要更新以与之匹配；
+- `myjenkins-blueocean:2.387.3-1` 命令行参数，咱们在上一步中构建的 Docker 映像的名称。

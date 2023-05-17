@@ -3,6 +3,7 @@
 
 - [安装 Jenkins](Ch01_Installing_Jenkins.md)
     - [Docker 方式安装](./installation/docker.md)
+    - [K8s 方式安装](./installation/k8s.md)
 
 
 - [系统管理](administration.md)

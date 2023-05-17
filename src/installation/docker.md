@@ -328,4 +328,10 @@ docker container exec -it jenkins-blueocean bash
 - **Install suggested plugins** - 安装建议的插件集，这些插件是基于最常见的使用情况；
 - **Select plugins to install** - 选择最初要安装哪一组插件。当你第一次访问插件选择页面时，建议的插件被默认选择。
 
->
+> 如果咱们不确定需要什么插件，就选择 **Install suggested plugins**。咱们可以在以后的时间点，通过 Jenkins 中的 [Manage Jenkins]() > [Plugins]() 页面安装（或删除）额外的 Jenkins 插件。
+
+安装向导会显示正在配置的 Jenkins 及咱们选择的一组正在安装的 Jenkins 插件的进度。此过程可能需要几分钟时间。
+
+### 创建首个管理员用户
+
+最后，在 [使用插件自定义 Jenkins]() 后，Jenkins 会要求您创建第一个管理员用户。

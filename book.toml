@@ -12,6 +12,7 @@ additional-css = ["theme/pagetoc.css"]
 additional-js  = ["theme/pagetoc.js"]
 git-repository-url = "https://github.com/gnu4cn/jenkins_book_zh"
 git-repository-icon = "fa-github"
+google-analytics="G-6NHZBVG5F6"
 
 [output.html.print]
 enable = false

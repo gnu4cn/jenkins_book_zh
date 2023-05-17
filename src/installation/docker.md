@@ -319,6 +319,13 @@ docker container exec -it jenkins-blueocean bash
 
 - Jenkins 控制台日志指出了还可以获得该密码的位置（在 Jenkins 主目录中）。在新安装的 Jenkins 上必须在设置向导中输入这个密码，然后才能访问 Jenkins 的主用户界面。如果你碰巧跳过了安装向导中的后续用户创建步骤，这个密码也可以作为默认的管理员账户密码（用户名为 "admin"）。
 
-## 使用插件定制 Jenkins
+### 使用插件定制 Jenkins
 
+[解锁 Jenkins](#解锁-jenkins) 后，会出现 **Customize Jenkins** 页面。作为初始设置的一部分，咱们可以在此处安装任意数量的有用插件。
 
+点击给出的两个选项之一：
+
+- **Install suggested plugins** - 安装建议的插件集，这些插件是基于最常见的使用情况；
+- **Select plugins to install** - 选择最初要安装哪一组插件。当你第一次访问插件选择页面时，建议的插件被默认选择。
+
+>

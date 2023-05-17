@@ -8,7 +8,7 @@
 
 ---
 
-[在线阅读：jenkins.xfoss.com](https://jenkins.xfoss.com/)
+在线阅读：[jenkins.xfoss.com](https://jenkins.xfoss.com/)
 
 ---
 

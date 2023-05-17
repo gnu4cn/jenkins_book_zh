@@ -334,4 +334,15 @@ docker container exec -it jenkins-blueocean bash
 
 ### 创建首个管理员用户
 
-最后，在 [使用插件自定义 Jenkins]() 后，Jenkins 会要求您创建第一个管理员用户。
+最后，在 [使用插件自定义 Jenkins](#使用插件定制-jenkins) 后，Jenkins 会要求您创建第一个管理员用户。
+
+1. 当 **Create First Admin User** 页面出现时，请在相应字段中指定管理员用户的详细信息，然后单击 **Save and Finish**；
+
+2. 当出现 **Jenkins is ready** 的页面时，点击 **Start using Jenkins**。
+
+**注意**：
+
+- 此页面可能表明 **Jenkins 几乎准备就绪！** 相反，如果是这样，请单击 **Restart**；
+- 如果一分钟后页面没有自动刷新，请使用你的网络浏览器手动刷新页面。
+
+3. 如果需要，使用咱们刚刚创建的用户的凭据登录到 Jenkins，咱们就可以开始使用 Jenkins 了！

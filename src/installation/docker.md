@@ -310,3 +310,15 @@ docker container exec -it jenkins-blueocean bash
 **注意**：
 
 - 命令：`sudo cat /var/lib/jenkins/secrets/initialAdminPassword` 将在控制台打印密码；
+
+- 如果你在 Docker 中使用官方的`jenkins/jenkins` 镜像运行 Jenkins，你可以使用 `sudo docker exec ${CONTAINER_ID 或 CONTAINER_NAME} cat /var/jenkins_home/secrets/initialAdminPassword` 来在控制台中打印密码，而不必进入容器。
+
+3. 在 **Unlock Jenkins** 页面上，将此密码粘贴到 **Administrator password** 字段中，然后单击 **Continue**。
+
+**注意**：
+
+- Jenkins 控制台日志指出了还可以获得该密码的位置（在 Jenkins 主目录中）。在新安装的 Jenkins 上必须在设置向导中输入这个密码，然后才能访问 Jenkins 的主用户界面。如果你碰巧跳过了安装向导中的后续用户创建步骤，这个密码也可以作为默认的管理员账户密码（用户名为 "admin"）。
+
+## 使用插件定制 Jenkins
+
+

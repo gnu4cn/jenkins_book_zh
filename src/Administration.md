@@ -179,6 +179,7 @@ Jenkins 插件，例如 [WMI Windows 代理](https://plugins.jenkins.io/windows-
 
 
 | 支持级别 | 描述 | 平台 |
+| :-- | :-- | :-- |
 | **级别 1** - 完全支持 | 我们对这些平台进行了自动化测试，我们打算及时修复报告的问题。 | <ul><li>64 位 (amd-64) Windows Server 版本，带有最新的 GA 更新包;</li><li>官方 Docker 镜像中使用的 Windows 版本。</li></ul> |
 | **级别 2** - 受支持 | 我们不积极测试这些平台，但我们打算保持兼容性。我们很乐意接受补丁。 | <ul><li>Microsoft 普遍支持的 64 位 (amd-64) Windows Server 版本；</li><li>Microsoft 普遍支持的 64 位 (amd-64) Windows 10 版本。</li></ul> |
 | **级别 3** - 补丁会被重视 | 支持可能有限制和额外要求。我们不测试兼容性，如果有需要，我们可能会放弃支持。如果补丁不会将 1/2 级支持置于风险之中并且不会产生维护开销，我们将考虑补丁。 | <ul><li>微软不再支持的 64 位 Windows 版本；</li><li>x86 和其他非 amd64 架构</li><li>非主流版本，如 Windows Embedded；</li><li>预览版；</li><li>Windows API 模拟引擎，例如 Wine 或 ReactOS。</li></ul> |
@@ -204,3 +205,21 @@ Jenkins 插件，例如 [WMI Windows 代理](https://plugins.jenkins.io/windows-
 ### 版本历史
 
 - 2020 年 6 月 3 日 - 第一版（[邮件列表中的讨论](https://groups.google.com/forum/#!msg/jenkinsci-dev/oK8pBCzPPpo/1Ue1DI4TAQAJ)，[治理会议记录](https://docs.google.com/document/d/11Nr8QpqYgBiZjORplL_3Zkwys2qK1vEvK-NYyYa4rzg/edit#heading=h.ele42cjexh55)）
+
+
+## Linux 支持政策
+
+本页记录了 Jenkins 控制器和代理的 Linux 支持政策。
+
+### 范围
+
+个别 Jenkins 插件可能对控制器和/或代理上的 Linux 版本设置额外的要求。本页没有记录这些要求。请参考 [插件文档](https://plugins.jenkins.io/) 以了解额外的要求。
+
+
+### 缘由
+
+理论上，Jenkins 可以在任何可以运行所支持 Java 版本的地方运行，但在实践中存在一些限制。Jenkins core 和一些插件包括了原生代码，或依赖于 Linux API 和子系统，因此他们依赖于特定的 Linux 版本。Jenkins 平台特定的安装包依赖于特定的 Linux 版本。
+
+### 支持级别
+
+

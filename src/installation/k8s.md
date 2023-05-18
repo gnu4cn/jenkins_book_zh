@@ -363,3 +363,58 @@ $ helm search repo jenkinsci
 我们打算为我们的 Jenkins 控制器 pod 创建一个持久卷。这将防止我们在重启 minikube 时丢失 Jenkins 控制器的整个配置和咱们的作业。[这个官方 minikube 文档](https://minikube.sigs.k8s.io/docs/handbook/persistent_volumes/) 解释了我们可以使用哪些目录来挂载咱们的数据。在多节点 Kubernetes 集群中，咱们需要一些类似 NFS 的解决方案，来使挂载目录在整个集群中可用。但是因为我们使用的是单节点集群 minikube，所以我们不必为此操心。
 
 我们选择使用 `/data` 目录。这个目录将包含我们的 Jenkins 控制器配置。
+
+
+#### 我们将创建一个名为 `jenkins-pv` 的卷：
+
+- 将 `https://raw.githubusercontent.com/installing-jenkins-on-kubernetes/jenkins-volume.yaml` 中的内容粘贴到名为 `jenkins-volume.yaml` 的 YAML 格式文件中；
+
+- 运行以下命令来应用该规范：
+
+
+```bash
+$ kubectl apply -f jenkins-volume.yaml
+```
+
+> 值得注意的是，在上述规范中，`hostPath` 使用咱们节点的 `/data/jenkins-volume/` 来模拟网络连接的存储。这种方法只适合于开发和测试目的。对于生产来说，咱们应该提供一个网络资源，比如 Google Compute Engine 的持久化磁盘，或者 Amazon Elastic Block Store 卷。
+
+> 为 `hostPath` 配置的 minikube 会只将 `/data` 的权限设置为 `root` 帐户。创建卷后，咱们需要手动更改权限以允许 `jenkins` 帐户写入其数据。
+
+```bash
+minikube ssh
+sudo chown -R 1000:1000 /data/jenkins-volume
+```
+
+### 创建一个服务账号
+
+在 Kubernetes 中，服务帐户用于为 pod 提供身份。想要与 API 服务器交互的 pod 将使用特定的服务帐户进行身份验证。默认情况下，应用程序将以他们所运行的命名空间中的默认服务账户进行认证。这意味着，例如，运行在 `test` 命名空间的应用程序将使用 `test` 命名空间的默认服务账户。
+
+我们将创建一个名为 `jenkins` 的服务帐户：
+
+`ClusterRole` 是一组权限，可以分配给给定集群内的资源。Kubernetes 的 API 根据其相关的 API 对象被归类为 API 组。在创建 `ClusterRole` 时，咱们可以指定 `ClusterRole` 可以对一个或多个 API 组中的一个或多个 API 对象进行的操作，就像我们上面做的那样。`ClusterRole` 有几种用途。咱们可以使用 `ClusterRole` 来：
+
+- 定义对命名空间资源的权限并在单个命名空间内授予权限；
+- 定义命名空间资源的权限，并在所有命名空间中授予权限；
+- 定义集群范围内资源的权限。
+
+如果咱们打算在整个集群内定义一个角色，请使用 `ClusterRole`；如果咱们打算在一个命名空间内定义一个角色，请使用 `Role`。
+
+角色绑定将一个角色中定义的权限授予一个用户或一组用户。他持有一个主体（用户、组或服务账户）的列表，以及一个对被授予的角色的引用。
+
+`RoleBinding` 可以引用同一命名空间中的任何角色。或者，某个 `RoleBinding` 可以引用一个 `ClusterRole`，并将该 `ClusterRole` 绑定到 `RoleBinding` 的命名空间。为了将一个 `ClusterRole` 绑定到我们集群中的所有命名空间，我们使用 `ClusterRoleBinding`。
+
+1. 将 [`https://raw.githubusercontent.com/installing-jenkins-on-kubernetes/jenkins-sa.yaml`](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml) 中的内容粘贴到名为 `jenkins-sa.yaml` 的 YAML 格式文件中；
+
+2. 运行以下命令来应用该规范：
+
+```bash
+$ kubectl apply -f jenkins-sa.yaml
+```
+
+### 安装 Jenkins
+
+我们将部署 Jenkins，包括 Jenkins Kubernetes 插件。更多细节见 [官方 chart](https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins)。
+
+1. 为了启用持久性，我们将创建一个覆盖文件，an override file，并将其作为一个参数传递给 Helm CLI。请将 [raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml](https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml) 中的内容粘贴到一个名为 `jenkins-values.yaml` 的 YAML 格式的文件中；
+
+2.

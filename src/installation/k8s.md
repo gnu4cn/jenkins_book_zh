@@ -323,4 +323,43 @@ kubectl exec -it jenkins-559d8cd85c-cfcgk cat /var/jenkins_home/secrets/initialA
 输入密码后，继续安装建议的插件并创建管理员用户。所有这些步骤在 Jenkins dashboard 中都是不言自明的。
 
 
+## 使用 Helm v3 安装 Jenkins
 
+典型的 Jenkins 部署由一个控制器节点和一个或多个代理（可选）组成。为了简化 Jenkins 的部署，我们将使用 [Helm](https://helm.sh/) 来部署 Jenkins。 Helm 是 Kubernetes 的一个包管理器，其包格式称为图，a chart。 [GitHub](https://github.com/helm/charts) 上提供了许多社区开发的图。
+
+
+Helm Charts 提供了 "按钮式 "的应用部署和删除，使那些没有容器或微服务经验的人更容易采用和开发 Kubernetes 应用。
+
+### 先决条件
+
+#### Helm 命令行界面
+
+如果你没有在本地安装和配置 Helm 命令行界面，请参阅下面的 [安装 Helm](#安装-Helm]) 和 [配置 Helm](#配置-Helm]) 部分。
+
+
+### 安装 Helm
+
+要安装 Helm CLI，请按照 [安装 Helm](https://helm.sh/docs/intro/install/) 页面的说明进行。
+
+
+### 配置 Helm
+
+
+安装并正确设置 Helm 后，按如下方式添加 Jenkins 源 repo：
+
+```bash
+$ helm repo add jenkinsci https://charts.jenkins.io
+$ helm repo update
+```
+
+可以使用以下命令列出 Jenkins repo 源中的 helm 图表：
+
+```bash
+$ helm search repo jenkinsci
+```
+
+### 创建一个持久卷
+
+我们打算为我们的 Jenkins 控制器 pod 创建一个持久卷。这将防止我们在重启 minikube 时丢失 Jenkins 控制器的整个配置和咱们的作业。[这个官方 minikube 文档](https://minikube.sigs.k8s.io/docs/handbook/persistent_volumes/) 解释了我们可以使用哪些目录来挂载咱们的数据。在多节点 Kubernetes 集群中，咱们需要一些类似 NFS 的解决方案，来使挂载目录在整个集群中可用。但是因为我们使用的是单节点集群 minikube，所以我们不必为此操心。
+
+我们选择使用 `/data` 目录。这个目录将包含我们的 Jenkins 控制器配置。

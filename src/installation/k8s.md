@@ -467,4 +467,94 @@ STATUS: deployed
 REVISION: 1
 ```
 
+### 安装后配置
 
+1. 通过运行以下命令，获得咱们的 `admin` 用户密码：
+
+```bash
+$ jsonpath="{.data.jenkins-admin-password}"
+$ secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$jsonpath)
+$ echo $(echo $secret | base64 --decode)
+```
+
+2. 通过在同一个 shell 中运行下面这些命令，获得要访问的 Jenkins URL：
+
+```bash
+$ jsonpath="{.spec.ports[0].nodePort}"
+$ NODE_PORT=$(kubectl get -n jenkins -o jsonpath=$jsonpath services jenkins)
+$ jsonpath="{.items[0].status.addresses[0].address}"
+$ NODE_IP=$(kubectl get nodes -n jenkins -o jsonpath=$jsonpath)
+$ echo http://$NODE_IP:$NODE_PORT/login
+```
+
+3. 用第 1 步中的密码和用户名：`admin` 登录；
+
+4. 通过在 `values.yaml` 文件中指定 `configScripts` 来将 Jenkins 配置, Configuration，用作代码 Code。请参阅 [配置作为代码的文档](https://plugins.jenkins.io/configuration-as-code) 和 [示例](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos)；
+
+请访问 [Jenkins on Kubernetes解决方案](https://cloud.google.com/solutions/jenkins-on-container-engine) 页面，了解在 Kubernetes 上运行 Jenkins 的更多信息。访问 [作为为代码项目的 Jenkins 配置](https://www.jenkins.io/projects/jcasc/)，了解更多关于作为代码的配置方面的信息。根据咱们的环境，Jenkins 的启动可能需要一点时间。输入以下命令来检查咱们 Pod 的状态：
+
+```bash
+$ kubectl get pods -n jenkins
+```
+
+安装 Jenkins 后，状态应设置为 `Running`，如以下输出所示：
+
+```bash
+$ kubectl get pods -n jenkins
+NAME                       READY   STATUS    RESTARTS   AGE
+jenkins-645fbf58d6-6xfvj   1/1     Running   0          2m
+```
+
+### 访问 Kubernetes 中的 Jenkins
+
+
+1. 要访问咱们的 Jenkins 服务器，咱们必须找回密码。咱们可以使用以下两个选项之一找回密码。
+
+**选项 1**
+
+请运行以下命令：
+
+```bash
+$ jsonpath="{.data.jenkins-admin-password}"
+$ secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$jsonpath)
+$ echo $(echo $secret | base64 --decode)
+```
+
+输出应如下所示：
+
+```bash
+Um1kJLOWQY
+```
+
+> 注意咱们的密码将有所不同。
+
+
+**选项 2**
+
+请运行以下命令：
+
+
+```bash
+$ jsonpath="{.data.jenkins-admin-password}"
+$ kubectl get secret -n jenkins jenkins -o jsonpath=$jsonpath
+```
+
+输出应该是一个 **base64 编码的字符串**，就像这样：
+
+
+```bash
+WkIwRkdnbDZYZg==
+```
+
+解码这个 base64 字符串，咱们就会得到咱们的密码。咱们可以使用 [这个网站](https://www.base64decode.org/) 来解码咱们的输出。
+
+
+2. 使用以下命令获得正在运行 Jenkins 的 Pod 名称：
+
+
+```bash
+$ kubectl get pods -n jenkins
+```
+
+
+3. 使用 `kubectl` 命令设置端口转发：

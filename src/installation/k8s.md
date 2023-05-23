@@ -526,7 +526,7 @@ $ echo $(echo $secret | base64 --decode)
 Um1kJLOWQY
 ```
 
-> 注意咱们的密码将有所不同。
+> 注意：咱们的密码将有所不同。
 
 
 **选项 2**
@@ -558,3 +558,23 @@ $ kubectl get pods -n jenkins
 
 
 3. 使用 `kubectl` 命令设置端口转发：
+
+
+```bash
+$ kubectl -n jenkins port-forward <pod_name> 8080:8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+```
+
+访问 `127.0.0.1:8080/`，用 `admin` 作为用户名和咱们之前获取的密码登录。
+
+
+## 使用 YAML 文件安装 Jenkins
+
+本节介绍了如何使用一组 YAML（Yet Another Markup Language）文件在 Kubernetes 集群上安装 Jenkins。YAML 文件很容易被追踪、编辑，并且可以无限次重复使用。
+
+
+### 创建 Jenkins 部署文件
+
+
+把 [这里](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml) 的内容复制到你喜欢的文本编辑器中，并在我们在上面这一节创建的 "jenkins "命名空间中创建一个jenkins-deployment.yaml文件。

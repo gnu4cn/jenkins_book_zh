@@ -230,7 +230,9 @@ spec:
 
 3. 基于本地存储类的本地持久卷，持有 Jenkins 数据路径 `/var/jenkins_home`。
 
+
 > 该部署文件使用本地存储类持久性卷存储 Jenkins 数据。对于生产用例，咱们应该为咱们的 Jenkins 数据添加一个云特定的存储类持久性卷。
+
 
 如果咱们不想要本地存储的持久卷，咱们可以用主机目录替换部署中的卷定义，如下所示。
 
@@ -379,6 +381,7 @@ $ kubectl apply -f jenkins-volume.yaml
 > 值得注意的是，在上述规范中，`hostPath` 使用咱们节点的 `/data/jenkins-volume/` 来模拟网络连接的存储。这种方法只适合于开发和测试目的。对于生产来说，咱们应该提供一个网络资源，比如 Google Compute Engine 的持久化磁盘，或者 Amazon Elastic Block Store 卷。
 
 > 为 `hostPath` 配置的 minikube 会只将 `/data` 的权限设置为 `root` 帐户。创建卷后，咱们需要手动更改权限以允许 `jenkins` 帐户写入其数据。
+
 
 ```bash
 minikube ssh
@@ -654,4 +657,66 @@ jenkins    NodePort    10.103.31.217    <none>         8080:32664/TCP    59s
 
 所以现在我们已经创建了一个部署和服务，我们如何访问 Jenkins 呢？
 
+从上面的输出中，我们可以看到该服务已经在 `32664` 端口暴露。我们还知道，由于该服务是 `NodeType` 类型，该服务将把对该端口上任何节点的请求路由到 Jenkins pod。我们剩下的就是要确定 `minikube` 虚拟机的 IP 地址。Minikube 通过包括一个特定的命令，输出运行集群的 IP 地址，使这一点变得非常简单：
 
+```bash
+$ minikube ip
+192.168.99.100
+```
+
+现在我们可以在 [`192.168.99.100:32664/`](http://192.168.99.100:32664/) 访问 Jenkins 实例。
+
+要访问 Jenkins，咱们首先需要输入咱们的凭证。新安装的默认用户名是 `admin`。密码可以通过几种方式获得。这个例子使用 Jenkins 部署的 pod 名称。
+
+要找到 pod 的名称，请输入以下命令：
+
+```bash
+$ kubectl get pods -n jenkins
+```
+
+一旦咱们找到了 pod 的名字，就用它来访问 pod 的日志。
+
+
+```bash
+$ kubectl logs <pod_name> -n jenkins
+```
+
+密码在日志的最后，格式为一个长的字母数字字符串：
+
+```text
+*************************************************************
+*************************************************************
+*************************************************************
+
+Jenkins initial setup is required.
+An admin user has been created and a password generated.
+Please use the following password to proceed to installation:
+
+94b73ef6578c4b4692a157f768b2cfef
+
+This may also be found at:
+/var/jenkins_home/secrets/initialAdminPassword
+
+*************************************************************
+*************************************************************
+*************************************************************
+```
+
+咱们已经成功地在咱们的 Kubernetes 集群上安装了 Jenkins，可以用它来创建新的、高效的开发管道，development pipelines。
+
+
+## 使用 Jenkins Operator 安装 Jenkins
+
+Jenkins Operator 是一个 Kubernetes 的原生 Operator，他管理 Jenkins 在 Kubernetes 上的操作。
+
+他在构建时考虑到了不变性和作为代码的声明性配置，以使在 Kubernetes 上部署和运行 Jenkins 所需的许多手动任务自动化。
+
+Jenkins Operator 很容易安装，只需应用几个 `yaml` 清单或使用 Helm。
+
+关于在你的 Kubernetes 集群上安装 Jenkins Operator 以及在那里部署和配置 Jenkins 的说明，请参见 [Jenkins Operator 的官方文档](https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/)。
+
+
+{{#include ./docker.md:292:}}
+
+
+## 总结

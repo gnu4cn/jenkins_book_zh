@@ -298,7 +298,7 @@ kubectl apply -f service.yaml
 http://<node-ip>:32000
 ```
 
-当咱们第一次访问仪表板时，Jenkins 会要求咱们提供初始管理密码。
+当咱们第一次访问控制面板时，Jenkins 会要求咱们提供初始管理密码。
 
 你可以从 Kubernetes dashboard 或 CLI 的 pod 日志中获得初始管理员密码。咱们可以使用下面的 CLI 命令来获得 pod 的详细信息。
 
@@ -577,4 +577,81 @@ Forwarding from [::1]:8080 -> 8080
 ### 创建 Jenkins 部署文件
 
 
-把 [这里](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml) 的内容复制到你喜欢的文本编辑器中，并在我们在上面这一节创建的 "jenkins "命名空间中创建一个jenkins-deployment.yaml文件。
+把 [这里](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml) 的内容复制到你喜欢的文本编辑器中，并在我们在上面 [这一节](#kubernetes-方式-jenkins-的部署) 创建的 `jenkins` 命名空间中创建一个 `jenkins-deployment.yaml` 文件。
+
+- 这个 [部署文件](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml) 正在定义一个部署，Deployment，正如 `kind` 字段所表明的那样；
+
+- 部署，Deployment，指定了一个单一的副本。这确保在发生故障时，复制控制器，the Replication Controller，将维护一个且只有一个实例；
+
+- 容器镜像名称为 `jenkins`，版本为 `2.32.2`；
+
++ 规范，the spec，中指定的端口列表是一个从 Pods IP 地址上的容器暴露出来的端口列表；
+
+    - Jenkins 运行在（`http`）`8080` 端口；
+    - Pod 暴露了 `jenkins` 容器的 `8080` 端口。
+
+- 该文件的 `volumeMounts` 部分创建了一个持久卷。这个卷被挂载在容器中的 `/var/jenkins_home` 路径下，因此对 `/var/jenkins_home` 中的数据的修改会被写入这个卷中。持久卷的作用是存储 Jenkins 的基本数据，并在 pod 的生命周期内保存这些数据。
+
+咱们把内容添加到Jenkins部署文件中后，要退出并保存更改。
+
+
+### 部署 Jenkins
+
+
+要创建部署，请执行：
+
+```bash
+$ kubectl create -f jenkins-deployment.yaml -n jenkins
+```
+
+该命令还指示系统在 `jenkins` 命名空间内安装Jenkins。
+
+
+要验证创建部署是否成功，咱们可以运行：
+
+```bash
+$ kubectl get deployments -n jenkins
+```
+
+### 授予对 Jenkins 服务的访问权限
+
+
+咱们已经部署了一个 Jenkins 实例，但他仍然无法访问。Jenkins Pod 已分配到一个属于 Kubernetes 集群内部的地址。可以登录 Kubernetes 节点，并从那里访问 Jenkins，但这并不是一个非常有用的访问服务的方式。
+
+为了使 Jenkins 在 Kubernetes 集群之外也能被访问，Pod 需要作为一项服务被公开。服务是一个抽象的概念，他将 Jenkins 暴露在更广泛的网络中。他允许我们保持与 Pod 的持久连接，而不管集群中的变化如何。在本地部署中，这意味着创建一个 `NodePort` 服务类型。`NodePort` 服务类型在集群中的每个节点的一个端口上公开一项服务。该服务通过节点的 IP 地址和服务 `nodePort` 被访问。[这里](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-service.yaml) 定义了一个简单的服务：
+
+- 这个服务文件正在定义一项服务，Service，正如 `kind` 字段所表明的那样；
+
+- 该服务的类型是 `NodePort`。其他选项是 `ClusterIP`（只能在集群内访问）和 `LoadBalancer`（由云提供商分配的 IP 地址，例如 AWS Elastic IP）；
+
++ 规范，the spec，中指定的端口列表是此服务公开的端口列表；
+
+    - 端口，port, 是将由服务暴露的端口；
+
+    - 目标端口，target port, 是访问该服务所针对的 Pod 的端口。也可以指定一个端口名称。
+
+- 选择器，selector 指定了该服务所针对的 Pod 的选择标准。
+
+
+要创建服务，请执行：
+
+```bash
+$ kubectl create -f jenkins-service.yaml -n jenkins
+```
+
+为了验证创建服务是否成功，咱们可以运行：
+
+
+```bash
+$ kubectl get services -n jenkins
+NAME       TYPE        CLUSTER-IP       EXTERNAL-IP    PORT(S)           AGE
+jenkins    NodePort    10.103.31.217    <none>         8080:32664/TCP    59s
+```
+
+
+### 访问 Jenkins 控制面板
+
+
+所以现在我们已经创建了一个部署和服务，我们如何访问 Jenkins 呢？
+
+

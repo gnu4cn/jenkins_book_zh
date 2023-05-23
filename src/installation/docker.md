@@ -180,7 +180,7 @@ docker run --name jenkins-blueocean --restart=on-failure --detach \
   myjenkins-blueocean:2.387.3-1
 ```
 
-6. 继续进行 [安装后的设置向导](#安装后的设置向导)。
+6. 继续进行 [安装后的设置向导](#安装后设置向导)。
 
 
 ### 在 Windows 系统上
@@ -245,7 +245,7 @@ docker run --name jenkins-blueocean --restart=on-failure --detach ^
   --publish 8080:8080 --publish 50000:50000 myjenkins-blueocean:2.387.3-1
 ```
 
-6. 继续进行 [安装后的设置向导](#安装后的设置向导)。
+6. 继续进行 [安装后的设置向导](#安装后设置向导)。
 
 
 ## 访问 Docker 容器

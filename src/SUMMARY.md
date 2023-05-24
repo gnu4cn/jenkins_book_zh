@@ -5,6 +5,8 @@
     - [Docker 方式安装](./installation/docker.md)
     - [K8s 方式安装](./installation/k8s.md)
     - [Linux 方式安装](./installation/linux.md)
+    - [其他安装方式](./installation/others.md)
+    - [初始设置](./installation/initial_settings.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

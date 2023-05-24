@@ -197,6 +197,6 @@ firewall-cmd --reload
 
 咱们需要选择 Jenkins 长期支持版本或 Jenkins 每周版本。
 
-{{#include :119:191}}
+{{#include self:119:191}}
 
 {{#include ./docker.md:292:}}

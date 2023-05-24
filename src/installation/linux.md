@@ -193,4 +193,10 @@ firewall-cmd --reload
 
 ## Red HAT/Alma/Rocky
 
+咱们可以通过 `yum` 在 Red Hat Enterprise Linux、Alma Linux、Rocky Linux、Oracle Linux 和其他基于 Red Hat 的发行版上安装 Jenkins。
 
+咱们需要选择 Jenkins 长期支持版本或 Jenkins 每周版本。
+
+{{include :119:191}}
+
+{{#include ./docker.md:292:}}

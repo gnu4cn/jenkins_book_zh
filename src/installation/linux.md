@@ -52,7 +52,7 @@ sudo apt-get install jenkins
 
 ### 每周发布版本
 
-每周都会有一个新的版本，向用户和插件开发者提供错误修复和功能。它可以从 [debian apt 仓库](https://pkg.jenkins.io/debian/) 中安装。
+每周都会有一个新的版本，向用户和插件开发者提供错误修复和功能。他可以从 [debian apt 仓库](https://pkg.jenkins.io/debian/) 中安装。
 
 
 ```bash
@@ -109,5 +109,88 @@ OpenJDK 64-Bit Server VM (build 11.0.12+7-post-Debian-2, mixed mode, sharing)
 ```
 
 > 为什么使用 `apt` 而不是 `apt-get` 或其他命令？`apt` 命令从 2014 年起就开始使用了。他的命令结构与 `apt-get` 类似，但其创建目的是为了让典型用户有更愉快的体验。简单的软件管理任务，如安装、搜索和删除，用 `apt` 更容易。
+
+
+## Fedora
+
+咱们可以通过 `dnf` 来安装 Jenkins。咱们需要先把 Jenkins 网站上的 Jenkins 资源库添加到软件包管理器中。
+
+
+### 长期支持发布版本
+
+
+[长期支持发布版本，LTS(Long-Term Support) release](https://www.jenkins.io/download/lts/) 每 12 周从常规版本中选出一个作为该时间段的稳定版本。他可以从 [redhat-stable](https://pkg.jenkins.io/redhat-stable/) `yum` 仓库安装。
+
+```bash
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo dnf upgrade
+# Add required dependencies for the jenkins package
+sudo dnf install java-11-openjdk
+sudo dnf install jenkins
+sudo systemctl daemon-reload
+```
+
+### 每周发布版本
+
+
+每周都会有一个新的版本，向用户和插件开发者提供错误修复和功能。他可以从 [redhat](https://pkg.jenkins.io/redhat/) `yum` 仓库安装。
+
+```bash
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io-2023.key
+sudo dnf upgrade
+# Add required dependencies for the jenkins package
+sudo dnf install java-11-openjdk
+sudo dnf install jenkins
+```
+
+### 启动 Jenkins
+
+咱们可以用以下命令，使 Jenkins 服务在系统启动时启动：
+
+```bash
+sudo systemctl enable jenkins
+```
+
+咱们可以用以下命令启动 Jenkins 服务：
+
+```bash
+sudo systemctl start jenkins
+```
+
+咱们可以使用以下命令检查 Jenkins 服务的状态：
+
+```bash
+sudo systemctl status jenkins
+```
+
+如果一切设置正确，咱们应该看到这样的输出：
+
+```bash
+Loaded: loaded (/lib/systemd/system/jenkins.service; enabled; vendor preset: enabled)
+Active: active (running) since Tue 2018-11-13 16:19:01 +03; 4min 57s ago
+```
+
+> 如果安装了防火墙，则必须将 Jenkins 添加为例外。咱们必须将下面脚本中的 `YOURPORT` 更改为咱们要使用的端口。端口 `8080` 是最常见的。
+
+```bash
+YOURPORT=8080
+PERM="--permanent"
+SERV="$PERM --service=jenkins"
+
+firewall-cmd $PERM --new-service=jenkins
+firewall-cmd $SERV --set-short="Jenkins ports"
+firewall-cmd $SERV --set-description="Jenkins port exceptions"
+firewall-cmd $SERV --add-port=$YOURPORT/tcp
+firewall-cmd $PERM --add-service=jenkins
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --reload
+```
+
+
+## Red HAT/Alma/Rocky
 
 

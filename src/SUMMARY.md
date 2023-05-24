@@ -4,6 +4,7 @@
 - [安装 Jenkins](Ch01_Installing_Jenkins.md)
     - [Docker 方式安装](./installation/docker.md)
     - [K8s 方式安装](./installation/k8s.md)
+    - [Linux 方式安装](./installation/linux.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

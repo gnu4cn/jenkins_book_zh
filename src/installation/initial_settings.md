@@ -33,7 +33,7 @@ Jenkins网络配置一般由命令行参数控制。网络配置的参数有：
 | :-- | :-- |
 | `--argumentsRealm.passwd.$USER=$PASS` | 为用户 `$USER` 指定密码。如果启用了 Jenkins 的安全功能，咱们必须以拥有 *admin* 角色的用户身份登录来配置 Jenkins。 |
 | `--argumentsRealm.roles.$USER=admin` | 指定用户 `$USER` 为管理员角色。即使在 Jenkins 中启用了安全功能，该用户也可以配置 Jenkins。更多信息请参考 [加固 Jenkins](../security/seuring_jenkins.md)。 |
-| `paramsFromStdIn` | 从标准输入（`stdin`）读取参数。当参数通过命令行传递时，只要进程继续运行，就可以用 Unix 的 `ps(1)` 或 Windows 的 Process Explorer 查看他们。当传递敏感参数如 `--httpsKeyStorePassword` 时，这是不可取的。有了 `--paramsFromStdIn` 参数，咱们就可以用 <br /> `echo '--httpPort=-1 --httpsPort=443 --httpsKeyStore=path/to/keystore --httpsKeyStorePassword=keystorePassword' | java -jar jenkins.war --paramsFromStdIn.` <br /> 取代 <br /> `java -jar jenkins.war --httpPort=-1 --httpsPort=443 --httpsKeyStore=path/to/keystore --httpsKeyStorePassword=keystorePassword` |
+| `paramsFromStdIn` | 从标准输入（`stdin`）读取参数。当参数通过命令行传递时，只要进程继续运行，就可以用 Unix 的 `ps(1)` 或 Windows 的 Process Explorer 查看他们。当传递敏感参数如 `--httpsKeyStorePassword` 时，这是不可取的。有了 `--paramsFromStdIn` 参数，咱们就可以用 <br> <code>echo '--httpPort=-1 --httpsPort=443 --httpsKeyStore=path/to/keystore --httpsKeyStorePassword=keystorePassword' | java -jar jenkins.war --paramsFromStdIn.</code> <br> 取代 <br> `java -jar jenkins.war --httpPort=-1 --httpsPort=443 --httpsKeyStore=path/to/keystore --httpsKeyStorePassword=keystorePassword` |
 | `--useJmx` | 启用 [Jetty Java管理扩展(JMX)](https://www.eclipse.org/jetty/documentation/current/#jmx-chapter) |
 
 *表 2 - Jenkins 杂项命令行参数*

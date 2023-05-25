@@ -37,3 +37,43 @@ Jenkins网络配置一般由命令行参数控制。网络配置的参数有：
 | `--useJmx` | 启用 [Jetty Java 管理扩展（JMX）](https://www.eclipse.org/jetty/documentation/current/#jmx-chapter) |
 
 *表 2 - Jenkins 杂项命令行参数*
+
+### Jenkins 的属性
+
+一些 Jenkins 的行为是用 Java 属性配置的。Java 属性是由启动 Jenkins 的命令行设置的。属性分配使用 `-DsomeName=someValue` 的形式，将值 `someValue` 分配给名为 `someName` 的属性。例如，如果要给属性 `testName` 赋值为 `true`，命令行参数为 `-DtestName=true`。
+
+更多信息请参考 [Jenkins 属性](../managing/features_controlled_with_system_properties.md) 的详细列表。
+
+
+## 配置 HTTP
+
+### 使用现有证书的 HTTPS
+
+
+如果咱们正在使用内置的 Winstone 服务器设置 Jenkins，并想使用现有的 HTTPS 证书：
+
+```bash
+--httpPort=-1 \
+--httpsPort=443 \
+--httpsKeyStore=path/to/keystore \
+--httpsKeyStorePassword=keystorePassword
+```
+
+
+### 使用 HTTP/2
+
+[HTTP/2 协议](https://tools.ietf.org/html/rfc7540) 允许网络服务器通过管道化请求、多路复用请求来减少加密连接的延迟，并允许服务器在某些情况下，在收到客户对数据的请求之前进行推送。Jenkins 使用的 Jetty 服务器通过添加应用层协议协商 (Application-Layer Protocol Negotiation, ALPN) 的 TLS 扩展来支持 HTTP/2。
+
+> 即使没有设置 HTTPS 端口，启用 HTTP/2 也会隐式地启用 TLS，从使用 Winstone 5.23 的 Jenkins 2.339 开始，咱们还必须指定一个 HTTPS 密钥存储文件。
+
+
+```bash
+--httpPort=-1 \
+--http2Port=9090 \
+--httpsKeyStore=path/to/keystore \
+--httpsKeyStorePassword=keystorePassword
+```
+
+### Windows 下的 HTTPS 证书问题
+
+<略>, 请参考 [HTTPS certificates with Windows](https://www.jenkins.io/doc/book/installing/initial-settings/#https-certificates-with-windows)。

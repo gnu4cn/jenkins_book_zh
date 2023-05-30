@@ -30,7 +30,7 @@ Jenkins 可以存储以下类型的凭据：
 
 - **证书，certificate** - 一个 [PKCS#12 证书文件](https://tools.ietf.org/html/rfc7292) 与可选的密码，或
 
-- **Docker 主机证书认证，Docker Host Certificate Authentication** 凭据。
+- **X.509 客户端证书/Docker 主机证书认证，X.509 client certificate/Docker Host Certificate Authentication** 凭据。
 
 
 ## 凭据安全
@@ -89,4 +89,20 @@ Jenkins 可以存储以下类型的凭据：
 
     - **系统（System）** - 如果要添加的凭证是用于 Jenkins 实例本身，用于系统管理功能，如电子邮件认证、代理 agent 连接等的交互。选择该选项会将凭证的范围只应用于单个对象。
 
-8.
+8. 将凭据本身添加到咱们所选择凭据类型的相应字段中：
+
+    - **密文，secret text** - 复制秘密文本并将其粘贴到 **Secret** 字段；
+
+    - **用户名与口令，username and password** - 在各自的字段中指定凭据的 **用户名, Username** 和 **密码，Password**；
+
+    - **秘密文件，secret file** - 点击 **File** 字段旁边的 **Browse** 按钮，选择要上传到 Jenkins 的秘密文件；
+
+    - **带有私钥的 SSH 用户名** - 在相应字段中指定凭据的 **用户名，Username**、**私钥，Private Key** 和可选的 **密码锁，Passphrase**；
+
+    **注意**：选择 **直接输入，Enter directly** 允许咱们复制私钥的文本并粘贴进入得到的 **密钥，Key** 文本框中。
+
+    - **证书，certificate** - 指定 **证书，Certificate** 和可选的 **口令，Password**。选择 **上传 PKCS#12 证书, Upload PKCS#12 certificate** 允许咱们通过得到的 **Browse** 按钮将证书作为文件上传；
+
+    - **X.509 客户端证书** - 将适当的详细信息复制并粘贴到 **客户端密钥，Client Key**、**客户端证书，Client Certificate** 和 **服务器 CA 证书，Server CA Certificate** 字段中。
+
+

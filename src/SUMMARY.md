@@ -8,8 +8,8 @@
     - [其他安装方式](./installation/others.md)
     - [初始设置](./installation/initial_settings.md)
 
-- [使用 Jenkins](src/using_jenkins.md)
-    - [使用凭据](src/usage/using_credentials.md)
+- [使用 Jenkins](./using_jenkins.md)
+    - [使用凭据](./usage/using_credentials.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

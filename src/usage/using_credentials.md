@@ -16,6 +16,7 @@
 
 - 由某名特定 Jenkins 用户（如 [在 Blue Ocean 中创建的管道项目](../blue_ocean/creating_pipelines.md)）所使用。
 
+## 证书种类
 
 Jenkins 可以存储以下类型的凭据：
 
@@ -30,3 +31,62 @@ Jenkins 可以存储以下类型的凭据：
 - **证书，certificate** - 一个 [PKCS#12 证书文件](https://tools.ietf.org/html/rfc7292) 与可选的密码，或
 
 - **Docker 主机证书认证，Docker Host Certificate Authentication** 凭据。
+
+
+## 凭据安全
+
+为了最大限度地提高安全性，在 Jenkins 中配置的凭据以加密的形式存储在控制器 Jenkins 实例上（由 Jenkins 实例 ID 加密），并且只在 Pipeline 项目中通过其凭据 ID 处理。
+
+这最大限度地减少了将具体凭据本身暴露给 Jenkins 用户的机会，并阻碍了将功能凭据从一个 Jenkins 实例复制到另一个的能力。
+
+
+## 配置凭据
+
+本节介绍在 Jenkins 中配置凭证的过程。
+
+任何拥有 **Credentials > Create** 权限（通过 **基于 Matrix 的安全，Matrix-based security** 设置）的 Jenkins 用户都可以向 Jenkins 添加凭据。这些权限可以由具有管理员权限的 Jenkins 用户配置。请在 [“管理安全（Managing Security）”](../security/managing_security.md) 的 [“授权（Authorization）”](../security/managing_security.md#authorization) 部分阅读更多相关内容。
+
+否则，如果咱们 Jenkins 实例的 **安全（Security）** 设置页面的 **授权（Authorization）** 设置被设置为默认的 **登录用户可以做任何事情（Logged-in users can do anything）** 设置或 **任何人可以做任何事情（Anyone can do anything）** 设置，那么任何 Jenkins 用户都可以添加和配置凭据。
+
+
+### 添加新的全局凭据
+
+要向咱们的 Jenkins 实例添加新的全局凭证：
+
+
+1. 如果需要，请确保咱们已经登录到 Jenkins（作为一名具有 **Credentials > Create** 权限的用户）;
+
+2. 从 Jenkins 主页（即 Jenkins 经典用户界面的仪表盘，Dashboard），点击 **管理 Jenkins > 管理凭据**；
+
+![系统管理](../images/manage.png)
+
+
+3. 在右边的 **Store scoped to Jenkins** 下，点击 **Jenkins**；
+
+
+![凭据库](../images/store.png)
+
+
+4. 在 “系统” 下，点击 “全局凭据（unrestricted）” 链接，访问这个默认域；
+
+![系统凭据库中的全局凭据](../images/system_global_credentials.png)
+
+
+5. 点击右侧的 “Add credentials”;
+
+**注意**：如果这个默认域中没有凭证，咱们也可以点击 “添加一些凭据” 链接（这与点击 “Add credentials” 链接相同）。
+
+![全局凭据详情页面](../images/system_global_credentials_page.png)
+
+
+6. 在 “种类（Kind）” 字段，选择要添加的 [凭据种类](#证书种类)；
+
+![新建凭据](../images/new_credentials.png)
+
+7. 在 “范围（Scope）” 字段，选择以下二者之一：
+
+    - **全局（Global）** - 若要添加的凭据是针对 Pipeline 项目/条目。选择此选项会将凭据的范围，应用到 Pipeline 项目/条目 “对象” 及其所有后代对象；
+
+    - **系统（System）** - 如果要添加的凭证是用于 Jenkins 实例本身，用于系统管理功能，如电子邮件认证、代理 agent 连接等的交互。选择该选项会将凭证的范围只应用于单个对象。
+
+8.

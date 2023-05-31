@@ -10,6 +10,8 @@
 
 - [使用 Jenkins](./using_jenkins.md)
     - [使用凭据](./usage/using_credentials.md)
+    - [搜索框](./usage/search_box.md)
+    - [通过名字引用另一个项目](./usage/referencing_another_project_by_name.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

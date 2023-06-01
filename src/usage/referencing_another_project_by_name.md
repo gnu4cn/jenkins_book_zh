@@ -101,4 +101,32 @@ mymatrixproject
 mymatrixproject/someaxis=somevalue
 ```
 
+或受多个轴线的限制：
 
+```pipeline
+mymatrixproject/someaxis=somevalue,anotheraxis=anothervalue
+```
+
+
+### 多分支的管线
+
+**Multibranch Pipelines**
+
+咱们可以引用某个特定分支：
+
+```pipeline
+mymultibranchproject/mybranch
+```
+
+## 名字编码
+
+路径中的特殊字符应该用 URL 编码。例如，如果咱们的 Multibranch Pipeline 有一个带有斜线的分支（ `feature/myfeature` ），那么就要用 `%2F` 替换斜线：
+
+```pipeline
+mymultibranchproject/feature%2Fmyfeature
+
+
+## 对于 Jenkins 和 Jenkins 插件的开发者
+
+请参阅 [`Jenkins::getItem()`](https://javadoc.jenkins.io/jenkins/model/Jenkins.html#getItem-java.lang.String-hudson.model.ItemGroup-) 函数。
+```

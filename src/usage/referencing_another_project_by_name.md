@@ -124,6 +124,7 @@ mymultibranchproject/mybranch
 
 ```pipeline
 mymultibranchproject/feature%2Fmyfeature
+```
 
 
 ## 对于 Jenkins 和 Jenkins 插件的开发者

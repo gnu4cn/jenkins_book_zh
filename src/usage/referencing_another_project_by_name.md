@@ -32,4 +32,73 @@ copyArtifacts projectName: 'myproject'
 ### 相对路径
 
 
+相对路径以正斜杠之外的东西开头，并指向与当前项目有关的另一项目。例如，假设咱们有以下绝对路径的项目：
+
+```pipeline
+/thatproject
+/folder/someproject
+/folder/subfolder/myproject
+/folder/subfolder/anotherproject
+```
+
+在 `/folder/subfolder/myproject` 的某个管道脚本， Pipeline Project，中，咱们可以使用下面这个相对路径引用 `/folder/subfolder/anotherproject`：
+
+
+```pipeline
+anotherproject
+```
+
+并可以用下面这个相对路径来引用 `/folder/someproject`，其中 `..` 表示在父文件夹中查找：
+
+```pipeline
+../someproject
+```
+
+并可以使用下面的相对路径，引用 `/thatproject`：
+
+```pipeline
+../../thatproject
+```
+
+
+## 引用项目内部的组件
+
+某些类型的项目 -- 如 Maven 项目、Matrix 项目和 Multibranch 项目 -- 有着一些子组件。咱们可以用以下方式来引用这些子组件：
+
+
+### Maven 项目
+
+咱们可以引用整个 Maven 项目：
+
+```pipleline
+mymavenproject
+```
+
+或 Maven 项目里的某个组：
+
+```pipeline
+mymavenproject/my.group
+```
+
+或到某个特定模块的引用：
+
+```pipeline
+mymavenproject/my.group$MyModule
+```
+
+
+### Matrix 项目
+
+咱们可以引用某个 Matrix 项目的所有配置：
+
+```pipeline
+mymatrixproject
+```
+
+或引用受某个轴线所限制的特定配置，a particular configuration, restricted by a axis：
+
+```pipeline
+mymatrixproject/someaxis=somevalue
+```
+
 

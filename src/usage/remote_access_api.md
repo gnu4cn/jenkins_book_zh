@@ -73,6 +73,7 @@ curl JENKINS_URL/job/JOB_NAME/buildWithParameters \
 > 什么是 Crumb 令牌？
 >
 > Crumb 是用来减少 CSRF 攻击的，他使用一个随机的唯一令牌，在服务器端进行验证。只要你想防止恶意代码执行由 HTTP 请求执行的系统命令，就可以使用 Crumb。
-> >https://hapi.dev/module/crumb/api/?v=9.0.1
+>
+> 参见：https://hapi.dev/module/crumb/api/?v=9.0.1
 
 

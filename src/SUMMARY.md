@@ -13,6 +13,7 @@
     - [搜索框](./usage/search_box.md)
     - [通过名字引用另一个项目](./usage/referencing_another_project_by_name.md)
     - [中止某个构建](./usage/aborting_a_build.md)
+    - [指纹](./usage/fingerprints.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

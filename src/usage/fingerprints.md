@@ -81,4 +81,14 @@ $JENKINS_HOME/fingerprints
 3. 咱们会看到 TOP #10 构建中打上了指纹的所有文件，以及他们的来源。
 
 
+咱们有一个构建 `.jar` 的 TOP 项目。咱们还有一个 TOP-TEST 项目，其在 TOP 项目之后运行，对最新的 TOP 项目包（二进制）进行全面集成测试。咱们想知道 TOP #7 的测试结果。
 
+1. 前往 TOP #7 的构建页面；
+
+2. 点击构建工件，build artifacts，中 `top.jar` 的 “指纹，fingerprint” 图标；
+
+3. 咱们会看到所有用到他的 TOP-TEST 构建；
+
+4. 点击他，咱们就将被带到相应的 TOP-TEST 构建页面，这将显示测试报告；
+
+5. 如果没有显示 TOP-TEST 构建，那就意味着 TOP-TEST 构建没有针对 TOP #7 运行。也许他跳过了 TOP #7（如果在很短的时间内有大量的 TOP 构建，这种情况可能发生），或者也许一个新的 TOP-TEST 构建正在进行。

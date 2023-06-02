@@ -77,3 +77,53 @@ curl JENKINS_URL/job/JOB_NAME/buildWithParameters \
 > 参见：https://hapi.dev/module/crumb/api/?v=9.0.1
 
 
+### XPath 选取
+
+XML API 通过使用查询参数 `xpath`，支持通过 XPath 进行选择。这对于在 XML 操作繁琐的环境中提取信息是很方便的（比如 shell 脚本）。关于如何使用这个的示例，请参阅 [issue #626](https://issues.jenkins.io/browse/JENKINS-626)。
+
+请查看咱们 Jenkins 服务器上的 `../api/` 了解更多更新的细节。
+
+
+### XPath 排除
+
+
+与上面的 `xpath` 查询参数类似，咱们可以使用（可能是多个）`exclude` 查询模式来从结果的 XML 中排除节点。所有与指定 XPath 相匹配的节点都将被从 XML 中删除。
+
+
+## 深度控制
+
+有时候，远程 API 在一次调用中并不能给咱们足够的信息。例如，如果咱们想找到某个给定视图的最后一次成功构建，就会发现调用该视图的远程 API 不会给到咱们这个信息，咱们必须递归调用每个项目的远程 API。深度控制解决了这个问题。深度控制从根本上与 Jenkins 的数据模型有关。
+
+Jenkins 内部维护的数据模型可被认为是一个大的树状结构，当咱们进行远程 API 调用时，咱们得到的是其中的一个小子树。该子树以咱们进行远程 API 调用的对象为根，子树在超过一定深度时被切断，以避免返回过多的数据。咱们可以通过指定深度查询参数来调整这种截断行为。当咱们指定一个正的深度值时，子树的截断就会晚一些。
+
+所以最终结果是，如果咱们指定了一个更大的深度值，咱们会看到远程 API 现在会返回更多的数据。由于算法的原因，这种工作方式使更大的深度值所返回的数据，会包括更小的深度值所返回的所有数据。
+
+请参阅 Jenkins 服务器上的 `.../api/` 以获取更多最新详细信息。
+
+
+## Python API 封装器
+
+
+[JenkinsAPI](https://pypi.python.org/pypi/jenkinsapi)、[Python-Jenkins](https://pypi.python.org/pypi/jenkinsapi)、[api4jenkins](https://pypi.org/project/api4jenkins/)、[aiojenkins](https://pypi.org/project/aiojenkins/) 是 Python REST API 的面向对象的 python 封装，旨在提供一种更传统的 pythonic 方式来控制 Jenkins 服务器。这提供了一个更高层次的 API，包含一些便利的功能。目前提供的服务包括：
+
+- 查询某个已完成构建的测试结果；
+
+- 获取代表某项作业最新构建的对象;
+
+- 通过简单的标准搜索工件，artifacts；
+
+- 阻塞直到作业完成；
+
+- 将工件，artifacts，安装到定制指定的目录结构；
+
+- 对 Jenkins 实例的身份验证支持；
+
+- 根据 subversion 修订搜索构建的能力；
+
+- 添加/删除/查询 Jenkins 代理的能力。
+
+
+## Ruby API 封装器
+
+
+[Jenkins API 客户端](https://rubygems.org/gems/jenkins_api_client) 是一个面向对象的 Ruby 封装器，他消费 Jenkins 的 JSON API，旨在提供对 Jenkins 提供的所有远程 API 的访问。

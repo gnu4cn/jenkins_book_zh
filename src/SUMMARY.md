@@ -18,6 +18,7 @@
     - [修改时区](./usage/change_time_zone.md)
     - [远程访问 API](./usage/remote_access_api.md)
     - [因执行器的饿死情况，Executor Starvation](./usage/executor_starvation.md)
+    - [使用 Jenkins 代理](./usage/using_jenkins_agents.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

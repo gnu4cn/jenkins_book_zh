@@ -148,3 +148,37 @@ Jenkins 控制器的代理 你可能会问
 Jenkins 代理可以在物理机 physical machines、虚拟机 virtual machines、Kubernetes 集群和 Docker 镜像中启动。这个小节使用 SSH 将 Docker 的代理连接到 Jenkins（控制器）。
 
 
+### 环境
+
+要运行本指南，咱们需要一台具有以下功能的机器：
+
+- Java 安装；
+
+- Jenkins 的安装；
+
+- Docker 的安装；
+
+- SSH 密钥对。
+
+> 如果您在安装 Java、Jenkins 和 Docker 方面需要帮助，请访问 [安装 Jenkins](../installation/docker.md) 小节。
+
+
+### 生成 SSH 密钥对
+
+要生成 SSH 密钥对，咱们必须在咱们能访问的机器上执行一个名为 `ssh-keygen` 的命令行工具。机器可以是：
+
+- 咱们 Jenkins 控制器所运行的机器；
+
+- 宿主机（在使用容器时）；
+
+- 某台咱们运行着代理的机器；
+
+- 甚至咱们的开发机器。
+
+
+> SSH 密钥对的生成可以在任何操作系统上完成：
+>
+> - 在 Windows 上，您可以使用任何的 OpenSSH 安装，例如 [Windows OpenSSH](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)、`ssh-keygen` 在 [用于 Windows 的 git](https://gitforwindows.org/)， 或 [Cygwin](https://cygwin.com/) 中均有包含；
+> - 在 Unix（Linux、macOS、BSD 等）上，咱们也可以使用任何与咱们系统打包的 OpenSSH 安装。
+
+

@@ -188,7 +188,7 @@ Jenkins 内部维护的数据模型可被认为是一个大的树状结构，当
 
 ## 检测 Jenkins 版本
 
-要检查 Jenkins 的版本，请加载首页或任何 `.../api/*` 页面并检查 `X-Jenkins` 响应头。这包含了 Jenkins 的版本号，如 "1.404"，这也是检查一个 URL 是否是 Jenkins URL 的好方法。
+要检查 Jenkins 的版本，请加载首页或任何 `.../api/*` 页面并检查 `X-Jenkins` 响应头。这包含了 Jenkins 的版本号，如 `2.401.1`，这也是检查一个 URL 是否是 Jenkins URL 的好方法。
 
 ```bash
 $ curl -o - -I https://ci.senscomm.com/

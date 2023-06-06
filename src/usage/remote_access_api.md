@@ -126,4 +126,41 @@ Jenkins 内部维护的数据模型可被认为是一个大的树状结构，当
 ## Ruby API 封装器
 
 
-[Jenkins API 客户端](https://rubygems.org/gems/jenkins_api_client) 是一个面向对象的 Ruby 封装器，他消费 Jenkins 的 JSON API，旨在提供对 Jenkins 提供的所有远程 API 的访问。
+[Jenkins API 客户端](https://rubygems.org/gems/jenkins_api_client) 是一个面向对象的 Ruby 封装器，他消费 Jenkins 的 JSON API，旨在提供对 Jenkins 提供的所有远程 API 的访问。他可以作为 Rubygem 使用，并且可以与作业 Job、节点 Node、视图 View、构建队列 BuildQueue 及系统 System 等相关功能进行交互。目前提供的服务 Services 包括：
+
+- 通过发送 xml 文件或将参数指定为选项来创建作业，有着更多的定制选项，包括源控制、通知等；
+
+- 构建作业（带参数）、停止构建、查询最近构建的细节、获取构建参数等；
+
+- 使用作业名称过滤器、作业状态过滤器列出 Jenkins 中可用的作业；
+
+- 添加/删除下游项目；
+
+- 链式作业，即给定一个项目清单，每个项目作为下游项目加入到前一个项目中；
+
+- 获取渐进式控制台输出，progressive console output；
+
+- 基于用户名/密码的身份验证；
+
+- 有着库中所提供的大量选项的命令行界面；
+
+- 创建、列出视图；
+
+- 将作业添加到视图和从视图中删除作业；
+
+- 添加/删除 Jenkins 代理，查询代理的详细信息；
+
+- 获取构建队列中的任务，以及他们的年龄 age、原因 cause、理由 reason、预计用时 ETA、ID、参数和更多信息；
+
+- 静默关机 quiet down，取消静默关机 canel quiet down，安全重启 safe restart，强制重启 force restart，以及等待重启后 Jenkins 变得可用等；
+
+- 能够列出已安装/可用的插件、获取有关插件的信息、安装/卸载插件以及使用插件进行更多操作。
+
+该项目源代码在 [这里](https://github.com/arangamani/jenkins_api_client)。
+
+
+## Java API 包装器
+
+**Java API wrappers**
+
+

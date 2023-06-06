@@ -17,7 +17,7 @@
     - [使用本地语言](./usage/using_local_lang.md)
     - [修改时区](./usage/change_time_zone.md)
     - [远程访问 API](./usage/remote_access_api.md)
-    - [执行器饿死，Executor Starvation](./usage/executor_starvation.md)
+    - [因执行器的饿死情况，Executor Starvation](./usage/executor_starvation.md)
 
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)

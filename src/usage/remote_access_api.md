@@ -163,4 +163,45 @@ Jenkins 内部维护的数据模型可被认为是一个大的树状结构，当
 
 **Java API wrappers**
 
+[jenkins-rest](https://github.com/cdancy/jenkins-rest) 库是一个面向对象的 Java 项目，他以编程方式提供对 Jenkins REST API 的访问，以获得 Jenkins 提供的一些远程 API。他是使用 [jclouds 工具包](https://jclouds.apache.org/) 建立的，可以很容易地扩展到支持更多的 REST 端点。他的功能集不断发展，用户被邀请通过 pull-requests 贡献新的端点。在目前的状态下，通过这个库可以提交一个作业，跟踪其在队列中的进度，监控其执行情况，直到完成，并获得构建状态。目前提供的服务包括：
 
+- 端点定义（属性或环境变量）；
+
+- 身份验证（经由属性或环境变量的基本和 API 令牌）；
+
+- Crumb 发行者支持（自动检查 crumbs，此特性与前面提到的 [CRSF 防护](#csrf-防护) 有关）；
+
+- 文件夹支持；
+
+- 作业 API（构建 `build`、构建信息 `buildInfo`、带参数构建 `buildWithParameters`、配置 `config`、创建 `create`、删除 `delete`、描述 `description`、禁用 `disable`、启用 `enable`、作业信息 `jobInfo`、上一次构建编号 `lastBuildNumber`、上一次构建时间戳 `lastBuildTimestamp` 及渐进式文本 `progressiveText` 等）；
+
+- 插件管理器 API（安装必要插件 `installNecessaryPlugins`, 列出当前的插件等）；
+
+- 队列 API（取消、列出队列项目、查询队列项目）；
+
+- 统计 API（总体负荷）；
+
+- 系统 API（系统信息 `systemInfo`）。
+
+该项目可能会迅速发展，这份清单仅在撰写日期前是准确的。
+
+
+## 检测 Jenkins 版本
+
+要检查 Jenkins 的版本，请加载首页或任何 `.../api/*` 页面并检查 `X-Jenkins` 响应头。这包含了 Jenkins 的版本号，如 "1.404"，这也是检查一个 URL 是否是 Jenkins URL 的好方法。
+
+```bash
+$ curl -o - -I https://ci.senscomm.com/
+HTTP/1.1 403 Forbidden
+Server: nginx/1.18.0 (Ubuntu)
+Date: Tue, 06 Jun 2023 06:39:58 GMT
+Content-Type: text/html;charset=utf-8
+Content-Length: 541
+Connection: keep-alive
+X-Content-Type-Options: nosniff
+Set-Cookie: JSESSIONID.a2a3cfcf=node0j5t0jvptqotv1dgrt8kuass8h20.node0; Path=/; HttpOnly
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+X-Hudson: 1.395
+X-Jenkins: 2.401.1
+X-Jenkins-Session: 28a2145a
+```

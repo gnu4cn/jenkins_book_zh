@@ -261,4 +261,23 @@ docker run -d --rm --name=agent1 -p 2222:22 \
 jenkins/ssh-agent:alpine
 ```
 
+> - 请记住将标记 `[your-public-key]` 替换为咱们自己的 SSH **公钥**；
+> - 本例中咱们的公钥值可以通过在咱们创建公钥的机器上执行：`cat ~/.ssh/jenkins_agent_key.pub` 找到。请不要在密钥值周围添加方括号`[]`；
+> 如果咱们的机器已经有一个运行在 `22` 端口的 `ssh` 服务器（如果咱们通过 `ssh` 命令登录到这台机器上，就是这种情况），那么咱们应该为 `docker` 命令使用另一个端口，例如 `-p 4444:22`。
 
+2. 现在容器 `agent1` 便在运行了。
+
+提示：可以使用 `docker ps` 命令来检查容器是否按预期运行。
+
+
+### 在 Windows 上
+
+这里我们将使用 [docker-ssh-agent 镜像](https://github.com/jenkinsci/docker-ssh-agent) 来创建代理容器。
+
+1. 运行以下命令来启动咱们的首个代理：
+
+```powershell
+docker run -d --rm --name=agent1 --network jenkins -p 2222:22 `
+  -e "JENKINS_AGENT_SSH_PUBKEY=[your-public-key]" `
+  jenkins/ssh-agent:jdk11
+```

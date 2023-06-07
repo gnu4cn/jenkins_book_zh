@@ -251,4 +251,14 @@ The key's randomart image is:
 ### 在 Linux 系统上
 
 
+这里我们将使用 [docker-ssh-agent 镜像](https://github.com/jenkinsci/docker-ssh-agent) 来创建代理容器。
+
+1. 请运行下面的命令启动咱们的首个代理：
+
+```bash
+docker run -d --rm --name=agent1 -p 2222:22 \
+-e "JENKINS_AGENT_SSH_PUBKEY=[your-public-key]" \
+jenkins/ssh-agent:alpine
+```
+
 

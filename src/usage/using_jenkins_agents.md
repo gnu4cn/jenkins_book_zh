@@ -315,7 +315,7 @@ docker: Error response from daemon: network jenkins not found.
 
     - 远端根目录 remote root directory；（比如：`/home/jenkins`）
 
-    - 标签 label；（比如：`agent1`）
+    - 标签 label；（比如：`linux-agent-01`）
 
     - 用法 usage；（比如：只构建带有标签表达式的作业......）
 
@@ -325,3 +325,9 @@ docker: Error response from daemon: network jenkins not found.
         - 主机关键验证策略；（比如：“手动地受信任密钥验证 Manually trusted key verification”......）
 
 ![配置新节点/代理的表单](../images/node-2.png)
+
+7. 按 “保存”按钮，`linux-agent-01` 将被注册，但暂时处于离线状态。点击他;
+
+![代理节点列表](../images/node-3.png)
+
+8. 咱们现在应该看到 `This node is being launched.`。如果不是这样，咱们现在可以按下 `Launch agent` 按钮，并等待几秒钟。咱们现在可以点击左边的 `日志` 按钮，然后咱们应收到消息：`Agent successfully connected and online`。

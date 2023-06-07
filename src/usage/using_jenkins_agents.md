@@ -222,4 +222,33 @@ The key's randomart image is:
 
 ![Jenkins 凭据管理入口](../images/credentials-1.png)
 
-3.
+3. 选择全局项目中的下拉选项 "添加凭据"；
+
+![全局凭据项中的“添加凭据”下拉选项](../images/credentials-2.png)
+
+
+4. 在表单中填入：
+
+- 类型 Kind：带有私钥的 SSH 用户名 SSH Username with private key；
+
+- id: Jenkins；
+
+- 描述 description：Jenkins SSH 密钥；
+
+- 用户名：`jenkins`；
+
+- 私钥 private key：选择 `Enter directly` 并按下 “Add” 按钮，插入位于 `~/.ssh/jenkins_agent_key` 处私钥文件的内容；
+
+- 口令：填写用于生成 SSH 密钥对的口令（如果咱们在上一步没有使用口令，则留空），然后按 `Create` 按钮。
+
+
+![新建凭据](../images/credentials-3.png)
+
+
+## 创建咱们的 Docker 代理
+
+
+### 在 Linux 系统上
+
+
+

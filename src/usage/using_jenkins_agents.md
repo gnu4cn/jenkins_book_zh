@@ -214,7 +214,7 @@ The key's randomart image is:
 ```
 
 
-## 创建一个 Jenkins SSH 凭证
+#### 创建一个 Jenkins SSH 凭证
 
 1. 前往咱们的 Jenkins 配置面板；
 
@@ -245,10 +245,10 @@ The key's randomart image is:
 ![新建凭据](../images/credentials-3.png)
 
 
-## 创建咱们的 Docker 代理
+### 创建咱们的 Docker 代理
 
 
-### 在 Linux 系统上
+#### 在 Linux 系统上
 
 
 这里我们将使用 [docker-ssh-agent 镜像](https://github.com/jenkinsci/docker-ssh-agent) 来创建代理容器。
@@ -270,7 +270,7 @@ jenkins/ssh-agent:alpine
 提示：可以使用 `docker ps` 命令来检查容器是否按预期运行。
 
 
-### 在 Windows 上
+#### 在 Windows 上
 
 这里我们将使用 [docker-ssh-agent 镜像](https://github.com/jenkinsci/docker-ssh-agent) 来创建代理容器。
 
@@ -281,3 +281,22 @@ docker run -d --rm --name=agent1 --network jenkins -p 2222:22 `
   -e "JENKINS_AGENT_SSH_PUBKEY=[your-public-key]" `
   jenkins/ssh-agent:jdk11
 ```
+
+**注意**：在运行这个命令前，仍需运行 `docker network create jenkins` 创建出 `jenkins` 网络。否则会报出错误：
+
+```powershell
+96a3fca1ba4f65b6a9bc7b7b6ed42bfce82ae69bea7f57eca9a00698fc224fa3
+docker: Error response from daemon: network jenkins not found.
+```
+
+> - 记得把标记 `[your-public-key]` 替换成咱们自己的 SSH 公钥；
+> - 这个示例中咱们的公钥为：`Get-Content $Env:USERPROFILE\.ssh\jenkins_agent_key.pub`。
+
+2. 现在容器 `agent1` 就在运行了。
+
+提示：可以使用命令 `docker ps` 来检查容器是否按照预期运行。此外，命令 `docker container inspect agent1 | Select-String -Pattern '"IPAddress"： "\d+\.\d+\.\d+\.\d+"'` 可以用来查看要在 Jenkins 中为该代理设置的 **主机，Host**。
+
+
+### 在 Jenkins 上设置 `agent1`
+
+

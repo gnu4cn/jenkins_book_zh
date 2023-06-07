@@ -299,4 +299,29 @@ docker: Error response from daemon: network jenkins not found.
 
 ### 在 Jenkins 上设置 `agent1`
 
+1. 前往咱们的 Jenkins 仪表盘；
 
+2. 前往左侧主菜单中的 “系统管理” 选项；
+
+3. 前往 “节点管理” 项；
+
+![“系统管理” 下的 “节点管理” 项](../images/node-1.png)
+
+4. 前往 “节点管理” 页面中的 “New Node” 选项；
+
+5. 填入节点/代理名字并选择类型；（比如，名字：`agent1`，类型：`固定节点Permanent Agent`）
+
+6. 现在填入以下字段：
+
+    - 远端根目录 remote root directory；（比如：`/home/jenkins`）
+
+    - 标签 label；（比如：`agent1`）
+
+    - 用法 usage；（比如：只构建带有标签表达式的作业......）
+
+    + 启动方式；（比如：通过 SSH 启动代理）
+        - 主机；（比如：`localhost` 或咱们的 IP 地址）
+        - 凭据；（比如：`jenkins`）
+        - 主机关键验证策略；（比如：“手动地受信任密钥验证 Manually trusted key verification”......）
+
+![配置新节点/代理的表单](../images/node-2.png)

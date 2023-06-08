@@ -346,3 +346,54 @@ docker container exec -it jenkins-blueocean bash
 - 如果一分钟后页面没有自动刷新，请使用你的网络浏览器手动刷新页面。
 
 3. 如果需要，使用咱们刚刚创建的用户的凭据登录到 Jenkins，咱们就可以开始使用 Jenkins 了！
+
+## 更新 Jenkins
+
+参考：[New Jenkins Container And Update Jenkins (Docker)](https://jimkang.medium.com/how-to-start-a-new-jenkins-container-and-update-jenkins-with-docker-cf628aa495e9)
+
+
+1. 得到新版 Jenkins WAR 文件的具体下载地址；
+
+比如：`https://mirrors.tuna.tsinghua.edu.cn/jenkins/war/2.407/jenkins.war`
+
+
+2. 登入 Jenkins 所在的 Docker 容器；
+
+
+```console
+# 以 `-u 0` 来使用主机的 root 账号
+docker container exec -u 0 -it jenkins-blueocean bash
+```
+
+3. 使用第 1 步中所拷贝的 URI 地址，下载更新；
+
+```console
+curl https://mirrors.tuna.tsinghua.edu.cn/jenkins/war/2.407/jenkins.war -o jenkins.war
+```
+
+4. 将其移动到正确位置；
+
+```console
+mv ./jenkins.war /usr/share/jenkins
+```
+
+> 注意：可以先 `cp /usr/share/jenkins/jenkins.war /usr/share/jenkins/jenkins.war.bakup` 备份一下。
+
+
+5. 修改 `jenkins.war` 的权限；
+
+```console
+chown jenkins:jenkins /usr/share/jenkins/jenkins.war
+```
+
+6. 退出容器并重启该容器。
+
+```console
+# 退出容器（在容器里）
+exit
+
+# 重启该容器（从咱们的服务器）
+docker container restart jenkins-blueocean
+```
+
+大功告成！

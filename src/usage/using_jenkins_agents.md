@@ -335,4 +335,57 @@ docker: Error response from daemon: network jenkins not found.
 
 ![代理成功连接并上线](../images/node-4.png)
 
-如果咱们的 Jenkins 控制器没有通过 `ssh` 启动代理，请检查咱们在代理上 [配置的]() 端口。复制它，然后点击高级...按钮。然后你就可以把端口号粘贴到端口文本字段中。
+如果咱们的 Jenkins 控制器没有通过 `ssh` 启动代理，请检查咱们在代理上 [配置的](#ssh-端口转发) 端口。复制他，然后点击 `高级` 按钮。然后咱们就可以把端口号粘贴到 `端口` 文本字段中。
+
+
+### 将首个作业委托给 `agent1`
+
+1. 前往 Jenkins 仪表板 dashboard；
+
+2. 选择侧边菜单上的 “新建任务 New Item”;
+
+3. 输入一个名字；（比如：“给 win-agent-01 的首个作业”）
+
+4. 选择 `构建一个自由风格的软件项目 Freestyle project` 并点击 “确定 OK”；
+
+5. 勾选 “限制项目的运行节点 Restrict where this project can be run”；
+
+6. 在那个字段填入：带有 `win-agent-01` 的标签；（比如：`win-agent-01`）
+
+![限制项目的运行节点设置](../images/node-5.png)
+
+> 要当心标签前后的空格。
+
+7. 现在选择 “Build Steps” 处的 `执行 shell` 选项；
+
+![选择 “Build Steps” 处的 “执行 shell” 选项](../images/node-6.png)
+
+8. 在 `执行 shell` 步骤的 `命令` 字段中添加命令：`echo $NODE_NAME`，当此作业运行时，代理的名称将被打印在日志中；
+
+9. 按下 “保存” 按钮，并随后选择 `立即构建 Build Now` 选项；
+
+10. 等待数秒然后前往 `控制台输出 Console Output` 页面；
+
+![立即构建与控制台输出](../images/node-7.png)
+
+11. 咱们应收到类似于下面的输出：
+
+```console
+Started by user Jenkins CI/CD Senscomm
+Running as SYSTEM
+Building remotely on win-agent-01 (ms-win) in workspace /home/jenkins/workspace/给 win-agent-01 的首个作业
+[给 win-agent-01 的首个作业] $ /bin/sh -xe /tmp/jenkins14625171737496999372.sh
++ echo win-agent-01
+win-agent-01
+Finished: SUCCESS
+```
+
+## 重启某个 Jenkins 代理
+
+
+下面这个视频提供了如何使用各种方法重启 Jenkins 代理的说明。
+
+（这里仅提供该视频的字幕中文翻译。）
+
+```console
+```

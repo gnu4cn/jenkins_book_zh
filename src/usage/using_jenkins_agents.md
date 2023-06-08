@@ -331,3 +331,5 @@ docker: Error response from daemon: network jenkins not found.
 ![代理节点列表](../images/node-3.png)
 
 8. 咱们现在应该看到 `This node is being launched.`。如果不是这样，咱们现在可以按下 `Launch agent` 按钮，并等待几秒钟。咱们现在可以点击左边的 `日志` 按钮，然后咱们应收到消息：`Agent successfully connected and online`。
+
+![代理成功连接并上线](../images/node-4.png)

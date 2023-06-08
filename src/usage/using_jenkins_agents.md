@@ -263,7 +263,8 @@ jenkins/ssh-agent:alpine
 
 > - 请记住将标记 `[your-public-key]` 替换为咱们自己的 SSH **公钥**；
 > - 本例中咱们的公钥值可以通过在咱们创建公钥的机器上执行：`cat ~/.ssh/jenkins_agent_key.pub` 找到。请不要在密钥值周围添加方括号`[]`；
-> 如果咱们的机器已经有一个运行在 `22` 端口的 `ssh` 服务器（如果咱们通过 `ssh` 命令登录到这台机器上，就是这种情况），那么咱们应该为 `docker` 命令使用另一个端口，例如 `-p 4444:22`。
+##### SSH 端口转发
+> - 如果咱们的机器已经有一个运行在 `22` 端口的 `ssh` 服务器（如果咱们通过 `ssh` 命令登录到这台机器上，就是这种情况），那么咱们应该为 `docker` 命令使用另一个端口，例如 `-p 4444:22`。
 
 2. 现在容器 `agent1` 便在运行了。
 
@@ -333,3 +334,5 @@ docker: Error response from daemon: network jenkins not found.
 8. 咱们现在应该看到 `This node is being launched.`。如果不是这样，咱们现在可以按下 `Launch agent` 按钮，并等待几秒钟。咱们现在可以点击左边的 `日志` 按钮，然后咱们应收到消息：`Agent successfully connected and online`。
 
 ![代理成功连接并上线](../images/node-4.png)
+
+如果咱们的 Jenkins 控制器没有通过 `ssh` 启动代理，请检查咱们在代理上 [配置的]() 端口。复制它，然后点击高级...按钮。然后你就可以把端口号粘贴到端口文本字段中。

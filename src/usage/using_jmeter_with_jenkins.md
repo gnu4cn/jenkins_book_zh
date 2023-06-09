@@ -124,3 +124,11 @@ JMeter 使用测试计划，test plans，来组织每个测试。一旦配置好
 6. 在屏幕左侧，用鼠标右键或辅助键选择 **Threap Group**，然后按照这个路径：**Add** > **Sampler** > **HTTP Request**，并选择这个 **HTTP Request** 选项；
 
 ![在 `Thread Group` 上添加 `HTTP Request` 的 `Sampler`](../images/jmeter-05.png)
+
+7. 在 **HTTP Request** 中，输入咱们测试的 **Name**、**Server Name or IP**, 以及 **Path** 上下文。比如，这里咱们讲使用 `Installing`、`www.jenkins.io` 与 `/doc/book/installing`；
+
+![输入 `HTTP Request` 测试的名字、服务器名字与路径](../images/jmeter-06.png)
+
+8. 对不同的上下文/页面再重复步骤六和七两次。例如，我们将使用 `www.jenkins.io/node`。现在我们的（测试）计划要测试三件事；
+
+9. 要添加可视化报告，请点击右键或辅助键，选择咱们的 `Thread Group`，然后按照以下路径： **Add** > **Listener** > **View results in table**。选择那个 **View Results in Table** 选项；

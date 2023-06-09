@@ -15,7 +15,7 @@
 - 日常工作的自动化。
 
 
-> 本页概述了怎样在 Jenkins 中使用 Apache JMeter。教程有意通过在 Jenkins 控制器上运行 Apache JMeter 来完成。在 Jenkins 生产环境中的 Apache JMeter 应在 Jenkins 代理上运行，而不是在 Jenkins 控制器上。要了解更多关于 Jenkins 代理的信息，请参考 [使用 Jenkins 代理](https://www.jenkins.io/doc/book/using/using-agents/) 页面。
+> 本页概述了怎样在 Jenkins 中使用 Apache JMeter。教程有意通过在 Jenkins 控制器上运行 Apache JMeter 来完成。在 Jenkins 生产环境中的 Apache JMeter 应在 Jenkins 代理上运行，而不是在 Jenkins 控制器上。要了解更多关于 Jenkins 代理的信息，请参考 [使用 Jenkins 代理](./using_jenkins_agents.md) 页面。
 
 ## 关于 Apache JMeter
 
@@ -32,3 +32,8 @@ Jenkins 文档中有一个页面可以帮助完成 [Jenkins 的安装过程](../
 为在 Jenkins 中集成 JMeter，咱们将使用 [性能插件](https://plugins.jenkins.io/performance)。
 
 
+按照以下步骤安装他：
+
+1. 从咱们的 Jnekins 仪表板页面，前往：**系统管理**；
+
+2. 前往 **插件管理** 页面；

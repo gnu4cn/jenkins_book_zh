@@ -132,3 +132,44 @@ JMeter 使用测试计划，test plans，来组织每个测试。一旦配置好
 8. 对不同的上下文/页面再重复步骤六和七两次。例如，我们将使用 `www.jenkins.io/node`。现在我们的（测试）计划要测试三件事；
 
 9. 要添加可视化报告，请点击右键或辅助键，选择咱们的 `Thread Group`，然后按照以下路径： **Add** > **Listener** > **View results in table**。选择那个 **View Results in Table** 选项；
+
+![选择 `View Results in Table` 选项](../images/jmeter-07.jpg)
+
+
+10. 要保存测试计划，请选择屏幕左上方的 `Save(disk)` 图标或前往 **File** > **Save**，为测试计划输入一个以 `.jmx` 为扩展名的名字。例如：`jenkins.io.jmx`。
+
+运行这个测试，并查看表格结果。
+
+![运行该测试并查看表格结果](../images/jmeter-08.png)
+
+
+### 首个使用终端命令的 JMeter 测试计划
+
+咱们的测试在图形用户界面中运行良好，但为了与 Jenkins 集成，需要从命令行运行。
+
+要使用命令行运行测试计划，请遵循以下步骤：
+
+1. 从终端运行以下命令：
+
+
+```powershell
+$env:OUT='jmeter.save.saveservice.output_format'
+$env:JMX = 'C:\Users\Lenny.Peng\Documents\jenkins.io test plan.jmx'
+$env:JTL = 'C:\Users\Lenny.Peng\Documents\jenkins.io.report.jtl'
+C:\ProgramData\chocolatey\bin\jmeter.cmd -j $env:OUT=x -n -t $env:JMX -l $env:JTL
+```
+
+> 这是在 Windows 10 系统上，于 Powershell 终端窗口中运行这个测试的方式。
+
+2. 如果一切正常，将在 `-l` 参数指定的位置创建报告文件。
+
+![报告文件已被创建出来](../images/jmeter-09.jpg)
+
+
+## Jenkins 和 JMeter 一起运行
+
+在从命令行运行 Jmeter 后，我们现在就拥有了从 Jenkins 执行 JMeter 所需的一切。
+
+要从 Jenins 执行 JMeter，请遵循以下步骤：
+
+

@@ -37,3 +37,67 @@ Jenkins 文档中有一个页面可以帮助完成 [Jenkins 的安装过程](../
 1. 从咱们的 Jnekins 仪表板页面，前往：**系统管理**；
 
 2. 前往 **插件管理** 页面；
+
+3. 选择左侧菜单中的 **Available plugins**，并在搜索字段中输入 “performance”；
+
+4. 勾选 Install 复选框，并选择 **Install without restart**；
+
+![按照 Performance 插件](../images/jmeter-00.png)
+
+如果一切成功，咱们将收到下面这个确认屏幕：
+
+![性能插件安装成功确认屏幕](../images/jmeter-01.png)
+
+
+## JMeter 的安装
+
+要安装 JMeter，请依照下面这些步骤：
+
+1. 请参考 [Apache JMeter 下载页面](https://jmeter.apache.org/download_jmeter.cgi)；
+
+2. 根据你的系统选择你的下载选项：Windows 的 `.zip` 或 Linux 的 `.tgz`。本教程是在 Linux 上完成的，所以显示的是 `.tgz` 选项;
+
+3. 将下载的文件解压到咱们偏好的位置，例如 `/opt/jmeter`；
+
+4. 编辑文件： `<YOUR-JMETER-PATH>>/bin/user.properties`。例如，`/opt/jmeter/bin` 便是这里使用的文件路径；
+
+5. 在文件的最后一行添加这条命令：`jmeter.save.saveservice.output_format=xml`。保存并关闭该文件，以确保改变生效。
+
+```properties
+# Type of keystore : JKS
+#
+#server.rmi.ssl.keystore.type=JKS
+#
+# Keystore file that contains private key
+#
+#server.rmi.ssl.keystore.file=rmi_keystore.jks
+#
+# Password of keystore
+#
+#server.rmi.ssl.keystore.password=changeit
+#
+# Key alias
+#
+#server.rmi.ssl.keystore.alias=rmi
+#
+# Type of truststore : JKS
+#
+#server.rmi.ssl.truststore.type=JKS
+#
+# Keystore file that contains certificate
+#
+#server.rmi.ssl.truststore.file=rmi_keystore.jks
+#
+# Password of Trust store
+#
+#server.rmi.ssl.truststore.password=changeit
+#
+# Set this if you don't want to use SSL for RMI
+#
+#server.rmi.ssl.disable=false
+jmeter.save.saveservice.output_format=xml
+```
+
+这个命令会将 JMeter 的输出整合到 Jenkins 中。现在我们来创建我们的 JMeter 测试计划，JMeter test plan。
+
+

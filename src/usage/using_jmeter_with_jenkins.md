@@ -101,3 +101,26 @@ jmeter.save.saveservice.output_format=xml
 这个命令会将 JMeter 的输出整合到 Jenkins 中。现在我们来创建我们的 JMeter 测试计划，JMeter test plan。
 
 
+### 使用 GUI 的首个 JMeter 测试计划
+
+JMeter 使用测试计划，test plans，来组织每个测试。一旦配置好，Jenkins 就会调用管道，pipeline，中定义的所有测试计划，然后在构建报告中显示结果。这意味着必须先在 JMeter 上配置所有测试计划。完成后，在 Jenkins 中输入信息，以便他知道需要调用哪些测试。
+
+请安装以下步骤创建一个测试计划：
+
+1. 请运行这个文件： `<YOUR-JMETER-PATH>>/bin/jmeter.sh` 来打开 JMeter GUI。例如，在这个例子中，将使用 `/opt/jmeter/bin/jmeter.sh`。在某个确定安装中，咱们可以将这些命令设置到咱们的 `path` 系统或系统变量（即在 `/etc/bashrc` 或 `~/.bashrc` 中设置 `PATH`）；
+
+> 对于 Windows 用户该文件将是 `jmeter.bat`。
+
+2. 在 JMeter GUI 中，前往 **File**，并选择 **New**;
+
+3. 输入咱们测试计划的名字；
+
+4. 在屏幕左侧，使用咱们鼠标右键或辅助键，选中咱们的测试计划。按照这样的路径：**Add** > **Thread(Users)** > **Thread Group**，并选中他；
+
+![选择 `Thread Group`](../images/jmeter-04.png)
+
+5. 在 `Thread Group` 中，把 **Number of Threads(users)** 增加到五，并把 **Loop Count** 增加到二；
+
+6. 在屏幕左侧，用鼠标右键或辅助键选择 **Threap Group**，然后按照这个路径：**Add** > **Sampler** > **HTTP Request**，并选择这个 **HTTP Request** 选项；
+
+![在 `Thread Group` 上添加 `HTTP Request` 的 `Sampler`](../images/jmeter-05.png)

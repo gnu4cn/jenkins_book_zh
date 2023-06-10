@@ -110,6 +110,24 @@ JMeter 使用测试计划，test plans，来组织每个测试。一旦配置好
 1. 请运行这个文件： `<YOUR-JMETER-PATH>>/bin/jmeter.sh` 来打开 JMeter GUI。例如，在这个例子中，将使用 `/opt/jmeter/bin/jmeter.sh`。在某个确定安装中，咱们可以将这些命令设置到咱们的 `path` 系统或系统变量（即在 `/etc/bashrc` 或 `~/.bashrc` 中设置 `PATH`）；
 
 > 对于 Windows 用户该文件将是 `jmeter.bat`。
+>
+> **注意**：启动 JMeter GUI 时，会看到如下一段提示信息：
+
+```console
+> /opt/jmeter/bin/jmeter
+Jun 10, 2023 9:53:22 PM java.util.prefs.FileSystemPreferences$1 run
+INFO: Created user preferences directory.
+================================================================================
+Don't use GUI mode for load testing !, only for Test creation and Test debugging.
+For load testing, use CLI Mode (was NON GUI):
+   jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]
+& increase Java Heap to meet your test requirements:
+   Modify current env variable HEAP="-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m" in the jmeter batch file
+Check : https://jmeter.apache.org/usermanual/best-practices.html
+================================================================================
+```
+
+> 表示只有在创建测试与调试测试时才使用 GUI，加载测试时不要使用 GUI！加载测试要使用 CLI 模式，并要通过命令行参数，提升 Java 内存堆大小，来满足咱们测试的需要。
 
 2. 在 JMeter GUI 中，前往 **File**，并选择 **New**;
 

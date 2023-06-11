@@ -21,6 +21,10 @@
     - [使用 Jenkins 代理](./usage/using_jenkins_agents.md)
     - [在 Jenkins 中使用 JMeter](./usage/using_jmeter_with_jenkins.md)
 
+
+- [管道 Pipeline](./pipeline.md)
+
+
 - [扩展 Jenkins 规模](scaling.md)
     - [硬件建议](./scaling/hardware_recommendation.md)
 

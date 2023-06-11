@@ -174,14 +174,20 @@ Check : https://jmeter.apache.org/usermanual/best-practices.html
 $env:OUT='jmeter.save.saveservice.output_format'
 $env:JMX = 'C:\Users\Lenny.Peng\Documents\jenkins.io test plan.jmx'
 $env:JTL = 'C:\Users\Lenny.Peng\Documents\jenkins.io.report.jtl'
-C:\ProgramData\chocolatey\bin\jmeter.cmd -j $env:OUT=x -n -t $env:JMX -l $env:JTL
+C:\ProgramData\chocolatey\bin\jmeter.cmd -j $env:OUT=xml -n -t $env:JMX -l $env:JTL
 ```
 
 > 这是在 Windows 10 系统上，于 Powershell 终端窗口中运行这个测试的方式。
 
+
 2. 如果一切正常，将在 `-l` 参数指定的位置创建报告文件。
 
-![报告文件已被创建出来](../images/jmeter-09.jpg)
+
+而要在 Jenkins 代理上，使用终端运行 JMeter 测试计划，则需在每个 Jenkins 代理上安装 JMeter, 然后使用 `scp` 命令将准备好的 `.jmx` 测试文件上传到代理上，并通过 `ssh` 登录到代理机器，运行下面这样的命令，就可以在代理上运行测试计划了。
+
+```console
+/opt/jmeter/bin/jmeter -n -t /home/jenkins/demo-http-req-test.jmx -l /home/jenkins/demo-http-req-test.jtl
+```
 
 
 ## Jenkins 和 JMeter 一起运行

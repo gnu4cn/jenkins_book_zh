@@ -196,4 +196,34 @@ C:\ProgramData\chocolatey\bin\jmeter.cmd -j $env:OUT=xml -n -t $env:JMX -l $env:
 
 要从 Jenins 执行 JMeter，请遵循以下步骤：
 
+1. 从 Jenkins 仪表板上，选择 **新建任务**；
 
+2. 输入项目名称，例如 `demoJmeterTest`，选择 “构建一个自由风格的软件项目”，然后选择 **确定**；
+
+3. 前往 **Build Steps** 选项卡，选择 **增加构建步骤**，并选择 **执行 shell**；
+
+4. 输入我们在上一节用于运行 JMeter 的相同代码：
+
+![添加用于执行 Jmeter 的构建步骤](../images/jmeter-10.png)
+
+5. 前往 **构建后操作** 标签，选择 **增加构建后操作步骤**，然后选择 **Publish Performance test result report**；
+
+> 这个选项来自性能插件。如果他不可用，请检查前面的部分，并确保咱们已经安装了该插件。
+
+6. 填入这些报告的来源；
+
+![增加 “发布性能测试结果报告” 的构建后步骤](../images/jmeter-11.png)
+
+7. 保存该构建项目，然后选择 `demoJmeterTest` 页面中的 **立即构建**；
+
+8. 作业完成后，请导航到 **控制台输出**，查看执行细节;
+
+![`demoJmeterTest` 作业完成后的执行详细情况](../images/jmeter-12.png)
+
+> **注意**：Jenkins 会自动将 `.jtl` 文件从代理 agent 机器上，拷贝到主控 master 机器上。
+
+9. 从这个 **控制台输出** 视图，咱们可以访问 **Performance Report**，并可以查看 JMeter 的报告数据。
+
+![在 Jenkins 中查看到 JMeter 的报告数据](../images/jmeter-13.png)
+
+咱们现在已经在 Jenkins 中运行了 JMeter，并且可以使用其所提供的数据。

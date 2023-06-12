@@ -23,6 +23,8 @@
 
 
 - [管道 Pipeline](./pipeline.md)
+    - [Jenkins 管道入门](./pipeline/get_started.md)
+
 
 
 - [扩展 Jenkins 规模](scaling.md)

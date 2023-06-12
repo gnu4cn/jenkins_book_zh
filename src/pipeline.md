@@ -700,4 +700,116 @@ pipeline {
 7. 执行与 “部署” 阶段相关的一些步骤。
 
 
+### 脚本化管道基础
 
+**Scripted Pipeline fundamentals**
+
+
+在脚本化管道语法中，一个或多个 `node` 代码块在整个管线中完成核心工作。虽然这不是脚本化管道语法的强制性要求，但将咱们管道的工作限制在 `node` 代码块内有两方面的作用：
+
+- 通过向 Jenkins 队列添加一个项目来调度 `node` 代码块中包含步骤的运行。只要某个节点上的执行器有空，这些步骤就会运行；
+
+- 创建一个工作区（特定于该管道的目录），在那里可以对从源代码控制中签出的文件进行工作。
+
+    **注意**：根据咱们的 Jenkins 配置，某些工作空间在一段时间不活动后可能不会被自动清理。请参阅 [JENKINS-2111](https://issues.jenkins.io/browse/JENKINS-2111) 中链接的那些工单与讨论了解更多信息。
+
+
+```groovy
+// Jenkinsfile （脚本化管道）
+node { // 1
+    stage('Build') { // 2
+        // 3
+    }
+    stage('Test') { // 4
+        // 5
+    }
+    stage('Deploy') { // 6
+        // 7
+    }
+}
+```
+
+1. 在任何可用的代理上执行该管道或其任何阶段；
+
+2. 定义了 “构建 Build” 阶段。`stage` 代码块在脚本化管道语法中是可选的。然而，在脚本化管道中实现 `stage` 块，可以在 Jenkins 用户界面中更清楚地呈现每个阶段的任务/步骤子集；
+
+3. 执行一些与 “构建 Build” 阶段相关的步骤；
+
+4. 定义了 “测试 Test” 阶段；
+
+5. 执行一些与 “测试 Test” 相关的步骤；
+
+6. 定义了 “部署 Deploy” 阶段；
+
+7. 执行一些与 “部署” 阶段相关的步骤。
+
+
+
+## 管道示例
+
+下面是一个使用声明式管道语法的 `Jenkinsfile` 的例子 -- 点击下面的 **切换脚本化管道** 链接，就可以访问其脚本化语法的等体：
+
+
+```groovy
+// Jenkinsfile（声明式管道）
+pipeline { // 1
+    agent any // 2
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') { // 3
+            steps { // 4
+                sh 'make' // 5
+            }
+        }
+        stage('Test'){
+            steps {
+                sh 'make check'
+                junit 'reports/**/*.xml' // 6
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
+            }
+        }
+    }
+}
+```
+
+<details>
+    <summary>切换脚本化管道</summary>
+
+```groovy
+node { // 5
+    stage('Build') { // 3
+        sh 'make' // 5
+    }
+    stage('Test') {
+        sh 'make check'
+        junit 'reports/**/*.xml' // 6
+    }
+    if (currentBuild.currentResult == 'SUCCESS') {
+        stage('Deploy') {
+            sh 'make publish' // 5
+        }
+    }
+}
+```
+</details>
+
+1. `pipeline` 是声明式管道特有的语法，他定义了一个 "块"，包含执行整个 Pipeline 的所有内容和指令；
+
+2. `agent` 是声明式管道特有的语法，给 Jenkins 指明了为整个管道分配执行器（an executor，在某个节点上）和工作空间；
+
+3. `stage` 是一个语法块，用于描述 [该管道的某个阶段](#阶段)。请在 [Pipeline 语法](./pipeline/syntax.md) 页面上阅读更多关于声明式 Pipeline 语法 `stage` 块的内容。如上所述，在脚本化管道语法中，阶段块是可选的。
+
+4. `steps` 是声明式管道特有的语法，描述了在这个 `stage` 要运行的步骤；
+
+5. `sh` 是一个 Pipeline [步骤](#步骤)（由 [Pipeline: 节点与过程插件](https://plugins.jenkins.io/workflow-durable-task-step) 提供），执行给定的 shell 命令；
+
+6. `junit` 是另一个 Pipeline [步骤](#步骤)（由 [JUnit 插件](https://plugins.jenkins.io/junit) 提供），用于汇总测试报告；
+
+
+请在 [管道语法](./pipeline/syntax.md) 页面阅读更多有个管道语法的内容。

@@ -524,7 +524,7 @@ cloudbeesdevs 上与我们联系
 
 > *Blue Ocean 的现状*
 >
-> Blue Ocean 将不再接收过多的功能更新。Blue Ocean 将继续提供易于使用的管道可视化，但他不会得到进一步增强。他只会在重大安全问题或功能缺陷方面得到选择性的更新。
+> Blue Ocean 将不再接收更多的功能更新。Blue Ocean 将继续提供易于使用的管道可视化，但他不会得到进一步增强。他只会在重大安全问题或功能缺陷方面得到选择性的更新。
 >
 > [Pipeline 语法片段生成器](#Pipeline-语法片段生成器) 会在用户以参数定义 Pipeline 步骤时为他们提供帮助。他是创建 Jenkins 管道的首选工具，因为他为咱们 Jenkins 控制器中的管道步骤提供在线帮助。他会使用安装在咱们 Jenkins 控制器上的插件来生成 Pipeline 语法。关于所有可用的 Pipeline 步骤的信息，请参考 [Pipeline 步骤参考页](./steps.md)。
 

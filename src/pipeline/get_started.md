@@ -595,7 +595,7 @@ node { // 3
 
 ![经典 UI 中的示例 Pipeline](../images/example-pipeline-in-classic-ui.png)
 
-    **注意**：咱们也可以从 **脚本** 文本区右上方的 **try sample Pipeline** 选项中选择预制的 **脚本化** 流水线实例。请注意，这个字段中没有预制的声明式 Pipeline 的示例。
+**注意**：咱们也可以从 **脚本** 文本区右上方的 **try sample Pipeline** 选项中选择预制的 **脚本化** 流水线实例。请注意，这个字段中没有预制的声明式 Pipeline 的示例。
 
 8. 点击 **保存** 打开这个 Pipeline 的项目/条目视图页面；
 

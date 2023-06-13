@@ -633,3 +633,5 @@ node { // 3
 - 在 **SCM** 字段，选择包含咱们 `Jenkinsfile` 的代码仓库的源代码控制系统的类型；
 
 -
+
+> 在使用 `gnu4cn/jenkins_book_zh` 做测试 Pipeline 时，发现要设置 “仪表板” > “系统管理” > “全局安全配置” > “Git Host Key Verification Configuration” > “Host Key Verification Strategy” 为 “No verification”，然后在配置 Pipeline 时，选择之前添加的全局密钥 `xfoss-com` 既可。

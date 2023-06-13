@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage {
+        stage('测试构建') {
             steps {
                 sh '/home/jenkins/.cargo/bin/mdbook --version'
             }

@@ -618,6 +618,6 @@ node { // 3
 - 通过经典用户界面定义 Pipeline，对于测试 Pipeline 代码片段，或处理简单的 Pipeline 或不需要从代码仓库检出/克隆源代码的 Pipeline 来说是很方便的。如上所述，与咱们通过 Blue Ocean（ [上文](#经由-blue-ocean) ）或在源代码控制系统（ [下文](#在-SCM-中) ）中定义的 `Jenkinsfile` 不同，输入到 Pipeline 项目 **脚本** 文本区的 `Jenkinsfile` 由 Jenkins 本身在 Jenkins 主目录内存储。因此，为了对咱们 Pipeline 有更大的控制力和灵活性，特别是对于在源代码控制系统中可能会越来越复杂的项目，建议咱们使用 [Blue Ocean](#经由-blue-ocean) 或 [源代码控制系统](#在-SCM-中) 来定义咱们的 `Jenkinsfile`。
 
 
-# 在 SCM 中
+### 在 SCM 中
 
 

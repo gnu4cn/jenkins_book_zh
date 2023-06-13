@@ -587,4 +587,37 @@ node { // 3
 ```
 </details>
 
+1). `agent` 指示 Jenkins 为整个管道分配一个执行器（在 Jenkins 环境中任何可用的代理/节点上）和工作空间；
+
+2). `echo` 在控制台输出中写下简单的字符串；
+
+3). `node` 有效地完成与 `agent` 同样的事情（上文）。
+
+![经典 UI 中的示例 Pipeline](../images/example-pipeline-in-classic-ui.png)
+
+    **注意**：咱们也可以从 **脚本** 文本区右上方的 **try sample Pipeline** 选项中选择预制的 **脚本化** 流水线实例。请注意，这个字段中没有预制的声明式 Pipeline 的示例。
+
+8. 点击 **保存** 打开这个 Pipeline 的项目/条目视图页面；
+
+9. 在此页面上，点击左侧的 **立即构建** 运行这个 Pipeline。
+
+![经典 UI 中构建项目页面上的左侧菜单栏](../images/classic-ui-left-column-on-item.png)
+
+10. 在左边的 **Build History** 下，点击 **#1** 来访问这个特定 Pipeline 运行的细节；
+
+11. 点击 **Console Output**，查看这个 Pipeline 运行的全部输出。下面的输出显示咱们管道的成功运行。
+
+
+![`Hello world` 的控制台输出](../images/hello-world-console-output.png)
+
+
+**注意**：
+
+- 咱们也可以通过点击构建号（如 **#1**）的上下文菜单，直接从仪表板上访问控制台输出；
+
+- 通过经典用户界面定义 Pipeline，对于测试 Pipeline 代码片段，或处理简单的 Pipeline 或不需要从代码仓库检出/克隆源代码的 Pipeline 来说是很方便的。如上所述，与咱们通过 Blue Ocean（ [上文](#经由-blue-ocean) ）或在源代码控制系统（ [下文](#在-SCM-中) ）中定义的 `Jenkinsfile` 不同，输入到 Pipeline 项目 **脚本** 文本区的 `Jenkinsfile` 由 Jenkins 本身在 Jenkins 主目录内存储。因此，为了对咱们 Pipeline 有更大的控制力和灵活性，特别是对于在源代码控制系统中可能会越来越复杂的项目，建议咱们使用 [Blue Ocean](#经由-blue-ocean) 或 [源代码控制系统](#在-SCM-中) 来定义咱们的 `Jenkinsfile`。
+
+
+# 在 SCM 中
+
 

@@ -575,7 +575,7 @@ pipeline {
 ```
 
 <details>
-    <summary></summary>
+    <summary>切换脚本化 Pipeline</summary>
 
 ```groovy
 // Jenkinsfile （脚本化 Pipeline）

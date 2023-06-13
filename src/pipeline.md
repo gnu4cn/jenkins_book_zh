@@ -779,7 +779,7 @@ pipeline { // 1
 ```
 
 <details>
-    <summary>切换脚本化管道</summary>
+    <summary>切换脚本化 Pipeline</summary>
 
 ```groovy
 node { // 5

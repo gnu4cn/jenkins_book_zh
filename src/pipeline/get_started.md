@@ -542,4 +542,49 @@ cloudbeesdevs 上与我们联系
 
 ![经典 UI 的左侧菜单栏](../images/classic-ui-left-column.png)
 
+3. 在 **输入一个任务名称** 表单字段，为咱们新管道项目指定名称；
+
+    **注意**：Jenkins 会使用这个项目名称在磁盘上创建目录。建议避免在项目名称中使用空格，因为这样做可能会暴露出脚本中不能正确处理目录路径中空格的错误。
+
+4. 向下滚动并点击 **流水线**，然后在页面末尾点击 **确定**，打开管道配置页面（其 **General** 标签页会被选中）；
+
+![新构建项目的创建](../images/new-item-creation.png)
+
+5. 点击页面左侧的 **流水线** 分页标签，以滚动到 **流水线** 部分；
+
+    **注意**：如果咱们是在源码控制系统中定义咱们的 `Jenkinsfile`，请按照下面 [在 SCM 中](#在-SCM-中) 的说明。
+
+6. 在 **流水线** 小节，请确保 **定义** 字段表明是 **Pipeline script** 选项；
+
+7. 将咱们的 Pipeline 代码输入到那个 **脚本** 的表单文本区；
+
+例如，请复制下面的声明式示例 Pipeline 代码（*`Jenkinsfile（...）`* 标题以下的）或其脚本化版本的等价代码，并将其粘贴到 **脚本** 表单文本区。(下面的声明式示例在本程序的其余部分都会用到）。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any // 1
+    stages {
+        stage('Stage 1') {
+            steps {
+                echo 'Hello world!' // 2
+            }
+        }
+    }
+}
+```
+
+<details>
+    <summary></summary>
+
+```groovy
+// Jenkinsfile （脚本化 Pipeline）
+node { // 3
+    stage('Stage 1') {
+        echo 'Hello World' // 2
+    }
+}
+```
+</details>
+
 

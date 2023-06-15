@@ -626,12 +626,61 @@ node { // 3
 
 要配置咱们的 Pipeline 项目使用来自源代码控制系统的 `Jenkinsfile`：
 
-- 按照上面的程序，[通过经典用户界面](#经由经典-ui) 定义咱们的管道，直到咱们到达第五步（访问流水线配置页面上的 **流水线** 部分）；
+1. 按照上面的程序，[通过经典用户界面](#经由经典-ui) 定义咱们的管道，直到咱们到达第五步（访问流水线配置页面上的 **流水线** 部分）；
 
-- 在 **定义** 字段，请选择 **Pipeline script from SCM** 选项；
+2. 在 **定义** 字段，请选择 **Pipeline script from SCM** 选项；
 
-- 在 **SCM** 字段，选择包含咱们 `Jenkinsfile` 的代码仓库的源代码控制系统的类型；
+3. 在 **SCM** 字段，选择包含咱们 `Jenkinsfile` 的代码仓库的源代码控制系统的类型；
 
--
+4. 完成特定于咱们存储库源代码控制系统的字段;
+
+**提示**：如果咱们不确定要为某个给定字段指定什么值，请点击其右侧的 **？** 图标以获得更多信息。
+
+![来自源代码控制系统的 Pipeline 脚本](../images/pipeline_script_from_scm.png)
+
+5. 在 **脚本路径** 字段，指定你的 `Jenkinsfile` 的位置（及名称）。这个位置是 Jenkins 检出/克隆包含咱们的 `Jenkinsfile` 的版本库位置，他应该与版本库的文件结构一致。这个字段的默认值假定咱们的 `Jenkinsfile` 被命名为 “Jenkinsfile” 并位于版本库的根部。
+
+
+只要 Pipeline 被配置了 SCM 轮询触发器，那么当咱们更新指定的存储库时，就会触发新的构建。
+
+> 由于流水线代码（特别是脚本化流水线）是用类似 Groovy 的语法编写的，如果咱们的 IDE 没有正确地语法突出显示咱们的 `Jenkinsfile`，请尝试在 `Jenkinsfile` 的顶部插入行 `#!/usr/bin/env groovy`，footnotegroovy_shebang:[[Shebang line (Groovy syntax)](http://groovy-lang.org/syntax.html#_shebang_line)] 就会纠正这个问题。
 
 > 在使用 `gnu4cn/jenkins_book_zh` 做测试 Pipeline 时，发现要设置 “仪表板” > “系统管理” > “全局安全配置” > “Git Host Key Verification Configuration” > “Host Key Verification Strategy” 为 “No verification”，然后在配置 Pipeline 时，选择之前添加的全局密钥 `xfoss-com` 既可。
+
+
+## 内建文档
+
+Pipeline 具有内建文档特性，使得创建各种不同复杂程度的 Pipeline 更加容易。这种内建文档是根据 Jenkins 实例中安装的插件自动生成和更新的。
+
+内建文档可以全局性地在 `${YOUR_JENKINS_URL}/pipeline-syntax` 中找到。同样的文档也在任何配置好的 Pipeline 项目边栏中作为 **流水线语法** 而被链接出来。
+
+![经典 UI 构建项目左侧栏](../images/classic-ui-left-column-on-item.png)
+
+
+### 代码片段生成器
+
+**Snippet Generator**
+
+内建的 “代码片段生成器” 实用工具有助于为单个步骤创建少量的代码，发现那些由插件所提供的新步骤，或为特定步骤试验不同的参数。
+
+代码片段生成器是由 Jenkins 实例可用步骤列表动态产生出的。可用步骤的数量取决于所安装的插件，这些插件会显式暴露在 Pipeline 中使用的步骤。
+
+要用代码片段生成器生成一个步骤片段：
+
+1. 从某个已配置好的 Pipeline 导航至 **流水线语法** 链接，或在 `${YOUR_JENKINS_URL}/pipeline-syntax` 处；
+
+2. 在 **示例步骤** 下拉菜单中选择所需的步骤；
+
+3. 使用 **示例步骤** 下拉菜单下面动态产生出的区域来配置所选步骤；
+
+4. 点击 "生成流水线脚本"，创建一个 Pipeline 代码片段，可将其复制并粘贴到流水线中。
+
+![代码片段生成器](../images/snippet-generator.png)
+
+要访问有关所选步骤的其他信息和/或文档，请点击帮助图标（**？**）。
+
+### 全局变量参考
+
+**Global Variable Reference**
+
+

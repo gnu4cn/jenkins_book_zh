@@ -80,4 +80,76 @@ node {
 
 ### 构建
 
+对于许多项目来说，Pipeline 中 “工作” 的开始是 “构建” 阶段。通常情况下，流水线的这一阶段将是源代码组装、编译或打包的地方。`Jenkinsfile` **不** 是既有构建工具，如 GNU/Make、Maven、Gradle 等的替代品，而是可以被视为一个胶水层，a glue layer，将项目开发生命周期的多个阶段（构建、测试、部署等）结合在一起。
 
+Jenkins 有可以调用几乎所有通用构建工具的许多插件，但下面这个例子将简单地从 shell 步骤（`sh`）中调用 `make`。`sh` 步骤假定系统是基于 Unix/Linux 的，对于基于 Windows 的系统，可以使用 `bat` 来代替。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make' // 1
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true // 2
+            }
+        }
+    }
+}
+```
+
+<details>
+    <summary>切换到脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+node {
+    stage('Build') {
+        sh 'make' // 1
+        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true // 2
+    }
+}
+```
+</details>
+
+1. `sh` 步骤调用 `make` 命令，且只有当该命令返回的退出代码为零时才会继续。任何非零的退出代码都将导致 Pipeline 失败；
+
+2. `archiveArtifacts` 会捕获所构建出的匹配包含模式 ( `**/target/*.jar` ) 的文件，并将他们保存到 Jenkins 控制器以供后面的索取。
+
+> 归档成品（`archiveArtifacts`）不能替代使用外部成品库，如 Artifactory 或 Nexus，只应考虑用于基本报告和文件存档。
+
+
+### 测试
+
+运行自动化测试是任何成功的持续交付过程的一个关键组成部分。因此，Jenkins 有着一些由一些插件所提供得测试记录、报告和可视化设施。从根本上说，当出现测试失败时，让 Jenkins 记录失败的情况，以便在 Web UI 中进行报告和可视化，是非常有用的。下面的例子使用了由 JUnit 插件提供的 `junit` 步骤。
+
+在下面的例子中，如果测试失败，这个 Pipeline 就被标记为 "不稳定，unstable"，在 Web UI 中用一个黄色的球表示。基于所记录的测试报告，Jenkins 还可以提供历史趋势分析与可视化。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+                /* `make check` returns non-zero on test failures,
+                * using `true` to allow the Pipeline to continue nonetheless
+                */
+                sh 'make check || true'
+                junit '**/target/*.xml'
+            }
+        }
+    }
+}
+```
+
+<details>
+    <summary>切换至脚本化 Pipeline</summary>
+
+
+</details>

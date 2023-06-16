@@ -719,3 +719,26 @@ Pipeline 中默认提供的变量有：
 在多分支项目构建中表示 SCM 的配置。使用 `checkout scm` 来检出与 Jenkinsfile 相匹配的那些源代码。
 
 在用 *Pipeline script from SCM* 配置的独立项目中，咱们也可以使用这个变量，不过在这种情况下，签出的只是分支中的最新版本，可能比加载 Pipeline 的版本还要新。
+
+下面这个视频讲了在 Jenkins Pipeline 中使用 `currentBuild` 变量。
+
+[![在 Jenkinsfile 中使用 `currentBuild` 环境变量的几种方式：从简单到复杂](https://img.youtube.com/vi/gcUORgHuna4/0.jpg)](https://www.youtube.com/watch?v=gcUORgHuna4)
+
+
+视频内容总结：
+
+- 可以通过 `echo "Build number is ${currentBuild.number}"` 在以 groovy 作为语法的 `Jenkinsfile` 中使用环境变量（其中 `${}` 属于 groovy 中与其他语言一样的字符串插值语法）；
+
+- 可以通过 `currentBuild.result = 'FAILURE'` 这种方式，修改/设置 `currentBuild` 环境变量，并通过 `echo currentBuild.result` 访问到该环境变量；
+
+- 通过 `@Library("shared-library")` 这样的 groory 导入库语法，编写更复杂的 Pipeline Jenkinsfile 时，可在库中使用 `currentBuild` 环境变量 `currentBuild.rawBuild`，使用该变量的 `addAction` 方法，编写咱们定制的方法 `addSidebarLink`，从而实现更复杂的构建流水线；
+
+- 在第 3 步的基础上，通过 groovy 的 `def` 关键字定义出一些变量，并结合 `docker` 命令与 DockerHub 登录凭据登录 DH，并将 `docker build` 出的镜像 `push` 到 DH，然后返回一个 DH 上该镜像的链接
+
+> 其中：
+>
+> 1. `sh` 步骤多行的情形，此时用 `"""` 把多行的 SH 脚本包围起来即可；
+>
+> 2. `sh` 不仅是个步骤，也可以作为函数使用，如 `sh(returnStdout: true, script:"docker push ${imageTag} | grep sha256 | awk -F':' '{print \$4}' | awk '{print \$1}'")`。
+
+

@@ -278,7 +278,7 @@ Pipeline 中默认提供的变量有：
 **Declarative Directive Generator**
 
 
-虽然 “代码片段生成器，Snippet Generator” 有助于为脚本化 Pipeline 或声明式 Pipeline 中的 `stage` 里的 `steps` 代码块生成步骤，但他并不包括用于定义声明式 Pipeline 的 [小节，sections](../pipeline/syntax.md#声明式小节) 和 [指令，directives](../pipeline/syntax.md#声明式指令)。“声明式指令生成器” 工具可以帮助解决这个问题。与 [Snippet Generator](#代码片段生成器) 类似，Directive Generator 允许咱们选择某个声明式指令，在一个表单中对其进行配置，并为该指令生成配置，然后咱们就可以在咱们的声明式 Pipeline 中使用。
+虽然 “代码片段生成器，Snippet Generator” 有助于为脚本化 Pipeline 或声明式 Pipeline 中的 `stage` 里的 `steps` 代码块生成步骤，但他并不包括用于定义声明式 Pipeline 的 [小节，sections](./syntax.md#声明式小节) 和 [指令，directives](./syntax.md#声明式指令)。“声明式指令生成器” 工具可以帮助解决这个问题。与 [Snippet Generator](#代码片段生成器) 类似，Directive Generator 允许咱们选择某个声明式指令，在一个表单中对其进行配置，并为该指令生成配置，然后咱们就可以在咱们的声明式 Pipeline 中使用。
 
 使用声明式指令生成器来生成声明式指令：
 
@@ -300,3 +300,16 @@ stage('Stage 1') {
     }
 }
 ```
+
+## 延伸阅读
+
+这一节仅仅触及了用 Jenkins 流水线可以做什么的表面，但为了咱们开始试验一个测试 Jenkins 实例，应该提供足够的基础。
+
+在下一小节 [Jenkinsfile](./jenkinsfile.md) 中，伴随实现成功的、真实世界的 Jenkins 流水线的一些模式，咱们将讨论到更多的 Pipeline 步骤。
+
+
+### 额外资源
+
+- [Pipeline 步骤参考](../pipeline_steps_ref.md)，包含 Jenkins 更新中心分发插件所提供的所有步骤；
+
+- [Pipeline 示例集](../pipeline_examples.md)，一个由社区策划的可复制 Pipeline 示例的集合。

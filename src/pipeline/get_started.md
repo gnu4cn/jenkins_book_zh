@@ -679,8 +679,43 @@ Pipeline 具有内建文档特性，使得创建各种不同复杂程度的 Pipe
 
 要访问有关所选步骤的其他信息和/或文档，请点击帮助图标（**？**）。
 
-### 全局变量引用
+### 全局变量参考
 
 **Global Variable Reference**
 
+除了仅显示步骤的 Snippet Generator 之外，Pipeline 还提供了一个内建的 “ **全局变量参考，Global Variable Reference** ”。与代码片段生成器一样，他也由插件动态产生。然而，与代码片段生成器不同的是，全局变量参考仅包含由 Pipeline 或插件所提供变量的文档，这些变量可用于流水线。
 
+全局变量在 Pipeline 中直接可用，而不是作为步骤。他们暴露了可在咱们 Pipeline 脚本中访问的方法与变量。
+
+Pipeline 中默认提供的变量有：
+
+#### `env`
+
+暴露环境变量，例如： `env.PATH` 或 `env.BUILD_ID`。请参考 `${YOUR_JENKINS_URL}/pipeline-syntax/globals#env` 的内建全局变量参考，以获得 Pipeline 中可用的完整、最新环境变量列表。
+
+
+#### `params`
+
+将为管道定义的所有参数公开为只读 [映射，Map](http://groovy-lang.org/syntax.html#_maps)，例如：`params.MY_PARAM_NAME`。
+
+
+#### `currentBuild`
+
+可用于发现有关当前执行的 Pipeline 的信息，其属性包括 `currentBuild.result`、`currentBuild.displayName` 等。请参考 `${YOUR_JENKINS_URL}/pipeline-syntax/globals#currentBuild` 的内置全局变量参考，以获得 `currentBuild` 的完整和最新的属性列表。
+
+
+#### `docker`
+
+`docker` 变量提供了从 Pipeline 脚本方便地访问 Docker 相关功能的方法。详情请参考：`${YOUR_JENKINS_URL}/pipeline-syntax/globals#docker`。
+
+
+#### `pipeline`
+
+`pipeline` 步骤允许咱们以更有条理的方式定义咱们的管线。更多信息请见 [wiki](https://github.com/jenkinsci/pipeline-model-definition-plugin/wiki/Getting-Started)。
+
+
+#### `scm`
+
+在多分支项目构建中表示 SCM 的配置。使用 `checkout scm` 来检出与 Jenkinsfile 相匹配的那些源代码。
+
+在用 *Pipeline script from SCM* 配置的独立项目中，咱们也可以使用这个变量，不过在这种情况下，签出的只是分支中的最新版本，可能比加载 Pipeline 的版本还要新。

@@ -724,7 +724,6 @@ Pipeline 中默认提供的变量有：
 
 [![在 Jenkinsfile 中使用 `currentBuild` 环境变量的几种方式：从简单到复杂](https://img.youtube.com/vi/gcUORgHuna4/0.jpg)](https://www.youtube.com/watch?v=gcUORgHuna4)
 
-[![在 Jenkinsfile 中使用 `currentBuild` 环境变量的几种方式：从简单到复杂](https://img.youtube.com/vi/4KghHJEz5no/0.jpg)](https://www.youtube.com/watch?v=4KghHJEz5no)
 
 视频内容总结：
 

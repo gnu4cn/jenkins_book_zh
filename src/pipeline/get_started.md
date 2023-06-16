@@ -273,3 +273,30 @@ Pipeline 中默认提供的变量有：
 > 2. `sh` 不仅是个步骤，也可以作为函数使用，如 `sh(returnStdout: true, script:"docker push ${imageTag} | grep sha256 | awk -F':' '{print \$4}' | awk '{print \$1}'")`。
 
 
+### 声明式指令生成器
+
+**Declarative Directive Generator**
+
+
+虽然 “代码片段生成器，Snippet Generator” 有助于为脚本化 Pipeline 或声明式 Pipeline 中的 `stage` 里的 `steps` 代码块生成步骤，但他并不包括用于定义声明式 Pipeline 的 [小节，sections](../pipeline/syntax.md#声明式小节) 和 [指令，directives](../pipeline/syntax.md#声明式指令)。“声明式指令生成器” 工具可以帮助解决这个问题。与 [Snippet Generator](#代码片段生成器) 类似，Directive Generator 允许咱们选择某个声明式指令，在一个表单中对其进行配置，并为该指令生成配置，然后咱们就可以在咱们的声明式 Pipeline 中使用。
+
+使用声明式指令生成器来生成声明式指令：
+
+1. 从某个配置好的管道中导航到 **流水线语法** 链接（前面已提到过），然后点击左侧边栏的 **Declarative Directive Generator**，或者直接进入 `${YOUR_JENKINS_URL}/directive-generator`；
+
+2. 在下拉菜单中选择所需的指令；
+
+3. 使用下拉菜单下面动态产生的区域来配置所选指令；
+
+4. 单击 **Generate Declarative Directive** 来创建要复制到咱们 Pipeline 的该指令配置。
+
+指令生成器可以为嵌套的指令生成配置，例如 `when` 指令中的条件，但他不能生成 Pipeline 的步骤。对于包含步骤的指令内容，如 `steps` 内的 `step` 或 `post` 内的条件（如 `always` 或 `failure`），指令生成器会添加一个占位符注释来代替。咱们仍需手工向咱们的 Pipeline 添加步骤。
+
+```groovy
+// Jenkinsfile（声明式 Pipeline）
+stage('Stage 1') {
+    steps {
+        // One or more steps need to be included within the steps block.
+    }
+}
+```

@@ -175,4 +175,45 @@ node {
 
 ### 部署
 
+部署可以意味着各种步骤，这取决于项目或组织的要求，可能是从发布构建的成品到 Artifactory 服务器，到将代码推送到生产系统等的任何东西。
 
+在示例 Pipeline 的这个阶段，“构建 Build” 和 “测试 Test” 阶段都已成功执行。实质上，“部署 Deploy” 阶段将只在假设前几个阶段成功完成的情况下执行，否则这个 Pipeline 将提前退出。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Deploy') {
+            when {
+              expression {
+                currentBuild.result == null || currentBuild.result == 'SUCCESS'
+              }
+            }
+            steps {
+                sh 'make publish'
+            }
+        }
+    }
+}
+```
+
+<details>
+    <summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+node {
+    /* .. snip .. */
+    stage('Deploy') {
+        if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
+            sh 'make publish'
+        }
+    }
+    /* .. snip .. */
+}
+```
+</details>

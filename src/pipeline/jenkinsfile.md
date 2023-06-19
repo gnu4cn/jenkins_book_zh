@@ -190,7 +190,7 @@ pipeline {
         stage('Deploy') {
             when {
               expression {
-                currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                currentBuild.result == null || currentBuild.result == 'SUCCESS' // 1
               }
             }
             steps {
@@ -209,7 +209,7 @@ pipeline {
 node {
     /* .. snip .. */
     stage('Deploy') {
-        if (currentBuild.result == null || currentBuild.result == 'SUCCESS') {
+        if (currentBuild.result == null || currentBuild.result == 'SUCCESS') { // 1
             sh 'make publish'
         }
     }
@@ -217,3 +217,52 @@ node {
 }
 ```
 </details>
+
+1. 访问 `currentBuild.result` 变量允许 Pipeline 确定是否有任何测试失败。在这种情况下，该值将是 `UNSTABLE`。
+
+假设示例 Jenkins Pipeline 中的一切都已成功执行，那么每个成功的 Pipeline 运行都将在 Jenkins 中存档相关的构建成品、报告测试结果以及完整的控制台输出。
+
+> 脚本管道可以包括条件测试（如上所示）、循环、`try`/`catch`/`finally` 代码块并甚至是函数。下一节将更详细地介绍这种高级的脚本管道语法。
+
+
+## 使用咱们的 `Jenkinsfile`
+
+**Working with your `Jenkinsfile`**
+
+接下来的小节提供了处理以下内容的详细信息：
+
+- 咱们 `Jenkinsfile` 中专门的流水线语法，以及
+
+- 构建咱们的应用程序或 Pipelline 项目所必需的一些流水线语法特性及功能。
+
+
+### 使用环境变量
+
+**Using environmental variables**
+
+Jenkins Pipeline 通过全局变量 `env` 暴露出环境变量，该变量可在 `Jenkinsfile` 的任何地方使用。在 Jenkins 流水线内可访问的环境变量的完整列表记录在 `${YOUR_JENKINS_URL}/pipeline-syntax/globals#env` 中，包括：
+
+
+#### `BUILD_ID`
+
+当前构建的 ID，与在 Jenkins 1.597 以上版本中创建的构建的 `BUILD_NUMBER` 相同。
+
+
+#### `BUILD_NUMBER`
+
+当前构建的编号，如 "153"。
+
+
+#### `BUILD_TAG`
+
+`jenkins-${JOB_NAME}-${BUILD_NUMBER}` 的字符串。便于放在资源文件、`.jar` 文件等中，以易于识别。
+
+
+#### `BUILD_URL`
+
+可以找到这次构建结果的 URL（例如 `http://buildserver/jenkins/job/MyJobName/17/`）。
+
+
+#### `EXECUTOR_NUMBER`
+
+识别当前执行器，the current executor（在同一台机器的执行器中）执行此次构建的唯一编号。这就是咱们在 "build executor status "中看到的数字，只不过这个数字是从0开始的，而不是1。

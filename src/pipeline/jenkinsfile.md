@@ -140,8 +140,8 @@ pipeline {
                 /* `make check` returns non-zero on test failures,
                 * using `true` to allow the Pipeline to continue nonetheless
                 */
-                sh 'make check || true'
-                junit '**/target/*.xml'
+                sh 'make check || true' // 1
+                junit '**/target/*.xml' // 2
             }
         }
     }
@@ -151,5 +151,28 @@ pipeline {
 <details>
     <summary>切换至脚本化 Pipeline</summary>
 
-
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+node {
+    /* .. snip .. */
+    stage('Test') {
+        /* `make check` returns non-zero on test failures,
+         * using `true` to allow the Pipeline to continue nonetheless
+         */
+        sh 'make check || true' // 1
+        junit '**/target/*.xml' // 2
+    }
+    /* .. snip .. */
+}
+```
 </details>
+
+
+1. 使用一个内联的 shell 条件（ `sh 'make check || true'` ）确保 `sh` 步骤总是看到一个零的退出代码，给 `junit` 步骤以机会来捕获和处理测试报告。这方面的替代方法在下面的 [处理失败](#处理失败) 部分有更详细的介绍；
+
+2. `junit` 会捕获并关联符合包含模式（matching the inclusion pattern, `**/target/*.xml`）的 JUnit XML 文件。
+
+
+### 部署
+
+

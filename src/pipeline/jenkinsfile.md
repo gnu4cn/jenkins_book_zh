@@ -377,3 +377,48 @@ node {
 #### 动态地设置环境变量
 
 环境变量可以在运行时设置，可以被 shell 脚本（`sh`）、Windows 批处理脚本（`bat`）和 PowerShell 脚本（ `powerhell`）使用。每个脚本都可以 `returnStatus` 或 `returnStdout`。[关于脚本的更多信息](./nodes_and_processes.md)。
+
+下面是一个使用 `sh`（shell）的声明式管道中的例子，同时有着 `returnStatus` 和 `returnStdout`。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any // 1
+    environment {
+        // Using returnStdout
+        CC = """${sh(
+                returnStdout: true,
+                script: 'echo "clang"'
+            )}""" // 2
+
+        // Using returnStatus
+        EXIT_STATUS = """${sh(
+                returnStatus: true,
+                script: 'exit 1'
+            )}"""
+    }
+    stages {
+        stage('Example') {
+            environment {
+                DEBUG_FLAGS = '-g'
+            }
+            steps {
+                sh 'printenv'
+            }
+        }
+    }
+}
+```
+
+1. 必须在流水线顶层设置一个 `agent`。如果代理被设置为 `agent none`，这将失败；
+
+2. 使用 `returnStdout` 时，尾随空格将附加到返回的字符串。请使用 `.trim()` 删除它。
+
+
+### 处理凭据
+
+[在 Jenkins 中配置的凭证](../usage/using_credentials.md#配置凭据) 可以在流水线中处理，以便立即使用。请在 [使用凭据](../usage/using_credentials.md) 页面阅读更多关于在 Jenkins 中使用凭证的信息。
+
+*Jenkins 中处理凭据的正确方式*
+
+[![Jenkins 流水线中处理凭据的正确方式](https://img.youtube.com/vi/yfjtMIDgmfs/0.jpg)](https://www.youtube.com/watch?v=yfjtMIDgmfs)

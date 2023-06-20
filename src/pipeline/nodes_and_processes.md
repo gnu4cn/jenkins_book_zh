@@ -143,3 +143,14 @@
 - `encoding: String` (可选项)
 
 {{#include ./nodes_and_processes.md:20:36}}
+
+
+## `pwsh`：PowerShell Core 脚本
+
+- `script: String`
+
+执行一个 PowerShell 脚本。允许多行。这个插件支持 PowerShell Core 6+。
+
+{{#include ./nodes_and_processes.md:141}}
+
+{{#include ./nodes_and_processes.md:20:36}}

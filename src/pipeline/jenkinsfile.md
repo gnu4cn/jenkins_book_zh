@@ -480,3 +480,28 @@ pipeline {
 
 
 **用户名与口令**
+
+下面的 Pipeline 代码片断显示了一个为获得用户名与密码凭据，而如何使用环境变量创建 Pipeline 的示例。
+
+在这个示例中，用户名和密码凭据被赋值给环境变量，以便在咱们组织的共同账户或团队中访问 Bitbucket 仓库；这些凭证在 Jenkins 中应以凭证 ID `jenkins-bitbucket-comm-creds` 被配置。
+
+在 `environment` 指令中设置凭据环境变量时：
+
+
+```groovy
+environment {
+    BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds')
+}
+```
+
+这实际上设置了以下三个环境变量：
+
+- `BITBUCKET_COMMON_CREDS` -- 包含用冒号分开的用户名和密码，格式为 `username:password`；
+
+- `BITBUCKET_COMMON_CREDS_USR` -- 仅包含用户名部分的一个额外变量；
+
+- `BITBUCKET_COMMON_CREDS_PSW` -- 仅包含密码部分的一个额外变量。
+
+> 按照惯例，环境变量的名称通常用大写字母指定，各个单词之间用下划线分开。然而，咱们可以使用小写字母指定任何合法的变量名称。请记住，由 `credentials()` 方法（上文）创建的额外环境变量将总是会附加 `_USR` 和 `_PSW`（即，以下划线跟三个大写字母的格式）。
+
+

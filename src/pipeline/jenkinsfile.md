@@ -375,3 +375,5 @@ node {
 
 
 #### 动态地设置环境变量
+
+环境变量可以在运行时设置，可以被 shell 脚本（`sh`）、Windows 批处理脚本（`bat`）和 PowerShell 脚本（ `powerhell`）使用。每个脚本都可以 `returnStatus` 或 `returnStdout`。[关于脚本的更多信息](./nodes_and_processes.md)。

@@ -545,3 +545,8 @@ pipeline {
 为了维护这些凭据的安全性和匿名性，如果作业从管道中显示这些凭据变量的值，则上面秘密文本示例中所描述的同样行为也适用于这些用户名和密码凭据变量类型。
 
 {{#include ./jenkinsfile.md:475}}
+
+2. 在这个流水线示例中，分配给三个 `BITBUCKET_COMMON_CREDS...` 环境变量的凭据只适用于 `Example stage 1`，所以这些凭据变量不能用于这个 `Example stage 2` 的步骤中。然而，如果这个 Pipeline 中的 `environment` 指令被立即移到 `pipeline` 代码块中（就像上面的秘密文本流水线示例那样），那么这些 `BITBUCKET_COMMON_CREDS...` 环境变量就会具有全局作用域，可以在任何阶段的步骤中使用。
+
+
+**秘密文件**

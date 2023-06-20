@@ -430,7 +430,53 @@ pipeline {
 
 **For secret text, usernames and passwords, and secret files**
 
+Jenkins 的声明式 Pipeline 语法有着 `credentials()` 辅助方法（在 [`environment` 指令](./syntax.md#envrionment-指令) 中使用），他支持秘密文本、用户名和密码，以及秘密文件等凭据。如果咱们想处理其他类型的凭据，请参考 [对于其他凭据类型](#对于其他凭据类型) 小节（见下文）。
 
 
+**秘密文本**
+
+下面的流水线代码展示了一个如何使用环境变量创建秘密文本凭据的流水线示例。
+
+在此示例中，两个秘密文本凭证被赋值给了单独的环境变量以访问 Amazon Web Services (AWS)。这些凭据将在 Jenkins 中以其各自的凭据 ID `jenkins-aws-secret-key-id` 和 `jenkins-aws-secret-access-key` 而被配置。
 
 
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent {
+        // Define agent details here
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+    }
+
+    stages {
+        stage('Example stage 1') {
+            steps {
+                // 1
+            }
+        }
+
+        stage('Example stage 2') {
+            steps {
+                // 2
+            }
+        }
+    }
+}
+```
+
+1. 咱们可以在本阶段的步骤中使用语法 `$AWS_ACCESS_KEY_ID` 和 `$AWS_SECRET_ACCESS_KEY`，引用这两个凭据环境变量（定义在此 Pipeline 的 `environment` 指令中）。例如，在这里咱们可以使用分配给这些凭据变量的秘密文本凭据来向 AWS 进行身份验证；
+
+为了维护这些凭据的安全性和匿名性，如果作业在 Pipeline 内显示这些凭证变量的值（例如，`echo $AWS_SECRET_ACCESS_KEY`），Jenkins 只会返回值 "****"，以减少秘密信息被披露到控制台输出和任何日志的风险。凭据 ID 本身的任何敏感信息（如用户名）也会在流水线运行的输出中作为 "****" 返回。
+
+这只是降低了 **意外暴露** 的风险。他并不能防止恶意用户通过其他方式获取凭据值。使用凭据的 Pipeline 也可以披露这些凭据。不要允许不受信任的流水线作业使用受信任的凭证。
+
+2. 在这个流水线示例中，分配给两个 `AWS_...` 环境变量的凭据对整个 Pipeline 来说是全局范围的，所以这些凭据变量也可以在这个阶段的步骤中使用。但是，如果这个 Pipeline 中的 `environment` 指令被移到某个特定阶段（就像下面的用户名和密码流水线示例中的情况），那么这些 `AWS_...` 环境变量将只在该阶段的步骤中起作用。
+
+> 在 Jenkins 凭据中存储静态 AWS 密钥不是很安全。如果咱们可以在 AWS 中运行 Jenkins 本身（至少是 Jenkins 代理），最好是为某台 [计算机](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html) 或 [EKS 服务账户](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) 使用 IAM 角色。也可以使用 [网络身份联盟](https://github.com/jenkinsci/oidc-provider-plugin#accessing-aws)。
+
+
+**用户名与口令**

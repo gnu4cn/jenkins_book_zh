@@ -154,3 +154,35 @@
 {{#include ./nodes_and_processes.md:141}}
 
 {{#include ./nodes_and_processes.md:20:36}}
+
+
+## `sh`: Shell 脚本
+
+
+- `script: String`
+
+运行 Bourne shell 脚本，通常在 Unix 节点上。接受多行。
+
+可以使用解释器选择器，an interpreter selector，例如： `#！/usr/bin/perl`。
+
+否则，系统默认的 shell 将在使用 `-xe` 命令行开关下被运行（咱们可指定 `set +e` 和/或 `set +x` 来禁用这些命令行开关）。
+
+
+{{#include ./nodes_and_processes.md:20:36}}
+
+
+## `ws`：分配工作区
+
+分配一个工作区。请注意，工作区是通过 `node` 步骤自动为咱们分配的。
+
+
+- `dir: String`
+
+在 `node` 步骤中，会自动为咱们分配一个工作区，或者咱们可以通过这个 `ws` 步骤获得一个备用工作空间，但默认情况下，会自动选择位置。(类似于 `AGENT_ROOT/workspace/JOB_NAME@2`。)
+
+
+咱们可以在这里指定某个路径，而该工作区将被锁定。(该路径可以是相对于构建代理根的，也可以是绝对的）。
+
+如果并发构建，concurrent builds，要求相同的工作区，那么一个后缀为 `@2` 的目录可能被锁定。目前没有等待锁定所请求的确切目录的选项；如果咱们需要强制执行这种行为，咱们既可以在 `pwd` 表明咱们得到了一个不同的目录时进行失败处理（`error`），或者咱们可以通过一些其他手段（如 `lock` 步骤）强制顺序执行构建的这一部分。
+
+如果咱们不关心加锁的问题，那么只需使用 `dir` 步骤来改变当前目录。

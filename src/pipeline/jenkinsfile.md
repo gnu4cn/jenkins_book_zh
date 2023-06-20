@@ -422,3 +422,15 @@ pipeline {
 *Jenkins 中处理凭据的正确方式*
 
 [![Jenkins 流水线中处理凭据的正确方式](https://img.youtube.com/vi/yfjtMIDgmfs/0.jpg)](https://www.youtube.com/watch?v=yfjtMIDgmfs)
+
+视频总结：由于凭据涉及到机密信息，所以为了更好的安全性，应使用单引号的方式使用凭据，而不是使用 Groovy 的双引号插值方式使用凭据。
+
+
+#### 对于秘文、用户名与口令及秘密文件
+
+**For secret text, usernames and passwords, and secret files**
+
+
+
+
+

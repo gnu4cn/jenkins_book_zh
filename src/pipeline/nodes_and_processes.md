@@ -109,4 +109,37 @@
 - 空的表达式将始终计算为 **真，`true`**，而匹配所有代理。
 
 
+**示例**
 
+`master`
+
+这个代码块只能在 Jenkins 的内建节点上执行。
+
+
+`linux-machine-42`
+
+此代码块只能在名为 `linux-machine-42` 的代理上执行（或在任何恰好具有名为 `linux-machine-42` 的标签的机器上执行）。
+
+
+`windows && jdk9`
+
+该代码块只能在安装了第 9 版 Java 开发包的任何 Windows 代理上执行（假设安装了 JDK 9 的代理已被赋予 `jdk9` 标签）。
+
+
+`postgres && !vm && (linux || freebsd)`
+
+这个代码块只能在 Linux 或 FreeBSD 代理上执行，只要他们不是虚拟机，并且安装了 PostgreSQL（假设每个代理都有适当的标签 -- 特别是，在虚拟机中运行的每个代理必须有 `vm` 标签，才能使这个例子按预期工作。）
+
+
+## `powerhell`：Windows Powershell 脚本
+
+
+- `script: String`
+
+执行一个 Windows PowerShell 脚本（版本 3 或更高）。允许多行。
+
+注意：请当心 [Windows PowerShell 和 PowerShell Core 之间的区别](https://docs.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell?view=powershell-7.2)，要检查咱们代理上有着哪一个。
+
+- `encoding: String` (可选项)
+
+{{#include ./nodes_and_processes.md:20:36}}

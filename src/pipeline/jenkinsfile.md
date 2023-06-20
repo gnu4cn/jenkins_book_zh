@@ -504,4 +504,44 @@ environment {
 
 > 按照惯例，环境变量的名称通常用大写字母指定，各个单词之间用下划线分开。然而，咱们可以使用小写字母指定任何合法的变量名称。请记住，由 `credentials()` 方法（上文）创建的额外环境变量将总是会附加 `_USR` 和 `_PSW`（即，以下划线跟三个大写字母的格式）。
 
+下面的代码片断显示了该 Pipeline 示例的全部内容：
 
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent {
+        // Define agent details here
+    }
+
+    stages {
+        stage('Example stage 1') {
+            environment {
+                BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds')
+            }
+            steps {
+                // 1
+            }
+        }
+
+        stage('Example stage 2') {
+            steps {
+                // 2
+            }
+        }
+    }
+}
+```
+
+以下凭据环境变量（在此 Pipeline 的 `environment` 指令中定义）在这个阶段的步骤中可用，可使用下面的语法来引用：
+
+- `$BITBUCKET_COMMON_CREDS`
+
+- `$BITBUCKET_COMMON_CREDS_USR`
+
+- `$BITBUCKET_COMMON_CREDS_PSW`
+
+1. 例如，在这里咱们可以使用分配给这些凭据变量的用户名和密码向 Bitbucket 进行身份验证。
+
+为了维护这些凭据的安全性和匿名性，如果作业从管道中显示这些凭据变量的值，则上面秘密文本示例中所描述的同样行为也适用于这些用户名和密码凭据变量类型。
+
+{{#include ./jenkinsfile.md:475}}

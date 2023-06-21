@@ -800,4 +800,47 @@ pipeline {
 
 > **重要提示**：Groovy 字符串插值可以通过特殊字符将恶意命令注入命令解释器。
 
+另一个要注意的问题，对用户控制的变量使用 Groovy 字符串插值，并将其参数传递给命令解释器的步骤，如 `sh`、`bat`、`powershell` 或 `pwsh` 步骤，会导致类似于 SQL 注入的问题。当用户控制的变量（一般是环境变量，通常是传递给构建的参数）包含特殊字符（如 `/\ $ & % ^ > < | ; `）被传递到使用 Groovy 插值的 `sh`、`bat`、`powershell` 或 `pwsh` 步骤时，就会发生这种情况。下面是个简单的示例：
 
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+  agent any
+
+  parameters {
+    string(name: 'STATEMENT', defaultValue: 'hello; ls /', description: 'What should I say?')
+  }
+
+  stages {
+    stage('Example') {
+      steps {
+        /* WRONG! */
+        sh("echo ${STATEMENT}")
+      }
+    }
+  }
+}
+```
+
+在此示例中，`sh` 步骤的参数会由 Groovy 计算出来，`STATEMENT` 会被直接插在参数中，就好像 `sh('echo hello; ls /')` 已经写在流水线中一样。当这在代理上被处理时，其不是回复出，echoing， `hello; ls /` 的值，而是将回复出 `hello` 然后继续列出整个代理的根目录。任何能够控制这种步骤所插入的变量的用户，都能够使 `sh` 步骤在代理上运行任意代码。为了避免这个问题，请确保引用了参数或其他用户控制环境变量的 `sh` 或 `bat` 等步骤要使用单引号，以避免 Groovy 插值。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+  agent any
+
+  parameters {
+    string(name: 'STATEMENT', defaultValue: 'hello; ls /', description: 'What should I say?')
+  }
+
+  stages {
+    stage('Example') {
+      steps {
+        /* CORRECT */
+        sh('echo ${STATEMENT}')
+      }
+    }
+  }
+}
+```

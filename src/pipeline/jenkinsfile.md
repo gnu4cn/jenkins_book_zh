@@ -588,4 +588,91 @@ pipeline {
 
 **For other credentials types**
 
+如果咱们需要在流水线中设置除秘密文本、用户名和密码或秘密文件（上文）以外的任何凭据 -- 即 SSH 密钥或证书等，那么请使用 Jenkins 的 **代码片段生成器，Snippet Generator** 功能，咱们可以通过 Jenkins 经典用户界面访问他。
+
+要访问咱们流水线项目/条目的代码片段生成器：
+
+1. 从 Jenkins 主页（即 Jenkins 经典用户界面的仪表板），点击咱们的流水线项目/条目的名称；
+
+2. 在左边，点击 **流水线语法**，确保 **片段生成器** 的链接在左上方以粗体显示；(如果没有，请点击其链接）
+
+3. 在 **示例步骤** 字段，选择 **withCredentials： Bind credentials to variables**；
+
+4. 在 **绑定** 项下，点击 **新增** 并从下拉菜单中选择：
+
+    + **SSH User Private Key** - 处理 [SSH 公/私钥对凭据](http://www.snailbook.com/protocols.html)，咱们可以从中指定：
+        - **Key 文件变量** - 将被绑定到这些凭据的环境变量名字。Jenkins 实际上会给这个临时变量分配在 SSH 公/私钥对认证过程中所需私钥文件的安全位置；
+        - **密码变量，Passphrase Variable**（可选项） - 将绑定到与 SSH 公/私钥对相关 [密码，passphrase](https://tools.ietf.org/html/rfc4251#section-9.4.4) 的环境变量名字；
+        - **用户名变量**（可选项） - 将绑定到与 SSH 公/私钥对相关用户名的环境变量名字；
+        - **凭据** - 选择存储在 Jenkins 中的 SSH 公/私钥凭据。这个字段的值为凭据的 ID，Jenkins 将其写到生成的代码片段中。
+
+
+    SSH 用户私钥凭据代码片段示例：
+
+    ```groovy
+    withCredentials([sshUserPrivateKey(credentialsId: 'for-github-op', keyFileVariable: 'GITHUB_CRED')]) {
+        // some block
+    }
+    ```
+
+    + **证书，Certificate** - 处理 [PKCS#12 证书](https://tools.ietf.org/html/rfc7292)，咱们可以从中指定：
+        - **密钥库变量，Keystore Variable** - 将绑定到这些凭据的环境变量名字。Jenkins 实际上将把证书身份验证过程中所需的证书密钥库的安全位置赋值给这个临时变量；
+        - **密码变量，Password Variable** (可选项) - 将绑定到与证书关联的密码的环境变量名字；
+        - **别名变量，Alias Variable** （可选项） - 将绑定到与证书关联的唯一别名的环境变量名字；
+        {{#include ./jenkinsfile.md:607}}
+
+
+5. 点击 **生成流水线脚本**，Jenkins 会为咱们所指定的凭据生成一个 `withCredentials( ... ) { ... }` 的流水线步骤片段，然后咱们便可以将其复制并粘贴到咱们的声明式或脚本化流水线代码中。
+
+
+    **注意**：
+
+    - **凭据** 字段（上文）会显示在 Jenkins 中配置的凭据名称。然而，在点击 **生成流水线脚本** 后，这些值将被转换为凭据 ID；
+    - 要在一个 `withCredentials(...) { ...}` 流水线步骤中结合多个凭据，请参阅 在一个步骤中结合凭证（下文）。
+
+
+下面的代码片段显示了一个完整的流水线示例，他实现了上面的 **SSH 用户私钥** 与 **证书** Pipeline 代码片段：
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent {
+        // define agent details
+    }
+
+    stages {
+        stage('Example stage 1') {
+            steps {
+                withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'jenkins-ssh-key-for-abc', \
+                                                             keyFileVariable: 'SSH_KEY_FOR_ABC')]) {
+                  // 1
+                }
+
+                withCredentials(bindings: [certificate(credentialsId: 'jenkins-certificate-for-xyz', \
+                                                       keystoreVariable: 'CERTIFICATE_FOR_XYZ', \
+                                                       passwordVariable: 'XYZ-CERTIFICATE-PASSWORD')]) {
+                  // 2
+                }
+            }
+        }
+
+        stage('Example stage 2') {
+            steps {
+                // 3
+            }
+        }
+    }
+}
+```
+
+1. 在这个步骤中，咱们可以用语法 `$SSH_KEY_FOR_ABC` 来引用那个凭据环境变量。例如，在这里咱们可以用其配置的 SSH 公钥/私钥对凭据来对 ABC 应用程序进行身份验证，其 **SSH 用户私钥文件** 被赋值给 `$SSH_KEY_FOR_ABC`；
+
+2. 在这个步骤中，咱们可以用 `$CERTIFICATE_FOR_XYZ` 和 `$XYZ-CERTIFICATE-PASSWORD` 语法引用那个凭据环境变量。例如，在这里咱们可以用其配置的证书凭据来对 XYZ 应用程序进行身份验证，其证书的 keystore 文件和密码分别被赋值给了变量 `$CERTIFICATE_FOR_XYZ` 和 `$XYZ-CERTIFICATE-PASSWORD`；
+
+3. 在这个流水线示例中，赋值给 `$SSH_KEY_FOR_ABC`、`$CERTIFICATE_FOR_XYZ` 和 `$XYZ-CERTIFICATE-PASSWORD` 环境变量的凭据只在其各自的 `withCredentials( ... ) { ... }` 步骤中起作用，所以这些凭据变量不能用于这个 `Example stage 2` 的步骤中。
+
+为了维护这些凭据的安全性和匿名性，如果咱们试图从这些 `withCredentials( ... ) { ... }` 步骤中取得这些凭据变量的值，秘密文本示例（上文）中描述的行为也适用于这些 SSH 公/私钥对凭据和证书变量类型。
+
+{{#include ./jenkinsfile.md:475}}
+
 

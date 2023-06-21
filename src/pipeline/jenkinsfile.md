@@ -921,7 +921,7 @@ pipeline {
 ```
 
 <details>
-<summary></summary>
+<summary>切换至脚本化 Pipeline</summary>
 
 ```groovy
 // Jenkinsfile (声明式 Pipeline)
@@ -943,5 +943,55 @@ node {
 
 **Handling failure**
 
+声明式流水线通过其 `post` 小节默认支持强大的失败处理，该小节允许声明许多不同的 "构建后情形，post conditions"，如：`always`、`unstable`、`success`、`failure` 及 `changed` 等。后面 [流水线语法](./syntax.md) 小节提供了关于如何使用各种构建后情形的更多细节。
 
 
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+                sh 'make check'
+            }
+        }
+    }
+
+    post {
+        always {
+            junit '**/target/*.xml'
+        }
+        failure {
+            mail to: team@example.com, subject: 'The Pipeline failed :('
+        }
+    }
+}
+```
+
+<details>
+<summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+node {
+    /* .. snip .. */
+    stage('Test') {
+        try {
+            sh 'make check'
+        }
+        finally {
+            junit '**/target/*.xml'
+        }
+    }
+    /* .. snip .. */
+}
+```
+</details>
+
+> 然而，脚本化流水线依赖于 Groovy 内置的 `try`/`catch`/`finally` 语义来处理流水线执行期间的失败。
+>
+> 在上面的 [测试](#测试) 示例中，`sh` 步骤被修改为绝不会返回非零的退出代码（ `sh 'make check || true'`）。这种方法虽然有效，但意味着接下来的阶段需要检查 `currentBuild.result`，以了解是否有测试失败的情况。
+>
+> 另一种处理方式是使用一系列的 `try`/`finally` 代码块，其会保留 Pipeline 中失败的早期退出行为，同时仍然给 `junit` 步骤捕捉测试报告的机会。

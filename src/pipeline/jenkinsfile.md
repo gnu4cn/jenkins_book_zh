@@ -995,3 +995,124 @@ node {
 > 在上面的 [测试](#测试) 示例中，`sh` 步骤被修改为绝不会返回非零的退出代码（ `sh 'make check || true'`）。这种方法虽然有效，但意味着接下来的阶段需要检查 `currentBuild.result`，以了解是否有测试失败的情况。
 >
 > 另一种处理方式是使用一系列的 `try`/`finally` 代码块，其会保留 Pipeline 中失败的早期退出行为，同时仍然给 `junit` 步骤捕捉测试报告的机会。
+
+
+### 使用多个代理
+
+在前面所有示例中，都只使用了一个代理。这意味着 Jenkins 会在任何有执行器可用的地方分配一个执行器，而不管其是如何被标记或配置的。这种行为不仅可被覆盖，而且 Pipeline 允许在 *同一* Jenkins 文件中利用 Jenkins 环境中的多个代理，这对更高级的用例很有帮助，比如在多个平台上执行构建/测试。
+
+在下面的示例中，`Build` 阶段将在一个代理上进行，而在 `Test` 阶段，构建的结果将在随后的两个分别标记为 `linux` 与 `windows` 的代理上重用。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent none
+
+    stages {
+        stage('Build') {
+            agent any
+
+            steps {
+                checkout scm
+                sh 'make'
+                stash includes: '**/target/*.jar', name: 'app' // 1
+            }
+        }
+
+        stage('Test on Linux') {
+            agent { // 2
+                label 'linux'
+            }
+
+            steps {
+                unstash 'app' // 3
+                sh 'make check'
+            }
+
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
+            }
+        }
+
+        stage('Test on Windows') {
+            agent {
+                label 'windows'
+            }
+
+            steps {
+                unstash 'app'
+                bat 'make check' // 4
+            }
+
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
+            }
+        }
+    }
+}
+```
+
+<details>
+<summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+stage('Build') {
+    node {
+        checkout scm
+        sh 'make'
+        stash includes: '**/target/*.jar', name: 'app' // 1
+    }
+}
+
+stage('Test') {
+    node('linux') { // 2
+        checkout scm
+
+        try {
+            unstash 'app' // 3
+            sh 'make check'
+        }
+        finally {
+            junit '**/target/*.xml'
+        }
+    }
+
+    node('windows') {
+        checkout scm
+
+        try {
+            unstash 'app'
+            bat 'make check' // 4
+        }
+        finally {
+            junit '**/target/*.xml'
+        }
+    }
+}
+```
+</details>
+
+
+1. `stash` 步骤允许捕获与包含模式（ `**/target/*.jar` ）相匹配的文件，以便在 *同一* 流水线内重复使用。一旦流水线完成了他的执行，储藏的文件将从 Jenkins 控制器中删除；
+
+2. `agent`/`node` 中的参数允许任何有效 Jenkins 标签表达式。更多细节请参考 [流水线语法](./syntax.md) 小节；
+
+3. `unstash` 步骤将从 Jenkins 控制器中获取那个命名的 “stash” 到流水线的当前工作区；
+
+4. 这个 `bat` 脚本允许在基于 Windows 的平台上执行批处理脚本。
+
+
+### 可选的步骤参数
+
+**Optional step arguments**
+
+
+Pipeline 遵循了 Groovy 语言允许在方法参数周围省略括号的约定。
+
+

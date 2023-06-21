@@ -1115,4 +1115,26 @@ stage('Test') {
 
 Pipeline 遵循了 Groovy 语言允许在方法参数周围省略括号的约定。
 
+许多 Pipeline 步骤还使用命名参数语法作为在 Groovy 中创建 Map 的速记方法，其用到语法 `[key1: value1, key2: value2]`。使得像下面这样的语句在功能上等同：
+
+```groovy
+git url: 'git://example.com/amazing-project.git', branch: 'master'
+git([url: 'git://example.com/amazing-project.git', branch: 'master'])
+```
+
+为方便起见，在调用只带一个参数（或只带一个强制参数）的步骤时，可以省略参数名称，例如：
+
+```groovy
+sh 'echo hello' /* short form  */
+sh([script: 'echo hello'])  /* long form */
+```
+
+
+### 高级脚本化 Pipeline
+
+脚本化 Pipeline 是一种基于 Groovy 的领域特定语言，大多数 [Groovy 语法](http://groovy-lang.org/semantics.html) 无需修改即可在脚本化流水线中使用。
+
+
+#### 并行执行
+
 

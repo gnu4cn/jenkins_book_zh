@@ -747,4 +747,57 @@ I said, Hello Mr. Jenkins
 
 #### 敏感环境变量的插值
 
+> **重要提示**：Groovy 字符串插值 **永远不** 应用于凭据。
+
+Groovy 字符串插值可能会泄露敏感的环境变量（即凭据，参见：[处理凭据](#处理凭据)）。这是因为敏感环境变量将在 Groovy 执行过程中被插值，the sensitive environment variable will be interpolated during Groovy evaluation，而环境变量的值可能比预期的更早被提供，导致敏感数据在各种情况下泄露。
+
+例如，设想下面的敏感的环境变量传递给 `sh` 步骤。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+
+    environment {
+        EXAMPLE_CREDS = credentials('example-credentials-id')
+    }
+
+    stages {
+        stage('Example') {
+            steps {
+                /* WRONG! */
+                sh("curl -u ${EXAMPLE_CREDS_USR}:${EXAMPLE_CREDS_PSW} https://example.com/")
+            }
+        }
+    }
+}
+```
+
+如果 Groovy 执行插值，敏感值就将被直接注入 `sh` 步骤的参数中，除开其他问题，这意味着字面值将在操作系统进程列表中作为代理上 `sh` 进程的参数而可见。在引用这些敏感环境变量时，使用单引号而不是双引号可以防止这种类型的泄漏。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+    environment {
+        EXAMPLE_CREDS = credentials('example-credentials-id')
+    }
+    stages {
+        stage('Example') {
+            steps {
+                /* CORRECT */
+                sh('curl -u $EXAMPLE_CREDS_USR:$EXAMPLE_CREDS_PSW https://example.com/')
+            }
+        }
+    }
+}
+```
+
+#### 通过插值注入
+
+**Injection via interpolation**
+
+
+> **重要提示**：Groovy 字符串插值可以通过特殊字符将恶意命令注入命令解释器。
+
 

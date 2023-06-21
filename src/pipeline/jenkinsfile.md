@@ -707,7 +707,7 @@ node {
 
 4. 点击 **绑定，Bindings** 下的 **新增**；
 
-5. 从下拉列表中选择要添加到 `withCredentials( ...) { ...}` 步骤的凭证类型；
+5. 从下拉列表中选择要添加到 `withCredentials( ...) { ...}` 步骤的凭据类型；
 
 6. 指定凭据 **绑定，Bindings** 的细节。请在其他凭据类型下的程序中（上文）阅读更多关于这些的内容；
 
@@ -719,3 +719,32 @@ node {
 ### 字符串插值
 
 **String interpolation**
+
+Jenkins Pipeline 使用与 [Groovy](http://groovy-lang.org/) 相同的规则进行字符串插值。Groovy 的字符串插值支持可能会让许多刚接触这门语言的人感到困惑。虽然 Groovy 支持用单引号或双引号声明字符串，例如：
+
+```groovy
+def singlyQuoted = 'Hello'
+def doublyQuoted = "World"
+```
+
+只有后一个字符串支持基于美元符号 (`$`) 的字符串插值，例如：
+
+```groovy
+def username = 'Jenkins'
+echo 'Hello Mr. ${username}'
+echo "I said, Hello Mr. ${username}"
+```
+
+将得到：
+
+```console
+Hello Mr. ${username}
+I said, Hello Mr. Jenkins
+```
+
+了解如何使用字符串插值对于使用 Pipeline 的一些更高级的功能至关重要。
+
+
+#### 敏感环境变量的插值
+
+

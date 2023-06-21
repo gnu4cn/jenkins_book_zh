@@ -1137,4 +1137,41 @@ sh([script: 'echo hello'])  /* long form */
 
 #### 并行执行
 
+[上面小节](#使用多个代理) 中的示例会在两种不同平台上以线性序列方式运行测试。实际上，如果 `make check` 需要 30 分钟完成，那么现在 `Test` 阶段将需要 60 分钟才能完成！
 
+幸运的是，Pipeline 有着用于并行执行脚本化 Pipeline 部分的内建功能，在一个恰如其分地被命名为 `parallel` 步骤中实现。
+
+
+将上面的示例重构为使用这个 `parallel` 步骤：
+
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+stage('Build') {
+    /* .. snip .. */
+}
+
+stage('Test') {
+    parallel linux: {
+        node('linux') {
+            checkout scm
+
+            try {
+                unstash 'app'
+                sh 'make check'
+            }
+            finally {
+                junit '**/target/*.xml'
+            }
+        }
+    },
+    windows: {
+        node('windows') {
+            /* .. snip .. */
+        }
+    }
+}
+```
+
+
+现在，假设 Jenkins 环境中存在必要容量，在标记为 `linux` 与 `windows` 节点上的测试将并行执行，而不再是序列执行。

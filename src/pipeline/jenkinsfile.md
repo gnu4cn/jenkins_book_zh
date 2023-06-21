@@ -550,3 +550,42 @@ pipeline {
 
 
 **秘密文件**
+
+秘密文件是存储在文件中并上传到 Jenkins 的凭据。秘密文件用于以下的凭据：
+
+- 直接输入 Jenkins 中太不方便，和/或
+
+- 是二进制格式的，比如 GPG 文件。
+
+在下面这个示例中，我们使用一个 Kubernetes 配置文件，该文件已被配置为一个名为 `my-kubeconfig` 的秘密文件凭据。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent {
+        // Define agent details here
+    }
+
+    environment {
+        // The MY_KUBECONFIG environment variable will be assigned
+        // the value of a temporary file.  For example:
+        //   /home/user/.jenkins/workspace/cred_test@tmp/secretFiles/546a5cf3-9b56-4165-a0fd-19e2afe6b31f/kubeconfig.txt
+        MY_KUBECONFIG = credentials('my-kubeconfig')
+    }
+
+    stages {
+        stage('Example stage 1') {
+            steps {
+                sh("kubectl --kubeconfig $MY_KUBECONFIG get pods")
+            }
+        }
+    }
+}
+```
+
+#### 对于其他凭据类型
+
+**For other credentials types**
+
+

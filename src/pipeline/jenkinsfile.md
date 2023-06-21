@@ -844,3 +844,104 @@ pipeline {
   }
 }
 ```
+
+凭据错乱，credential mangling, 是另一个问题，当含有特殊字符的凭据传递给某个使用 Groovy 插值的步骤时，可能会发生。当凭证值被破坏时，他就不再有效，也不会再被掩盖在控制台日志中。
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+  agent any
+
+  environment {
+    EXAMPLE_KEY = credentials('example-credentials-id') // Secret value is 'sec%ret'
+  }
+
+  stages {
+    stage('Example') {
+      steps {
+          /* WRONG! */
+          bat "echo ${EXAMPLE_KEY}"
+      }
+    }
+  }
+}
+```
+
+这里，那个 `bat` 步骤会收到 `echo sec%ret`，Windows 批处理 shell 将简单地去掉 `%`，并打印出值 `secret`。因为只有一个字符的差别，值 `secret` 就不会被掩盖。尽管该值与实际的凭证不一样，但这仍然是敏感信息的一次重大暴露。同样，单引号会避免这个问题。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+  agent any
+
+  environment {
+    EXAMPLE_KEY = credentials('example-credentials-id') // Secret value is 'sec%ret'
+  }
+
+  stages {
+    stage('Example') {
+      steps {
+          /* CORRECT */
+          bat 'echo %EXAMPLE_KEY%'
+      }
+    }
+  }
+}
+```
+
+### 处理参数
+
+**Handling parameters**
+
+声明式流水线支持开箱即用的参数，允许流水线在运行时通过 [`parameters` 指令](./syntax.md#parameters) 接受用户指定的参数。而在脚本化流水线下的配置参数是通过 `properties` 步骤完成的，这可以在 Pipeline 代码片段生成器中找到。
+
+如果咱们使用 “参数化构建过程，Build with Parameters” 选项将流水线配置为接受参数，那么这些参数可以作为 `params` 变量的成员访问。
+
+假设在 `Jenkinsfile` 中已经配置了一个名为 `Greeting` 的字符串参数，那么他就可以通过 `${params.Greeting}` 访问该参数：
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet the world?')
+    }
+
+    stages {
+        stage('Example') {
+            steps {
+                echo "${params.Greeting} World!"
+            }
+        }
+    }
+}
+```
+
+<details>
+<summary></summary>
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+properties([
+    parameters([
+        string(defaultValue: 'Hello', description: 'How should I greet the world?', name: 'Greeting')
+    ])
+])
+
+node {
+    echo "${params.Greeting} World!"
+}
+```
+</details>
+
+> **注意**：只需在 Pipeline 脚本中加入 `parameters` 指令，Jenkins 经典 UI 中 Pipeline 项目/条目页面左侧的 “立即构建” 就会变为 “Build with Paramters”，而无需在 Pipeline 项目/条目的 “配置” 页面进行 “参数化构建过程” 的设置。
+
+### 处理失败
+
+**Handling failure**
+
+
+

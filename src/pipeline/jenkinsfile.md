@@ -675,4 +675,23 @@ pipeline {
 
 {{#include ./jenkinsfile.md:475}}
 
+> - 当使用 **代码片段生成器** 中 **示例步骤** 字段的 **withCredentials: Bind credentials to variables** 选项时，只有咱们当前流水线项目/条目可以访问的凭据可以从任何的 **凭据，Credentials** 字段清单中选择。虽然咱们可以为咱们的流水线手动写一个 `withCredentials( ... ) { ... }` 步骤（就像上面的示例），但建议使用代码片段生成器，以避免指定超出此流水线项目/条目范围的凭据，这会在运行时使该步骤失败；
+>
+> - 咱们也可以使用 **代码片段生成器** 生成处理秘密文本、用户名和密码以及秘密文件的 `withCredentials( ... ) { ... }` 步骤。但是，如果咱们只需处理这些类型的凭据，建议使用 [上面](#对于秘文用户名与口令及秘密文件) 小节中描述的相关程序，以提高流水线代码的可读性；
+>
+> - 在上面的 Groovy 中使用了 **单引号** 而不是 **双引号** 来定义脚本（ `sh` 的隐含参数）。单引号将导致秘密被 shell 扩展为环境变量。双引号可能不太安全，因为秘密是由 Groovy 插入的，而因此典型的操作系统进程列表会意外地泄露他。
 
+```groovy
+node {
+  withCredentials([string(credentialsId: 'mytoken', variable: 'TOKEN')]) {
+    sh /* WRONG! */ """
+      set +x
+      curl -H 'Token: $TOKEN' https://some.api/
+    """
+    sh /* CORRECT */ '''
+      set +x
+      curl -H 'Token: $TOKEN' https://some.api/
+    '''
+  }
+}
+```

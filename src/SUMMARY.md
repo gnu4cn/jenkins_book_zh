@@ -26,6 +26,7 @@
     - [Jenkins 管道入门](./pipeline/get_started.md)
     - [使用 `Jenkinsfile`](./pipeline/jenkinsfile.md)
     - [运行流水线](./pipeline/running.md)
+    - [分支与拉取请求](./pipeline/branches.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 
 

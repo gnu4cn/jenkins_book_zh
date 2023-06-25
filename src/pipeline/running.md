@@ -117,3 +117,34 @@ options {
 
 
 [![怎样将某项 Jenkins 作业编排为每小时运行](https://img.youtube.com/vi/JhvVJtYFUm0/0.jpg)](https://www.youtube.com/watch?v=JhvVJtYFUm0)
+
+视频内容总结：
+
+1. Jenkins 作业可以手动运行，可以由某个 Web 钩子触发，也可以定时运行；
+
+2. 定时运行 Jenkins 作业，是经由 “声明式指令生成器” 中的 “triggers: Triggers” 指令，“cron: Build periodically” 完成的；
+
+3. 这里的 `cron` 与 \*nix 中 `cron` 有略微差异，包括了 `H` 及 `@midnight` 等语法，其中 `H` 指 `hash`，可避免在某个时刻过多的作业（作业竞争），`@midnight` 这样的写法也可以避免作业竞争；
+
+4. `TZ=America/New_York` 这种写法可以给 Jenkins `cron` 加入时区；
+
+5. 将声明式指令生成器生成的代码片段：
+
+
+```groovy
+triggers {
+    cron '* * * * *'
+}
+```
+
+放在 Jenkinsfile 中：
+
+```groovy
+pipeline {
+    agent any
+
+    triggers {
+        cron '* * * * *'
+    }
+}
+```

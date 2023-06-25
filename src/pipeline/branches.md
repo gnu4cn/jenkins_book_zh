@@ -20,13 +20,13 @@
 
 4. 创建构建项目时，选择 “多分支流水线，Multibranch Pipeline”；然后在 “分支源，Branch Sources” 字段，选择 “Git”；
 
-5. 针对公开代码仓库，选择 `https` URI，并无需凭据；
+5. 针对公开代码仓库，选择 `https` URI，并无需凭据。在保存多分支构建项目时，Jenkins 会立即扫描代码仓库；
 
 6. 在没有发现 Jenkinsfile 时，会显示 `Does not meet criteria`，“This folder is empty”；
 
 7. Jenkinsfile 是建立多分支构建项目的必要条件；
 
-8. 通过 web 钩子，可以从 GitHub 推送变更到 Jenkins 控制器；
+8. 通过 Web 钩子，可以从 GitHub 推送变更到 Jenkins 控制器（Web 钩子在多个场景都扮演重要角色）；
 
 9. 多分支构建项目配置中，有 “扫描 多分支流水线 触发器” 选项；
 

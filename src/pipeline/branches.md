@@ -108,3 +108,49 @@
 
 
 其他环境变量列在 [全局变量参考](./get_started.md#全局变量参考) 中。
+
+
+
+### 拉取请求的支持
+
+**Supporting Pull Requests**
+
+
+多分支流水线可以通过适当的插件来验证拉取/更改请求。该功能由以下插件提供：
+
+
+- [GitHub 分支源](https://plugins.jenkins.io/github-branch-source)
+
+- [Bitbucket 分支源](https://plugins.jenkins.io/cloudbees-bitbucket-branch-source)
+
+- [GitLab 分支源](https://plugins.jenkins.io/gitlab-branch-source)
+
+- [Gitea](https://plugins.jenkins.io/gitea)
+
+- [Tuleap Git 分支源](https://plugins.jenkins.io/tuleap-git-branch-source)
+
+- [AWS CodeCommit 作业](https://plugins.jenkins.io/aws-codecommit-jobs)
+
+- [DAGsHub 分支源](https://plugins.jenkins.io/dagshub-branch-source)
+
+
+关于如何使用这些插件的进一步信息，请查阅其文档。
+
+
+
+## 使用组织文件夹
+
+**Using Organization Folders**
+
+
+组织文件夹类型的构建项目，使 Jenkins 能够监控整个 GitHub 组织、Bitbucket 团队/项目、GitLab 组织或 Gitea 组织，并为包含 `Jenkinsfile` 的分支和拉取请求的代码仓库自动创建新的多分支流水线。
+
+组织文件夹的实施是为了：
+
+- [GitHub 分支源](https://plugins.jenkins.io/github-branch-source) 插件中的 GitHub；
+
+- [Bitbucket 分支源](https://plugins.jenkins.io/cloudbees-bitbucket-branch-source) 插件中的 Bitbucket；
+
+- [GitLab 分支源](https://plugins.jenkins.io/gitlab-branch-source) 插件中的 GitLab；
+
+- [Gitea](https://plugins.jenkins.io/gitea) 插件中的 Gitea。

@@ -125,3 +125,57 @@ pipeline {
 // 选项 “reuseNode true” 目前在脚本化流水线中不支持。
 ```
 </details>
+
+
+
+
+### 缓存容器的数据
+
+**Caching data for containers**
+
+
+许多构建工具都会下载外部依赖项，并将其缓存在本地，以便将来重新使用。由于容器一开始是以 “干净” 的文件系统创建的，这可能会导致流水线速度变慢，因为他们可能不会在随后的流水线运行之间利用磁盘缓存。
+
+Pipeline 支持添加传递给 Docker 的自定义参数，从而允许用户指定要挂载的自定义 Docker 卷，这可用于在流水线历次运行之间在代理上缓存数据。下面的例子将利用 `maven` 容器在流水线各次运行之间缓存 `~/.m2`，从而避免在流水线的后续运行中重新下载依赖。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.0-eclipse-temurin-11'
+            args '-v $HOME/.m2:/root/.m2'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn -B'
+            }
+        }
+    }
+}
+```
+
+
+<details>
+<summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+
+node {
+    /* Requires the Docker Pipeline plugin to be installed */
+    docker.image('maven:3.9.0-eclipse-temurin-11').inside('-v $HOME/.m2:/root/.m2') {
+        stage('Build') {
+            sh 'mvn -B'
+        }
+    }
+}
+```
+</details>
+
+
+
+

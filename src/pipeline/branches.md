@@ -82,4 +82,4 @@
 
 **保存** 时，Jenkins 会自动扫描指定的代码仓库，并为代码仓库中包含 `Jenkinsfile` 的每个分支创建适当的项目。
 
-
+![Jenkins 会在多分支构建项目保存时自动扫描代码仓库](../images/Jenkins-scanning-multibranch-repo_automatically.png)

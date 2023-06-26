@@ -500,3 +500,41 @@ cannot create /…@tmp/durable-…/pid: Directory nonexistent
 > 当 Jenkins 检测到代理本身运行在 Docker 容器内时，他会自动将 `--volumes-from` 参数传递给这个 `inside` 容器，确保其能与代理共用一个工作空间。
 >
 > 此外，某些版本的 Docker Swarm 不支持自定义注册表，custom Registries。
+
+
+### 使用定制注册中心
+
+默认情况下，[Docker Pipeline](https://plugins.jenkins.io/docker-workflow) 的集成假定了默认的 [Docker Hub](https://hub.docker.com/) 的 Docker 注册中心。
+
+
+为了使用自定义的 Docker 注册中心，脚本化 Pipeline 用户可以用传入了定制注册中心 URL 的 `withRegistry()` 方法来包装步骤，例如：
+
+
+```groovy
+node {
+    checkout scm
+
+    docker.withRegistry('https://registry.example.com') {
+        docker.image('my-custom-image').inside {
+            sh 'make test'
+        }
+    }
+}
+```
+
+对于需要身份验证的 Docker 注册中心，请从 Jenkins 主页添加 “用户名/密码” 凭据项，并使用凭据 ID 作为 `withRegistry()` 的第二个参数：
+
+
+```groovy
+node {
+    checkout scm
+
+    docker.withRegistry('https://registry.example.com', 'credentials-id') {
+
+        def customImage = docker.build("my-image:${env.BUILD_ID}")
+
+        /* Push the container to the custom Registry */
+        customImage.push()
+    }
+}
+```

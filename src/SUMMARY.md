@@ -27,6 +27,7 @@
     - [使用 `Jenkinsfile`](./pipeline/jenkinsfile.md)
     - [运行流水线](./pipeline/running.md)
     - [分支与拉取请求](./pipeline/branches.md)
+    - [在流水线中使用 Docker](./pipeline/docker.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 
 

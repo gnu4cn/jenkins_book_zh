@@ -311,4 +311,55 @@ pipeline {
 （暂略过）
 
 
+## 脚本化流水线的高级用法
 
+**Advanced Usage with Scripted Pipeline**
+
+
+### 运行 “挎斗，sidecar” 容器
+
+**Running "sidecar" containers**
+
+在流水线中使用 Docker 可以成为运行其上可能依赖的构建或一组测试的服务的有效方式。类似于 [sidecar 模式](https://docs.microsoft.com/en-us/azure/architecture/patterns/sidecar)，Docker 的流水线可以 “在后台” 运行一个容器，同时在另一个容器中执行工作。利用这种挎斗方式，流水线可以为每次流水线运行提供一个 “干净” 的容器。
+
+请设想一个假想的集成测试套件，其依赖于本地 MySQL 数据库的运行。使用 [Docker Pipeline 插件](https://plugins.jenkins.io/docker-workflow) 对脚本化流水线支持中所实现的 `withRun` 方法，`Jenkinsfile` 就可以将 MySQL 作为一个挎斗运行：
+
+
+```groovy
+node {
+    checkout scm
+    /*
+     * In order to communicate with the MySQL server, this Pipeline explicitly
+     * maps the port (`3306`) to a known port on the host machine.
+     */
+    docker.image('mysql:8-oracle').withRun('-e "MYSQL_ROOT_PASSWORD=my-secret-pw"' +
+                                           ' -p 3306:3306') { c ->
+        /* Wait until mysql service is up */
+        sh 'while ! mysqladmin ping -h0.0.0.0 --silent; do sleep 1; done'
+        /* Run some tests which require MySQL */
+        sh 'make check'
+    }
+}
+```
+
+这个示例可以更进一步，同时利用两个容器。一个 “挎斗” 运行 MySQL，另一个通过使用 Docker 的 [容器链接](https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/) 特性提供 [执行环境](#执行环境的定制)。
+
+
+```groovy
+node {
+    checkout scm
+    docker.image('mysql:8-oracle').withRun('-e "MYSQL_ROOT_PASSWORD=my-secret-pw"') { c ->
+        docker.image('mysql:8-oracle').inside("--link ${c.id}:db") {
+            /* Wait until mysql service is up */
+            sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+        }
+        docker.image('oraclelinux:9').inside("--link ${c.id}:db") {
+            /*
+             * Run some tests which require MySQL, and assume that it is
+             * available on the host name `db`
+             */
+            sh 'make check'
+        }
+    }
+}
+```

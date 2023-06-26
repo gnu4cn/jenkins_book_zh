@@ -64,4 +64,22 @@
 - 为咱们的流水线输入一个名称，选择 **多分支流水线**，然后点击 **确定**；
 
 
-> Jenkins 会使用流水线名称来创建磁盘上的目录。包含空格的流水线名称可能会揭露脚本中的错误，这些脚本并不期望路径包含空格。
+> Jenkins 会使用流水线名称来创建磁盘上的目录。包含空格的流水线名称可能会引起那些不期望路径保护空格脚本中的错误。
+
+
+![新多分支项目的创建](../images/new-item-multibranch-creation.png)
+
+
+- 添加一个 **分支源，Branch Source** （比如，Git）并输入代码仓库的地址；
+
+
+![多分支的分支源](../images/multibranch-branch-source.png)
+
+![配置分支源](../images/multibranch-branch-source-configuration.png)
+
+
+- **保存，Save** 这个多分支流水线项目。
+
+**保存** 时，Jenkins 会自动扫描指定的代码仓库，并为代码仓库中包含 `Jenkinsfile` 的每个分支创建适当的项目。
+
+

@@ -3,7 +3,7 @@
 **Using Dokcer with Pipeline**
 
 
-> **注**：对于构建代理节点都是由 Docker 容器构成的 Jenkins 环境，在流水线中使用 `Dockerfile` 需要解决在容器中运行容器（DinD）的问题，这在 [Docker 安装方式](docker.md#在-macos-和-linux-上) 小节中曾讨论到。
+> **注**：对于构建代理节点都是由 Docker 容器构成的 Jenkins 环境，在流水线中使用 `Dockerfile` 需要解决在容器中运行容器（DinD）的问题，这在 [Docker 安装方式](../installation/docker.md#在-macos-和-linux-上) 小节中曾讨论到。
 
 
 许多组织都使用 [Docker](https://www.docker.com/) 来统一其跨机器的构建和测试环境，并为部署应用程序提供一种有效的机制。从 Pipeline 2.5 及以上版本开始，Pipeline 内建了对从 `Jenkinsfile` 中与 Docker 进行交互的支持。

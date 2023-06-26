@@ -353,6 +353,7 @@ node {
             /* Wait until mysql service is up */
             sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
         }
+
         docker.image('oraclelinux:9').inside("--link ${c.id}:db") {
             /*
              * Run some tests which require MySQL, and assume that it is
@@ -363,3 +364,139 @@ node {
     }
 }
 ```
+
+
+上面的示例使用了 `withRun` 所暴露的对象，其有着运行中容器的 ID，可以通过 `id` 属性获得。使用容器的 ID，流水线就可以通过向 `inside()` 方法传递自定义的 Docker 参数来创建一个链接。
+
+对于在流水线退出前检查运行中的 Docker 容器的日志，这个 `id` 属性也很有用：
+
+```groovy
+sh "docker logs ${c.id}"
+```
+
+
+### 构建容器
+
+**Building containers**
+
+
+为了创建 Docker 镜像，[Docker Pipeline 插件](https://plugins.jenkins.io/docker-workflow) 还提供了一个 `build()` 方法，用于在 Pipeline 运行期间从代码仓库中的 `Dockerfile` 创建新的镜像。
+
+
+使用 `docker.build("my-image-name")` 语法的主要好处是，脚本化流水线可以将返回值用于后续的 Docker 流水线调用，比如说：
+
+
+```groovy
+node {
+    checkout scm
+
+    def customImage = docker.build("my-image:${env.BUILD_ID}")
+
+    customImage.inside {
+        sh 'make test'
+    }
+}
+```
+
+该返回值也可以用来将 Docker 镜像通过 `push()` 方法发布到 [Docker Hub](https://hub.docker.com/) 或 [自定义的注册中心](#使用定制注册中心)，例如：
+
+
+```groovy
+node {
+    checkout scm
+
+    def customImage = docker.build("my-image:${env.BUILD_ID}")
+    customImage.push()
+}
+```
+
+Docker 镜像的 “标签，tags” 的一个常见用法是为 Docker 镜像的最新验证版本指定 `latest` 标签。`push()` 方法接受一个可选的 `tag` 参数，允许流水线推送有着不同标签的 `customImage`，例如：
+
+
+```groovy
+node {
+    checkout scm
+
+    def customImage = docker.build("my-image:${env.BUILD_ID}")
+    customImage.push()
+
+    customImage.push('latest')
+}
+```
+
+
+`build()` 方法默认会构建在当前目录下的 `Dockerfile`。可以通过提供一个包含着 `Dockerfile` 的目录路径作为 `build()` 方法的第二个参数来覆盖这一默认行为，例如：
+
+
+```groovy
+node {
+    checkout scm
+
+    def testImage = docker.build("test-image", "./dockerfiles/test") // 1
+    testImage.inside {
+        sh 'make test'
+    }
+}
+```
+
+1. 从 `./dockerfiles/test/Dockerfile` 处找到的 `Dockerfile` 构建 `test-image`。
+
+
+通过在 `build()` 方法的第二个参数中添加其他参数来传递给 [docker build](https://docs.docker.com/engine/reference/commandline/build/) 是可行的。当以这种方式传递参数时，该字符串的最后一个值必须是 `Dockerfile` 的路径，并且应该以要用作构建环境的文件夹结尾。
+
+
+下面这个示例通过传递 `-f` 命令行标志，覆盖了默认的 `Dockerfile`：
+
+
+```groovy
+node {
+    checkout scm
+
+    def dockerfile = 'Dockerfile.test'
+    def customImage = docker.build("my-image:${env.BUILD_ID}",
+                                   "-f ${dockerfile} ./dockerfiles") // 1
+}
+```
+
+1. 从位于 `./dockerfiles/Dockerfile.test` 处找到的 `Dockerfile`  构建 `my-image：${env.BUILD_ID}`。
+
+
+### 使用远程 Docker 服务器
+
+
+**Using a remote Docker server**
+
+
+默认情况下，[Docker Pipeline 插件](https://plugins.jenkins.io/docker-workflow) 将与本地的 Docker 守护进程通信，通常通过 `/var/run/docker.sock` 访问。
+
+而要选择非默认的 Docker 服务器，比如 [Docker Swarm](https://docs.docker.com/swarm/)，就应使用 `withServer()` 方法。
+
+
+通过传递一个 URI，及可选地 Jenkins 中预先配置的 **Docker 服务器证书认证** 的凭据 ID，到这个方法中：
+
+
+```groovy
+node {
+    checkout scm
+
+    docker.withServer('tcp://swarm.example.com:2376', 'swarm-certs') {
+        docker.image('mysql:8-oracle').withRun('-p 3306:3306') {
+            /* do things */
+        }
+    }
+}
+```
+
+
+> `inside()` 和 `build()` 将无法在开箱即用的 Docker Swarm 服务器上正常工作。
+>
+> 为了让 `inside()` 工作，Docker 服务器和 Jenkins 代理必须使用同一文件系统，以便工作区可以被挂载。
+>
+> 目前，这个 Jenkins 插件和 Docker CLI 都不会自动检测到服务器正远程运行的情况；一个典型的症状是来自嵌套 `sh` 命令的报错，比如：
+
+```console
+cannot create /…@tmp/durable-…/pid: Directory nonexistent
+```
+> 当 Jenkins 检测到代理本身运行在 Docker 容器内时，他会自动将 `--volumes-from` 参数传递给这个 `inside` 容器，确保其能与代理共用一个工作空间。
+>
+> 此外，某些版本的 Docker Swarm 不支持自定义注册表，custom Registries。

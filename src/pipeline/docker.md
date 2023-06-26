@@ -148,6 +148,7 @@ pipeline {
             args '-v $HOME/.m2:/root/.m2'
         }
     }
+
     stages {
         stage('Build') {
             steps {
@@ -177,5 +178,131 @@ node {
 </details>
 
 
+
+### 使用多个容器
+
+**Using multiple containers**
+
+代码库依赖多种不同技术已经变得越来越普遍。例如，某个代码仓库可能同时拥有基于 Java 的后端 API 实现 *和* 基于 JavaScript 的前端实现。结合 Docker 和 Pipeline，就允许某个 `Jenkinsfile` 通过结合 `agent {}` 指令，而对不同阶段使用 **多种** 类型的技术。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent none
+
+    stages {
+        stage('Back-end') {
+            agent {
+                docker { image 'maven:3.9.0-eclipse-temurin-11' }
+            }
+
+            steps {
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Front-end') {
+            agent {
+                docker { image 'node:18.16.0-alpine' }
+            }
+
+            steps {
+                sh 'node --version'
+            }
+        }
+    }
+}
+```
+
+
+<details>
+<summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+
+node {
+    /* Requires the Docker Pipeline plugin to be installed */
+
+    stage('Back-end') {
+        docker.image('maven:3.9.0-eclipse-temurin-11').inside {
+            sh 'mvn --version'
+        }
+    }
+
+    stage('Front-end') {
+        docker.image('node:18.16.0-alpine').inside {
+            sh 'node --version'
+        }
+    }
+}
+```
+</details>
+
+
+### 使用 `Dockerfile`
+
+**Using a `Dockerfile`**
+
+
+对于需要更多定制执行环境的项目，Pipeline 还支持从源代码仓库中的 `Dockerfile` 构建和运行一个容器。与使用 “现成，off-the-shelf” 容器的 [早先方法](#执行环境的定制) 相比，使用 `agent { dockerfile true }` 语法将从 `Dockerfile` 中构建一个新的镜像，而不是从 [Docker Hub](https://hub.docker.com/) 中拉取一个。
+
+
+以一个定制程度更高的 `Dockerfile` 重用上面的示例：
+
+
+```
+// Dockerfile
+FROM node:18.16.0-alpine
+
+RUN apk add -U subversion
+```
+
+
+通过将其提交到源代码仓库的根目录，`Jenkinsfile` 就可以被修改为基于这个 `Dockerfile` 构建一个容器，然后使用该容器运行所定义的步骤：
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent { dockerfile true }
+
+    stages {
+        stage('Test') {
+            steps {
+                sh 'node --version'
+                sh 'svn --version'
+            }
+        }
+    }
+}
+```
+
+
+`agent { dockerfile true }` 语法支持一些其他选项，这些选项在 [管道语法](./syntax.md#agent) 小节有更详细的描述。
+
+
+*在 Jenkins 流水线中使用 `Dockerfile`*
+
+
+
+[![在 Jenkins 流水线中使用 `Dockerfile`](https://img.youtube.com/vi/Pi2kJ2RJS50/0.jpg)](https://www.youtube.com/watch?v=Pi2kJ2RJS50)
+
+
+### 指定 Docker 标签
+
+**Specifying a Docker Label**
+
+
+默认情况下，Pipeline 会假设任何已配置的 [代理](../glossary.md#agent) 都能够运行基于 Docker 的流水线。而对于有着不能运行 Docker 守护程序的 macOS、Windows 或其他代理的 Jenkins 环境，这种默认的设置就可能会出现问题。Pipeline 在 **系统管理，Manage Jenkins** 页面和 [文件夹，Folder](./glossary.md#folder) 级别上提供了一个全局选项，用于指定哪些代理（按照 [标签，Label](./glossary.md#label)）用于运行基于 Docker 的流水线。
+
+
+![配置 Docker 标签](../images/configure-docker-label.png)
+
+
+### macOS 用户的路径设置
+
+**Path setup for macOS users**
 
 

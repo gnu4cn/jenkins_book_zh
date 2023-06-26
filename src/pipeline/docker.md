@@ -32,6 +32,8 @@ pipeline {
 }
 ```
 
+
+
 <details>
 <summary>切换至脚本化 Pipeline</summary>
 
@@ -66,4 +68,60 @@ v16.13.1
 ```
 
 
+### 工作区同步
 
+**Workspace synchronization**
+
+
+简而言之：如果保持工作区与其他阶段的同步是很重要的，那么请使用 `reuseNode true`。否则，docker 化的阶段则可以在任何其他代理或同一代理上运行，不过是在临时工作区。
+
+
+默认情况下，对于容器化阶段，Jenkins 会这样做：
+
+
+- 挑选出任何一个代理；
+
+- 创建新的空工作区；
+
+- 克隆流水线代码到其中；
+
+- 将这个新的工作区挂载到容器中。
+
+
+如果咱们有多个 Jenkins 代理，那么咱们的容器化阶段可在其中任何一个上启动。
+
+当 `reuseNode` 被设置为 `true` 时：将不会创建新的工作区，而当前代理的当前工作区将被挂载到容器中，并且容器将在同一节点启动，因此整个数据将被同步。
+
+
+```groovy
+// Jenkinsfile (声明式 Pipeline)
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'gradle:6.7-jdk11'
+                    // Run the container on the node specified at the
+                    // top-level of the Pipeline, in the same workspace,
+                    // rather than on a new node entirely:
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'gradle --version'
+            }
+        }
+    }
+}
+```
+
+
+<details>
+<summary>切换至脚本化 Pipeline</summary>
+
+```groovy
+// Jenkinsfile (脚本化 Pipeline)
+// 选项 “reuseNode true” 目前在脚本化流水线中不支持。
+```
+</details>

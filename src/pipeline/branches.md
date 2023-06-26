@@ -83,3 +83,28 @@
 **保存** 时，Jenkins 会自动扫描指定的代码仓库，并为代码仓库中包含 `Jenkinsfile` 的每个分支创建适当的项目。
 
 ![Jenkins 会在多分支构建项目保存时自动扫描代码仓库](../images/Jenkins-scanning-multibranch-repo_automatically.png)
+
+默认情况下，Jenkins 不会为分支的添加或删除自动重新索引（除非使用 [组织文件夹](#使用组织文件夹)），所以在多分支流水线项目的配置中配置多分支流水线定期重新索引通常是有用的：
+
+
+![多分支构建项目的分支索引](../images/multibranch-branch-indexing.png)
+
+
+### 额外环境变量
+
+**Additional Environment Variables**
+
+多分支流水线会通过 `env` 全局变量暴露关于正在构建分支的一些额外信息，例如：
+
+
+#### `BRANCH_NAME`
+
+该流水线正在执行分支的名称，例如 `master`。
+
+
+#### `CHANGE_ID`
+
+与某种变更请求相对应的标识符，如拉取请求编号。
+
+
+其他环境变量列在 [全局变量参考](./get_started.md#全局变量参考) 中。

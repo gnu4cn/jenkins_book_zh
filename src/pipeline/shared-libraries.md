@@ -9,4 +9,15 @@
 > 什么是 DRY，Don't Repeat Yourself, 参见：[Wikipedia: Don't repeat yourself](https://en.wikipedia.org/wiki/Don't_repeat_yourself)。
 
 
+Pipeline 支持创建可以在外部源代码控制仓库中定义并加载到现有的 Pipeline 中的 “共享库，Shared Libraries”。
 
+
+*Jenkins 中共享库入门*
+
+
+[![Jenkins 中共享库入门](https://img.youtube.com/vi/Wj-weFEsTb0/0.jpg)](https://www.youtube.com/watch?v=Wj-weFEsTb0)
+
+
+视频内容概要：
+
+-

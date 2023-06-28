@@ -219,7 +219,43 @@ public class AddSidebarLinkAction implements hudson.model.Action,java.io.Seriali
 
 摘自：[https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy](https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy)
 
-> 可见，`src/` 目录下应放入一些供流水线使用的类文件。而这个 `AddSidebarLinkAction` 类，就曾在 [Jenkins 流水线入门](get_started.md#全局变量参考) 小节的那个视频中粗略提到其用法。
+> 可见，`src/` 目录下应放入一些供流水线使用的类文件。而这个 `AddSidebarLinkAction` 类，就曾在 [Jenkins 流水线入门](get_started.md#全局变量参考) 小节的那个视频中粗略提到其用法。以下便是那里用到的 `Jenkins-4` 流水线脚本文件（其中仍然只是使用了 `vars/` 目录下的 `.groovy` 变量，而尚未用到 `src/` 目录下的类文件）：
+
+```groovy
+def timeInMillis = currentBuild.timeInMillis
+def imageTag = "darinpope/alpine:" + timeInMillis
+@Library("shared-library") _
+pipeline {
+  agent any
+  environment {
+    DH_CREDS=credentials('dh-creds')
+  }
+  stages {
+    stage('Hello') {
+      steps {
+        sh """
+          echo "FROM alpine:latest" > Dockerfile
+          docker build -t ${imageTag} .
+        """
+        sh '''
+          echo $DH_CREDS_PSW | docker login --username=$DH_CREDS_USR --password-stdin
+        '''
+        script {
+          def sha256 = sh(returnStdout: true, script:"docker push ${imageTag} | grep sha256 | awk -F':' '{print \$4}' | awk '{print \$1}'").trim()
+          echo sha256
+          def url = "https://hub.docker.com/layers/" + env.DH_CREDS_USR + "/alpine/" + timeInMillis + "/images/sha256-" + sha256 + "?context=explore"
+          addSidebarLink(url:url,text:"Image on Docker Hub",icon:"star.gif")
+        }
+      }
+      post {
+        always {
+          sh 'docker logout'
+        }
+      }
+    }
+  }
+}
+```
 
 ### 动态加载库
 

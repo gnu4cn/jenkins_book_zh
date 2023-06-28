@@ -307,4 +307,31 @@ echo useSomeLib(lib.Helper.new(lib.Constants.SOME_TEXT))
 当勾选了 “Load implicity” 选项时，或者当流水线仅以名称引用库时，例如 `@Library('my-shared-library') _`，就会使用已配置共享库的 “Default version”。而如果没有定义 “Default version”，那么流水线就必须指定某个版本，例如 `@Library('my-shared-library@master') _`。
 
 
+而若在共享库的配置中启用了 “Allow default version to be overridden” 选项，那么 `@Library` 注解就也可以覆盖为该库所定义的默认版本。这也会允许带有 “Load implicity” 选项的库在必要时从某个不同的版本加载。
+
+当咱们使用 `library` 步骤时，也可以指定某个版本：
+
+```groovy
+library 'my-shared-library@master'
+```
+
+
+由于这是一个常规步骤，故该版本可被计算出来，而不是像注解那样的常量；例如：
+
+
+```groovy
+library "my-shared-library@$BRANCH_NAME"
+```
+
+就将将使用与这个多分支 `Jenkinsfile` 相同的 SCM 分支加载库。而作为另一个示例，咱们可以通过参数挑选出某个库：
+
+
+```groovy
+properties([parameters([string(name: 'LIB_VERSION', defaultValue: 'master')])])
+library "my-shared-library@${params.LIB_VERSION}"
+```
+
+请注意，`library` 步骤不能用来覆盖隐式加载库的版本。在脚本启动时，他就已经被加载了，而且某个给定名称的库不可能被加载两次。
+
+
 

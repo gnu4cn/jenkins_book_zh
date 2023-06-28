@@ -219,6 +219,7 @@ public class AddSidebarLinkAction implements hudson.model.Action,java.io.Seriali
 
 摘自：[https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy](https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy)
 
+> 可见，`src/` 目录下应放入一些供流水线使用的类文件。
 
 ### 动态加载库
 
@@ -246,3 +247,28 @@ library 'my-shared-library'
 ```groovy
 library('my-shared-library').com.mycorp.pipeline.Utils.someStaticMethod()
 ```
+
+咱们还可以访问那些 `static` 字段，并调用构造函数，就像他们是一些名为 `new` 的 `static` 方法一样：
+
+
+```groovy
+def useSomeLib(helper) { // dynamic: cannot declare as Helper
+    helper.prepare()
+    return helper.count()
+}
+
+def lib = library('my-shared-library').com.mycorp.pipeline // preselect the package
+
+echo useSomeLib(lib.Helper.new(lib.Constants.SOME_TEXT))
+```
+
+
+### 库的各个版本
+
+**Library versions**
+
+
+当勾选了 “Load implicity” 选项时，或者当流水线仅以名称引用库时，例如 `@Library('my-shared-library') _`，就会使用已配置共享库的 “Default version”。而如果没有定义 “Default version”，那么流水线就必须指定某个版本，例如 `@Library('my-shared-library@master') _`。
+
+
+

@@ -161,3 +161,88 @@ echo useSomeLib(new Helper('some text'))
 
 
 [![使用 Jenkins 共享库中的资源文件](https://img.youtube.com/vi/eV7roTXrEqg/0.jpg)](https://www.youtube.com/watch?v=eV7roTXrEqg)
+
+视频内容摘要：
+
+1. 在库的 `vars` 目录下，可以定义很多函数，方式如下：
+
+```groovy
+def call(Map paras = [:]) {
+    // 函数代码体，其中可以 paras.para_name 访问到传入的各个参数。
+}
+```
+
+这些函数可在库本身及流水线脚本中使用；
+
+2. 使用 `libraryResource "com/xfoss/scripts/linux/hello-world.sh"` 就可以访问到库的 `resources` 目录中的资源文件；
+
+3. 此视频没有讲到库的 `src` 目录中 `.groovy` 文件的作用及使用方式。
+
+
+> 库 `src` 目录中一个 `.groovy` 文件的示例：
+
+
+```groovy
+public class AddSidebarLinkAction implements hudson.model.Action,java.io.Serializable {
+  private String displayName;
+  private String iconFileName;
+  private String urlName;
+  private String iconClassName;
+
+  public AddSidebarLinkAction(String displayName,String iconFileName,String urlName,String iconClassName) {
+    this.displayName = displayName;
+    this.iconFileName = iconFileName;
+    this.urlName = urlName;
+    this.iconClassName = iconClassName;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  @Override
+  public String getIconFileName() {
+    return iconFileName;
+  }
+
+  @Override
+  public String getUrlName() {
+    return urlName;
+  }
+
+  public String getIconClassName() {
+    return iconClassName;
+  }
+}
+```
+
+摘自：[https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy](https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy)
+
+
+### 动态加载库
+
+**Loading libraries dynamically**
+
+
+从 *Pipeline: Shared Groovy Libraries* 插件的 2.7 版开始，便有了一个用于在脚本中加载（非隐式）库的新选项：在构建过程中随时 *动态* 加载库的 `library` 步骤。
+
+
+若咱们只对使用全局变量/函数（来自 `vars/` 目录）感兴趣，那么这种语法就非常简单：
+
+
+```groovy
+library 'my-shared-library'
+```
+
+此后，该库中的任何全局变量都可以被脚本访问。
+
+
+使用 `src/` 目录下的类也是可行的，但比较麻烦。虽然 `@Library` 注解会在编译前准备脚本的 “classpath”，但在遇到 `library` 步骤时，脚本就已经被编译了。因此咱们无法 `import` 或以其他方式 “静态地” 引用库中的类型。
+
+然而，你可以动态地使用库中的类（但没有类型检查），通过 `library` 步骤返回值的完全合格名称来访问他们。那些 `static` 方法则可以使用类似 Java 的语法来调用：
+
+
+```groovy
+library('my-shared-library').com.mycorp.pipeline.Utils.someStaticMethod()
+```

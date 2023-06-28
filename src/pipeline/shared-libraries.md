@@ -352,3 +352,91 @@ library "my-shared-library@${params.LIB_VERSION}"
 那些尚未更新以支持共享库所需的较新特性的 SCM 插件，仍然可以通过 **Legacy SCM** 选项使用。在这种情况下，在可能为特定 SCM 插件，包含其中配置了 `branch/tag/ref` 的 `${library.yourlibrarynamehere.version}`。这样作可以确保在检出库的源代码时，SCM 插件就会展开这个变量来检出相应版本的库。
 
 ![全局流水线库的遗留 SCM 配置](../images/global-pipeline-library-legacy-scm.jpg)
+
+
+#### 动态获取
+
+**Dynamic retrieval**
+
+
+如果咱们在 `library` 步骤中只指定了某个库的名字（可选择在 `@` 后面加上版本），Jenkins 就将寻找一个预先配置好这个名字的库。(或者在 `github.com/owner/repo` 自动库的情况下，他将加载该库）。
+
+
+不过咱们也可以动态地指定获取方式，在这种情况下，不需要在 Jenkins 中预先定义该库。下面是一个例子：
+
+
+```groovy
+library identifier: 'custom-lib@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'git@git.mycorp.com:my-jenkins-utils.git',
+   credentialsId: 'my-private-key'])
+```
+
+最好是参考 [流水线语法](https://www.jenkins.io/doc/pipeline/steps/pipeline-groovy-lib/#library-load-a-library-on-the-fly)，了解咱们 SCM 的准确语法。
+
+请注意，在这些情况下必须指定库的版本。
+
+
+## 编写流水线库
+
+**Writing libraries**
+
+
+在基础层面，任何有效的 Groovy 代码都可以使用。包括不同的数据结构、工具方法等，如：
+
+
+```groovy
+// src/org/foo/Point.groovy
+package org.foo
+
+// point in 3D space
+class Point {
+  float x,y,z
+}
+```
+
+
+### 访问步骤
+
+**Accessing steps**
+
+
+流水线的库类不能直接调用 `sh` 或 `git` 之类的步骤。然而，他们可以在封闭类的作用域之外实现一些方法，由这些方法来调用流水线步骤，例如：
+
+
+```groovy
+// src/org/foo/Zot.groovy
+package org.foo
+
+def checkOutFrom(repo) {
+  git url: "git@github.com:jenkinsci/${repo}"
+}
+
+return this
+```
+
+随后就可以在某个脚本化流水线中调用他：
+
+
+```groovy
+def z = new org.foo.Zot()
+z.checkOutFrom(repo)
+```
+
+
+这种方法有其局限性；例如，他会阻止声明超类。
+
+另外，在构造器中可以用 `this` 显式地把一组步骤，传递给某个库类，或者只是一个方法，alternately, a set of `steps` can be passed explicitly using `this` to a library class, in a constructor, or just one method：
+
+
+```groovy
+package org.foo
+class Utilities implements Serializable {
+  def steps
+  Utilities(steps) {this.steps = steps}
+  def mvn(args) {
+    steps.sh "${steps.tool 'Maven'}/bin/mvn -o ${args}"
+  }
+}
+
+```

@@ -139,4 +139,25 @@ import com.mycorp.pipeline.somelib.UsefulClass
 >
 > 咱们不建议 `import` 某个全局的变量/函数，因为这将迫使编译器将字段和方法解释为 `static`，即使他们原本是实例。在这种情况下，Groovy 编译器会产生混乱的错误信息。
 
+在脚本开始执行之前的 *编译* 过程中，库被解析和加载。这使得 Groovy 编译器能够在静态类型检查中理解所用到的符号含义，并允许在脚本的类型声明中使用这些符号，例如：
 
+
+```groovy
+@Library('somelib')
+import com.mycorp.pipeline.somelib.Helper
+
+int useSomeLib(Helper helper) {
+    helper.prepare()
+    return helper.count()
+}
+
+echo useSomeLib(new Helper('some text'))
+```
+
+而全局变量则是在运行时被解析的。
+
+
+下面这个视频讲到了使用共享库中的资源文件。在这个 [视频的描述](https://www.youtube.com/watch?v=eV7roTXrEqg) 中还提供了用到的示例资源库的链接。
+
+
+[![使用 Jenkins 共享库中的资源文件](https://img.youtube.com/vi/eV7roTXrEqg/0.jpg)](https://www.youtube.com/watch?v=eV7roTXrEqg)

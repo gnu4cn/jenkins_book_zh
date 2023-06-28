@@ -334,4 +334,21 @@ library "my-shared-library@${params.LIB_VERSION}"
 请注意，`library` 步骤不能用来覆盖隐式加载库的版本。在脚本启动时，他就已经被加载了，而且某个给定名称的库不可能被加载两次。
 
 
+### 取得方式
 
+**Retrieval Method**
+
+指定 SCM 的最佳方式是使用已被专门更新以支持新 API 的 SCM 插件，用于签出任意命名的版本（即 **Modern SCM** 选项）。截至目前，最新版本的 Git 和 Subversion 插件均支持这种模式。
+
+![全局流水线库的现代 SCM 配置](../images/global-pipeline-library-modern-scm.png)
+
+
+
+#### 遗留 SCM
+
+**Legacy SCM**
+
+
+那些尚未更新以支持共享库所需的较新特性的 SCM 插件，仍然可以通过 **Legacy SCM** 选项使用。在这种情况下，在可能为特定 SCM 插件，包含其中配置了 `branch/tag/ref` 的 `${library.yourlibrarynamehere.version}`。这样作可以确保在检出库的源代码时，SCM 插件就会展开这个变量来检出相应版本的库。
+
+![全局流水线库的遗留 SCM 配置](../images/global-pipeline-library-legacy-scm.jpg)

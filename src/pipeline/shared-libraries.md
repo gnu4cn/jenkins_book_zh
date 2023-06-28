@@ -219,7 +219,7 @@ public class AddSidebarLinkAction implements hudson.model.Action,java.io.Seriali
 
 摘自：[https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy](https://github.com/darinpope/github-api-global-lib/blob/main/src/AddSidebarLinkAction.groovy)
 
-> 可见，`src/` 目录下应放入一些供流水线使用的类文件。而这个 `AddSidebarLinkAction` 类，就曾在 [Jenkins 流水线入门](get_started.md#全局变量参考) 小节的那个视频中讲到其用法。
+> 可见，`src/` 目录下应放入一些供流水线使用的类文件。而这个 `AddSidebarLinkAction` 类，就曾在 [Jenkins 流水线入门](get_started.md#全局变量参考) 小节的那个视频中粗略提到其用法。
 
 ### 动态加载库
 

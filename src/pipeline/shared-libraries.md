@@ -137,4 +137,6 @@ import com.mycorp.pipeline.somelib.UsefulClass
 
 > 对于只定义了全局变量（即 `vars/`）的共享库，或者只需要某个全局变量的 `Jenkinsfile`，注释模式 `@Library('my-shared-library') _` 会对保持代码简洁很有用。从本质上讲，与其注释某个不必要的 `import` 语句，不如注释符号 `_`。
 >
-> 咱们不建议 `import` 某个全局的变量/函数，因为这将迫使编译器将字段和方法解释为 `static`，即使他们本来应是实例。在这种情况下，Groovy 编译器会产生混乱的错误信息。
+> 咱们不建议 `import` 某个全局的变量/函数，因为这将迫使编译器将字段和方法解释为 `static`，即使他们原本是实例。在这种情况下，Groovy 编译器会产生混乱的错误信息。
+
+

@@ -433,10 +433,120 @@ z.checkOutFrom(repo)
 package org.foo
 class Utilities implements Serializable {
   def steps
-  Utilities(steps) {this.steps = steps}
+
+  Utilities(steps) {
+    this.steps = steps
+  }
+
   def mvn(args) {
     steps.sh "${steps.tool 'Maven'}/bin/mvn -o ${args}"
   }
 }
-
 ```
+
+当在类上保存状态时，比如上面这样，类 **必须** 实现 `Serializable` 接口。这可以确保使用该类的流水线，如下面的例子所示，可以在 Jenkins 中正确地暂停和恢复。
+
+
+```groovy
+@Library('utils') import org.foo.Utilities
+
+def utils = new Utilities(this)
+
+node {
+  utils.mvn 'clean package'
+}
+```
+
+如果库需要访问全局变量，例如 `env`，那么这些变量应该以类似方式显式传递到库的类或方法中。
+
+
+无需将大量变量从脚本化流水线传递到库，
+
+
+```groovy
+package org.foo
+
+class Utilities {
+  static def mvn(script, args) {
+    script.sh "${script.tool 'Maven'}/bin/mvn -s ${script.env.HOME}/jenkins.xml -o ${args}"
+  }
+}
+```
+
+上面的例子显示脚本被传递到了一个 `static` 方法，而从脚本化流水线中调用则如下所示：
+
+
+```groovy
+@Library('utils') import static org.foo.Utilities.*
+
+node {
+  mvn this, 'clean package'
+}
+```
+
+
+### 定义全局变量
+
+**Defining global variables**
+
+
+在流水线库内部，`vars` 目录中的那些脚本是作为单例，singletons，而按需实例化的。这允许在一个 `.groovy` 文件中定义多个方法，以方便使用。比如说：
+
+
+```groovy
+// vars/log.groovy
+def info(message) {
+    echo "INFO: ${message}"
+}
+
+def warning(message) {
+    echo "WARNING: ${message}"
+}
+```
+
+```groovy
+// Jenkinsfile
+
+@Library('utils') _
+
+log.info 'Starting'
+log.warning 'Nothing to do!'
+```
+
+
+声明式流水线不允许对 `script` 代码块之外的对象进行方法调用。( [JENKINS-42360](https://issues.jenkins.io/browse/JENKINS-42360))。那么上面的方法调用就需要放在一个 `script` 指令里面：
+
+
+```groovy
+// Jenkinsfile
+@Library('utils') _
+
+pipeline {
+    agent none
+
+    stages {
+        stage ('Example') {
+            steps {
+                // log.info 'Starting' // 1
+                script { // 2
+                    log.info 'Starting'
+                    log.warning 'Nothing to do!'
+                }
+            }
+        }
+    }
+}
+```
+
+
+1. 此方法调用将失败，因为他位于某个 `script` 指令之外；
+
+2. 访问声明式流水线中全局变量所需的 `script` 指令。
+
+
+> 在共享库中定义的变量只有在 Jenkins 加载并使用该库作为成功 Pipeline 运行的一部分后，才会显示在 [ *全局变量参考*（ *Pipeline 语法* 下）](./get_started.md#全局变量参考) 中。
+>
+> *请避免在全局变量中保留状态*。
+> 在共享库中定义的所有全局变量都应是无状态的，也就是说，他们应该作为函数的集合。如果咱们的管道试图在全局变量中存储一些状态，那么在 Jenkins 控制器重启的情况下，这些状态会丢失。要使用静态类或实例化某个类的本地变量来代替。
+
+

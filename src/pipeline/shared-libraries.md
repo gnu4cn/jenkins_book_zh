@@ -549,4 +549,146 @@ pipeline {
 > *请避免在全局变量中保留状态*。
 > 在共享库中定义的所有全局变量都应是无状态的，也就是说，他们应该作为函数的集合。如果咱们的管道试图在全局变量中存储一些状态，那么在 Jenkins 控制器重启的情况下，这些状态会丢失。要使用静态类或实例化某个类的本地变量来代替。
 
+尽管如上所述，不鼓励对全局变量使用字段，但定义字段并将其作为只读使用是可行的。为定义某个字段，咱们需要使用一个注解：
+
+
+```groovy
+@groovy.transform.Field
+def yourField = "YourConstantValue"
+
+def yourFunction....
+```
+
+
+### 定义定制步骤
+
+**Defining custom steps**
+
+
+共享库还可以定义出行为类似于内建步骤，例如 `sh` 或 `git` 等的一些全局变量。共享库中定义的全局变量必须以全小写或 “camelCased” （驼峰大小写）样式命名，以便流水线正确加载。
+
+
+> 参见：[流水线共享库中全局变量无效大小写的示例](https://gist.github.com/rtyler/e5e57f075af381fce4ed3ae57aa1f0c2)
+
+
+例如，为了定义 `sayHello`，应该创建 `vars/sayHello.groovy` 文件，并且应实现一个 `call` 方法。`call` 方法允许这个全局变量以类似于步骤的方式被调用：
+
+
+```groovy
+// vars/sayHello.groovy
+def call(String name = 'human') {
+    // Any valid steps can be called from this code, just like in other
+    // Scripted Pipeline
+    echo "Hello, ${name}."
+}
+```
+
+然后，流水线将能够引用和调用这个变量：
+
+
+```groovy
+sayHello 'Joe'
+sayHello() /* invoke with default arguments */
+```
+
+
+如果要以代码块来调用，那么这个 `call` 方法就将收到一个 `Closure`。应该明确地定义这种类型，以阐明该步骤的意图，例如：
+
+
+```groovy
+// vars/windows.groovy
+def call(Closure body) {
+    node('windows') {
+        body()
+    }
+}
+```
+
+然后，流水线便可以像任何接受代码块的内建步骤一样使用这个变量：
+
+
+```groovy
+windows {
+    bat "cmd /?"
+}
+```
+
+
+### 定义更加结构化的 DSL
+
+**Defining a more structured DSL**
+
+如果咱们有很多大部分相似的 Pipeline，那么全局变量机制，the global variable mechanism，提供了一个方便的工具，可以构建出会捕获到相似性的更高级别 DSL。例如，所有的 Jenkins 插件都以同样方式构建和测试，所以咱们可以编写一个名为 `buildPlugin` 的步骤：
+
+
+```groovy
+// vars/buildPlugin.groovy
+def call(Map config) {
+    node {
+        git url: "https://github.com/jenkinsci/${config.name}-plugin.git"
+        sh 'mvn install'
+        mail to: '...', subject: "${config.name} plugin build", body: '...'
+    }
+}
+```
+
+假设该脚本是作为 [全局共享库](#全局共享库) 或 [文件夹级共享库](#文件夹级别的共享库) 加载的，那么得到的 `Jenkinsfile` 将大大简化：
+
+
+```groovy
+buildPlugin name: 'git'
+```
+
+还有一个用到 Groovy `Closure.DELEGATE_FIRST` 的 “构建者模式，builder pattern” 技巧，他允许 `Jenkinsfile` 看起来稍微更像配置文件，而不是程序，但这更为复杂，更容易出错，不推荐使用。
+
+
+### 使用第三方库
+
+**Using third-party libraries**
+
+
+> 虽然可行，但使用 `@Grab` 从受信任库中访问第三方库有各种问题，而因此不建议使用。相比于使用 `@Grab`，推荐方法是用咱们选择的编程语言（使用咱们自己想要的任何第三方库）创建独立的可执行文件，将其安装在咱们流水线使用到的 Jenkins 代理上，然后在咱们流水线中使用 `bat` 或 `sh` 步骤调用该可执行文件。
+
+使用 `@Grab` 注解，咱们便可以 **从受信任的** 库代码中使用第三方 Java 库，通常在 [Maven 中心](https://search.maven.org/) 找到。详情请参考 [Grape 文档](https://docs.groovy-lang.org/latest/html/documentation/grape.html#_quick_start)，但简单地说：
+
+
+```groovy
+@Grab('org.apache.commons:commons-math3:3.4.1')
+import org.apache.commons.math3.primes.Primes
+
+void parallelize(int count) {
+  if (!Primes.isPrime(count)) {
+    error "${count} was not prime"
+  }
+  // …
+}
+```
+
+第三方库默认会被缓存在 Jenkins 控制器上的 `~/.groovy/grapes/` 中。
+
+
+### 加载资源
+
+**Loading resources**
+
+
+外部库可以使用 `libraryResource` 步骤从 `resources/` 目录中加载一些辅助文件。其参数是一个相对路径名，类似于 Java 的资源加载：
+
+
+```groovy
+def request = libraryResource 'com/mycorp/pipeline/somelib/request.json'
+```
+
+文件是作为字符串而被加载的，适合于传递给某些 API 或使用 `writeFile` 保存到工作区。
+
+
+建议使用独特的包结构，这样咱们就不会意外地与别的库冲突。
+
+
+
+### 预先测试库的变化
+
+**Pretesting library changes**
+
+
 

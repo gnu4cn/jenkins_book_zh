@@ -686,9 +686,66 @@ def request = libraryResource 'com/mycorp/pipeline/somelib/request.json'
 
 
 
-### 预先测试库的变化
+### 预先测试库的变更
 
 **Pretesting library changes**
 
 
+如果咱们注意到在使用了不受信任库的构建中出现错误，就只需点击 *回访，Replay* 链接，尝试编辑该构建的一个或多个源文件，看看得到的构建是否与预期一致。一旦咱们对结果感到满意，就要从该构建的状态页上点击差异链接，the diff link, 并将差异应用到该库的代码仓库并提交。
 
+(即使为该库所请求的版本是个分支，而不是像标签那样的固定版本，回放构建仍将使用与原始构建完全相同的版本：库的源代码不会被再次签出。)
+
+目前不支持对受信任的库进行 *回放*。在 *回访* 过程中，目前也不支持修改资源文件。
+
+
+
+### 定义声明式流水线
+
+**Defining Declarative Pipelines**
+
+
+从 2017 年 9 月底发布的 Declarative 1.2 开始，咱们也可以在共享库中定义 Declarative Pipeline。下面是个示例，他将根据构建号是奇数还是偶数来执行不同的 Declarative Pipeline：
+
+
+
+```groovy
+// vars/evenOrOdd.groovy
+def call(int buildNumber) {
+  if (buildNumber % 2 == 0) {
+    pipeline {
+      agent any
+
+      stages {
+        stage('Even Stage') {
+          steps {
+            echo "The build number is even"
+          }
+        }
+      }
+    }
+  } else {
+    pipeline {
+      agent any
+
+      stages {
+        stage('Odd Stage') {
+          steps {
+            echo "The build number is odd"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+
+```groovy
+// Jenkinsfile
+@Library('my-shared-library') _
+
+evenOrOdd(currentBuild.getNumber())
+```
+
+
+到目前为止，只有整个的 `pipeline` 可以在共享库中定义。这只能在 `vars/*.groovy` 中进行，而且只能在 `call` 方法中进行。在一次构建中只能执行一条声明式流水线，如果咱们试图执行第二条，咱们的构建将因此而失败。

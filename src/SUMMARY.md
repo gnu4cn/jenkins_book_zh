@@ -29,6 +29,7 @@
     - [分支与拉取请求](./pipeline/branches.md)
     - [在流水线中使用 Docker](./pipeline/docker.md)
     - [使用共享库扩展 Pipeline](./pipeline/shared-libraries.md)
+    - [流水线开发工具](./pipeline/development_tools.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 
 

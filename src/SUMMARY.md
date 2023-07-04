@@ -22,7 +22,7 @@
     - [在 Jenkins 中使用 JMeter](./usage/using_jmeter_with_jenkins.md)
 
 
-- [管道 Pipeline](./pipeline.md)
+- [流水线 Pipeline](./pipeline.md)
     - [Jenkins 管道入门](./pipeline/get_started.md)
     - [使用 `Jenkinsfile`](./pipeline/jenkinsfile.md)
     - [运行流水线](./pipeline/running.md)
@@ -30,6 +30,10 @@
     - [在流水线中使用 Docker](./pipeline/docker.md)
     - [使用共享库扩展 Pipeline](./pipeline/shared-libraries.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
+
+
+- [管理 Jenkins](./managing.md)
+    - [Jenkins 命令行界面](./managing/jenkins_cli.md)
 
 
 - [扩展 Jenkins 规模](scaling.md)

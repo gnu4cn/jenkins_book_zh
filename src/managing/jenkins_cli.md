@@ -180,3 +180,86 @@ CLI 客户端可以直接从 Jenkins 控制器的 URL `/jnlpJars/jenkins-cli.jar
 ### 使用客户端
 
 
+调用客户端的一般语法如下：
+
+
+```console
+java -jar jenkins-cli.jar -s JENKINS_URL [global options...] command [command options...] [arguments...]
+```
+
+`JENKINS_URL` 可以通过环境变量 `$JENKINS_URL` 来指定。其他一般选项的摘要可以通过在运行客户端时完全不带参数来显示。
+
+
+### 客户端连接模式
+
+**Client connection modes**
+
+有三种基本模式可供客户端使用，可通过全局选项选择：`-http`、`-webSocket` 和 `-ssh`。
+
+
+#### HTTP 连接模式
+
+这是默认模式，但为了清楚起见，咱们可以显式传递 `-http` 选项。
+
+
+身份验证最好使用 `-auth` 选项，该选项采用 `username:apitoken` 参数。请从 `/me/configure` 获取 API 令牌：
+
+
+```console
+java -jar jenkins-cli.jar [-s JENKINS_URL] -auth kohsuke:abc1234ffe4a command ...
+```
+
+（也接受实际密码，但不鼓励这样做。）
+
+
+咱们也可以在参数前加上 `@`，而从文件中加载相同的内容：
+
+
+```console
+$ java -jar ./jenkins-cli.jar -s https://ci.xfoss.com -auth @/home/lenny.peng/.jenkins-cli-auth help
+```
+
+> 出于安全考虑，使用文件加载认证凭据是推荐的认证方式。
+
+另一种认证方法是以类似于 `$JENKINS_URL` 的方式来配置环境变量。`username` 可以通过环境变量 `$JENKINS_USER_ID` 指定，而 `apitoken` 可以通过变量 `$JENKINS_API_TOKEN` 指定。这两个变量必须同时设置。
+
+
+```bash
+export JENKINS_USER_ID=kohsuke
+export JENKINS_API_TOKEN=abc1234ffe4a
+java -jar jenkins-cli.jar [-s JENKINS_URL] command ...
+```
+
+如果配置了这些环境变量，咱们仍然可以用 `-auth` 选项，以不同凭据覆盖认证方法，这个选项优先于所设置的环境变量。
+
+一般来说，不需要做特殊的系统配置来启用基于 HTTP 的 CLI 连接。如果咱们在某个 HTTP(S) 反向代理后面运行 Jenkins，请确保其不会缓存请求或响应体。
+
+
+> 众所周知，在使用某些反向代理时，这种模式不能可靠地工作或根本不能工作。请优先选择 WebSocket 模式。
+
+
+#### WebSocket 连接模式
+
+
+在 Jenkins 2.217 及以上版本中，`-webSocket` 模式可以作为 `-http` 的替代品。其优点是使用了一个更标准的传输，避免了许多反向代理的问题或需要特殊的代理配置。
+
+
+```console
+java -jar .\jenkins-cli.jar -webSocket -auth kohsuke:abc1234ffe4a who-am-i
+```
+
+
+#### SSH 连接模式
+
+
+认证是通过 SSH 密钥对进行的。咱们必须同时选择 Jenkins 的用户 ID：
+
+
+```console
+java -jar jenkins-cli.jar [-s JENKINS_URL] -ssh -user kohsuke command ...
+```
+
+在这种模式下，客户端的行为基本上就像原生的 `ssh` 命令。
+
+
+

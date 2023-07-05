@@ -56,6 +56,8 @@ $ alias jenkins-cli='ssh -l ci_cd_scm -p 32222 ci.senscomm.com'
 $ jenkins-cli help
 ```
 
+> `help` 命令的输出如下：
+
 ```console
 {{#include ./jenkins-cli-help:}}
 ```
@@ -64,4 +66,117 @@ $ jenkins-cli help
 
 
 #### `build`
+
+最常见和最有用的 CLI 命令之一便是 `build`，他允许用户触发他们有权限的任何作业或流水线。
+
+
+最基本的调用将简单地触发作业或流水线并退出，但通过附加选项，用户也可以传递参数、轮询 SCM，甚至跟踪被触发的构建或流水线运行的控制台输出。
+
+
+```console
+$ jenkins-cli help build
+java -jar jenkins-cli.jar build JOB [-c] [-f] [-p] [-r N] [-s] [-v] [-w]
+Starts a build, and optionally waits for a completion.
+Aside from general scripting use, this command can be
+used to invoke another job from within a build of one job.
+With the -s option, this command changes the exit code based on
+the outcome of the build (exit code 0 indicates a success)
+and interrupting the command will interrupt the job.
+With the -f option, this command changes the exit code based on
+the outcome of the build (exit code 0 indicates a success)
+however, unlike -s, interrupting the command will not interrupt
+the job (exit code 125 indicates the command was interrupted).
+With the -c option, a build will only run if there has been
+an SCM change.
+ JOB : Name of the job to build
+ -c  : Check for SCM changes before starting the build, and if there's no
+       change, exit without doing a build (default: false)
+ -f  : Follow the build progress. Like -s only interrupts are not passed
+       through to the build. (default: false)
+ -p  : Specify the build parameters in the key=value format. (default: {})
+ -s  : Wait until the completion/abortion of the command. Interrupts are passed
+       through to the build. (default: false)
+ -v  : Prints out the console output of the build. Use with -s (default: false)
+ -w  : Wait until the start of the command (default: false)
+$ jenkins-cli build foobar -f -v
+Started foobar #1
+Started from command line by ci_cd_scm
+Running as SYSTEM
+Building remotely on agent-on-linux-01 in workspace /home/jenkins/workspace/foobar
+[foobar] $ /bin/sh -xe /tmp/jenkins15758294526917720365.sh
++ echo Building...
+Building...
+Finished: SUCCESS
+Completed foobar #1 : SUCCESS
+```
+
+#### `console`
+
+同样有用的是 `console` 命令，他会检索指定构建或流水线运行的控制台输出。如果没有提供构建编号，`console` 命令将输出最后完成的构建的控制台输出。
+
+
+```console
+$ jenkins-cli help console
+java -jar jenkins-cli.jar console JOB [BUILD] [-f] [-n N]
+Produces the console output of a specific build to stdout, as if you are doing 'cat build.log'
+ JOB   : Name of the job
+ BUILD : Build number or permalink to point to the build. Defaults to the last
+         build (default: lastBuild)
+ -f    : If the build is in progress, stay around and append console output as
+         it comes, like 'tail -f' (default: false)
+ -n N  : Display the last N lines (default: -1)
+$ jenkins-cli console foobar
+Started from command line by ci_cd_scm
+Running as SYSTEM
+Building remotely on agent-on-linux-01 in workspace /home/jenkins/workspace/foobar
+[foobar] $ /bin/sh -xe /tmp/jenkins15758294526917720365.sh
++ echo Building...
+Building...
+Finished: SUCCESS
+```
+
+#### `who-am-i`
+
+`who-am-i` 命令有助于列出当前用户的凭据和用户可用的权限。在调试由于缺乏某些权限而没有 CLI 命令的情况时，这可能很有用。
+
+
+```console
+$ jenkins-cli help who-am-i
+java -jar jenkins-cli.jar who-am-i
+Reports your credential and permissions.
+$ jenkins-cli who-am-i
+Authenticated as: ci_cd_scm
+Authorities:
+  authenticated
+```
+
+
+## 使用命令行界面客户端
+
+**Using the CLI client**
+
+
+虽然基于 SSH 的 CLI 速度很快，而且能满足大多数需求，但在某些情况下，随 Jenkins 分发的 CLI 客户端可能更适合。例如，CLI 客户端的默认传输是 HTTP，这意味着不需要在防火墙中为其使用打开额外的端口。
+
+
+### SSH 与 CLI 客户端的比较
+
+**Comparing SSH and CLI client**
+
+SSH 和 `jenkins-cli.jar` 都提供了对一套命令的访问，使咱们可以从命令行与 Jenkins 进行交互，但他们有一些区别：
+
+- Jenkins SSH 在客户端不需要任何定制的 `.jar` 文件，使其更容易从各种来源访问 Jenkins；
+
+- SSH 客户端是为成为一个通用的工具，为多种目的服务而构建的。他没有提供简单方法来做 Jenkins 环境中常见和特定的基本事情。而使用 `jenkins-cli.jar` 而不是 SSH 客户端则可能会提高生产力并改善开发体验。
+
+
+### 下载客户端
+
+CLI 客户端可以直接从 Jenkins 控制器的 URL `/jnlpJars/jenkins-cli.jar` 下载，实际上就是 `JENKINS_URL/jnlpJars/jenkins-cli.jar`。
+
+虽然 CLI 的 `.jar` 可以针对不同版本的 Jenkins 使用，但如果在使用过程中出现任何兼容性问题，请从 Jenkins 控制器重新下载最新的 `.jar` 文件。
+
+
+### 使用客户端
+
 

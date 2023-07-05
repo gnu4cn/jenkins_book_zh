@@ -320,4 +320,16 @@ org.acegisecurity.userdetails.UsernameNotFoundException: <name_you_used>
 
 1. 前往 **系统管理** > **System log** > **Add recorder**；
 
-2.
+2. 输入咱们想要的任何名字，然后点击 **Create**。
+
+3. 点击 **新增**；
+
+4. 输入 `org.jenkinsci.main.modules.sshd.PublicKeyAuthenticatorImpl`（或者输入 `PublicKeyAuth`，然后选择全名）；
+
+5. 将级别设置为 **ALL**；
+
+6. 对 `hudson.model.User` 重复前面三个步骤；
+
+7. 点击 **保存**。
+
+当咱们尝试认证时，咱们就可以刷新页面，看看内部发生了什么。

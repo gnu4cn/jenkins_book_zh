@@ -25,4 +25,26 @@ $ curl -Lv https://ci.senscomm.com/login 2>&1 | grep -i 'x-ssh-endpoint'
 < X-SSH-Endpoint: ci.senscomm.com:32222
 ```
 
+有了 SSH 端口（本例中为 `32222`），并配置了 [认证](#认证)，任何现代的 SSH 客户端都可以安全地执行 CLI 命令。
+
+
+### 认证
+
+**Authentication**
+
+无论哪个用户用于与 Jenkins 控制器的认证，都必须有 `全部/读取，Overall/Read` 权限，以便访问 CLI。该用户可能需要额外的权限，这取决于所执行的命令。
+
+SSH 模式下的认证依赖基于 SSH 的公钥/私钥认证。为了给适当的用户添加一个 SSH 公钥，请导航至 `JENKINS_URL/me/configure` 并将 SSH 公钥粘贴到适当的文本区域。
+
+
+![为 Jenkins 命令行界面添加 SSH 公钥](../images/cli-adding-ssh-public-keys.png)
+
+> **注**：Jenkins 不支持 `ssh-ecdsa` 与 `ssh-ed25519` 类型的密钥，支持 `ssh-rsa` 的密钥。
+
+
+### 常用命令
+
+**Common Commands**
+
+
 

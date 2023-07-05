@@ -262,4 +262,62 @@ java -jar jenkins-cli.jar [-s JENKINS_URL] -ssh -user kohsuke command ...
 在这种模式下，客户端的行为基本上就像原生的 `ssh` 命令。
 
 
+默认情况下，客户端将尝试连接到与 `JENKINS_URL` 中使用的同一主机上的某个 SSH 端口。如果 Jenkins 是在在某个 HTTP 反向代理后面，这通常不会起作用，所以运行 Jenkins 时要使用系统属性 `-Dorg.jenkinsci.main.modules.sshd.SSHD.hostName=ACTUALHOST` 来为 SSH 端点定义一个主机名或 IP 地址。
 
+
+### CLI 客户端的常见问题
+
+**Common Problems with the CLI client**
+
+
+在运行 CLI 客户端时，可能会遇到一些常见问题。
+
+
+#### 服务器密钥无效
+
+**Server key did not validate**
+
+
+咱们可能会得到下面的错误，并在那个关于 `mismatched keys` 下面找到一个日志条目：
+
+```console
+org.apache.sshd.common.SshException: Server key did not validate
+    at org.apache.sshd.client.session.AbstractClientSession.checkKeys(AbstractClientSession.java:523)
+    at org.apache.sshd.common.session.helpers.AbstractSession.handleKexMessage(AbstractSession.java:616)
+    ...
+```
+
+这意味着咱们的 SSH 配置无法识别服务器所提供的公钥。当咱们在开发模式下运行 Jenkins 并且应用程序的多个实例随着时间推移在同一 SSH 端口下运行时，通常会出现这种情况。
+
+
+在开发环境中，请访问咱们的 `~/.ssh/known_hosts`（或者 Windows 的 `C:/Users/<your_name>/.ssh/known_hosts` 中），并删除与咱们当前 SSH 端口（例如 `[localhost]:3485`）对应的行。在生产环境中，请向 Jenkins 管理员确认服务器的公钥最近是否有变化。如果是的话，请管理员完成上述步骤。
+
+
+#### `UsernameNotFoundException`
+
+如果咱们的客户端显示如下所示的堆栈跟踪：
+
+
+```console
+org.acegisecurity.userdetails.UsernameNotFoundException: <name_you_used>
+    ...
+```
+
+这意味着咱们的 SSH 密钥被识别并与已存储用户进行了验证，但用户名对咱们应用程序目前正在使用的安全域，the security realm，无效。这可能发生在咱们最初使用 Jenkins 数据库时，配置了咱们的用户，然后切换到另一个安全域（如 LDAP，等等），其中已定义的用户还不存在。
+
+
+为了解决这个问题，请确保咱们的用户存在于所配置的安全域中。
+
+
+
+### 用于故障排除的日志
+
+**Troubleshooting logs**
+
+
+为获得更多关于认证过程的信息：
+
+
+1. 前往 **系统管理** > **System log** > **Add recorder**；
+
+2.

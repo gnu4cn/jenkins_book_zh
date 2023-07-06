@@ -164,4 +164,57 @@ Jenkinsfile successfully validated.
 **Limitations**
 
 
--
+- **有语法错误的流水线运行不能被重放** -- 这意味着他们的代码无法被查看，在其中所做的任何修改也不能被检索到。当使用回放进行一些较为重要的修改时，请在运行之前将咱们的修改保存到 Jenkins 之外的文件或编辑器中。参见 [JENKINS-37589](https://issues.jenkins.io/browse/JENKINS-37589)；
+
+- **所回放的流水线行为可能与通过其他方法启动的运行有区别** - 对于不属于多分支流水线一部分的流水线，原始运行和回放运行的代码提交信息可能不同。参见 [JENKINS-36453**](https://issues.jenkins.io/browse/JENKINS-36453)
+
+
+
+## IDE 集成
+
+**IDE Integrations**
+
+
+### Eclipse 的 Jenins 编辑器
+
+
+Eclipse 的 `Jenkins Editor` 插件可以在 [Eclipse Marketplace](https://marketplace.eclipse.org/content/jenkins-editor) 上找到。这个特别的文本编辑器提供了一些用于定义流水线的功能，例如：
+
+- 通过 [Jenkins 的静态检查器检查](#命令行的流水线静态分析程序) 而验证流水线脚本。检查失败会显示为 eclipse 标记；
+
+- 带有专用图标的大纲（用于声明式 Jenkins 流水线）；
+
+- 语法/关键词高亮显示；
+
+- Groovy 语法检查。
+
+
+> 这个 Jenkins 编辑器插件是个第三方工具，不受 Jenkins 项目方所支持。
+
+
+### VisualStudio Code 的 Jenkins 流水线静态检查器连接器
+
+
+**VisualStudio Code Jenkins Pipeline Linter Connector**
+
+
+[VisualStudio Code](https://code.visualstudio.com/) 的 `Jenkins Pipeline Linter Connector` 扩展会将咱们当前打开的文件，推送到咱们的 Jenkins 服务器，并在 VS Code 中显示验证结果。
+
+
+你可以在 VS Code 的扩展浏览器中找到这个扩展，也可以在以下网址找到：
+
+[marketplace.visualstudio.com/items?itemName=janjoerke.jenkins-pipeline-linter-connector](https://marketplace.visualstudio.com/items?itemName=janjoerke.jenkins-pipeline-linter-connector)
+
+
+该扩展会在 VS Code 中增加了四个设置项，选择咱们打算用来验证的 Jenkins 服务器。
+
+- `jenkins.pipeline.linter.connector.url` 是 Jenkins 服务器所期望的包含咱们打算验证 `Jenkinsfile` 的 POST 请求端点，the endpoint。通常，这会指向 `<your_jenkins_server:port>/pipeline-model-converter/validate`；
+
+- `jenkins.pipeline.linter.connector.user` 允许咱们指定咱们的 Jenkins 用户名；
+
+- `jenkins.pipeline.linter.connector.pass` 允许咱们指定咱们的 Jenkins 密码；
+
+- 如果咱们的 Jenkins 服务器启用了 CRSF 保护，那么就必须指定 `jenkins.pipeline.linter.connector.crumbUrl`。通常这会指向 `<your_jenkins_server:port>/crumbIssuer/api/xml?xpath=concat（//crumbRequestField,%22:%22,//crumb）`。
+
+
+

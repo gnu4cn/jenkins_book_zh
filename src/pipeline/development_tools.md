@@ -105,4 +105,4 @@ Jenkinsfile successfully validated.
 [Blue Ocean 的流水线编辑器](../blue_ocean/pipeline_editor.md) 提供了一种 [WYSIWYG](https://en.wikipedia.org/wiki/WYSIWYG) 方式来创建声明式流水线。该编辑器提供了某个流水线中所有阶段、平行分支及步骤的结构化视图。该编辑器在进行流水线修改时进行验证，在提交之前就消除了许多错误。而在幕后，其仍会生成声明式流水线代码。
 
 
-{{#include ./getting_started.md:56:60}}
+{{#include ./get_started.md:56:60}}

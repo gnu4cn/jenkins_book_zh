@@ -175,7 +175,7 @@ Jenkinsfile successfully validated.
 **IDE Integrations**
 
 
-### Eclipse 的 Jenins 编辑器
+### Eclipse 的 Jenkins 编辑器
 
 
 Eclipse 的 `Jenkins Editor` 插件可以在 [Eclipse Marketplace](https://marketplace.eclipse.org/content/jenkins-editor) 上找到。这个特别的文本编辑器提供了一些用于定义流水线的功能，例如：
@@ -217,4 +217,32 @@ Eclipse 的 `Jenkins Editor` 插件可以在 [Eclipse Marketplace](https://marke
 - 如果咱们的 Jenkins 服务器启用了 CRSF 保护，那么就必须指定 `jenkins.pipeline.linter.connector.crumbUrl`。通常这会指向 `<your_jenkins_server:port>/crumbIssuer/api/xml?xpath=concat（//crumbRequestField,%22:%22,//crumb）`。
 
 
+### Neovim 的 `nvim-jenkinsfile-linter` 插件
 
+这个 [`nvim-jenkinsfile-linter`](https://github.com/ckipp01/nvim-jenkinsfile-linter) Neovim 插件允许咱们通过使用 Jenkins 实例的流水线静态检查器 API 来验证 `Jenkinsfile`，并在编辑器中报告任何既有的诊断信息。
+
+
+### Atom 的 `linter-jenkins` 包
+
+这个 [`linter-jenkins`](https://atom.io/packages/linter-jenkins) Atom 软件包允许咱们通过使用运行中的 Jenkins 的流水线静态检查器 API 来验证某个 `Jenkinsfile`。咱们可以直接从 Atom 包管理器中安装他。他还需要安装 [Atom 中的 `Jenkinsfile` 语言支持](https://atom.io/packages/language-jenkinsfile)。
+
+
+### Sublime Text 的 `Jenkinsfile` 包
+
+
+这个 [`Jenkinsfile`](https://github.com/june07/sublime-Jenkinsfile) Sublim Text 包允许咱们通过安全通道（SSH）使用运行中的 Jenkins 实例的流水线静态检查器 API 来验证某个 `Jenkinsfile`。咱们可以直接从 Sublime Text 包管理器中安装他。
+
+
+咱们可以在 Sublime Text 界面中的 Package Control 包，在 GitHub 上， 或在 packagecontrol.io 找到该包：
+
+- [https://github.com/june07/sublime-Jenkinsfile](https://github.com/june07/sublime-Jenkinsfile)
+
+- [https://packagecontrol.io/packages/Jenkinsfile](https://packagecontrol.io/packages/Jenkinsfile)
+
+
+## 流水线的单元测试框架
+
+**Pipeline Unit Testing Framework**
+
+
+[流水线的单元测试框架](https://github.com/jenkinsci/JenkinsPipelineUnit) 允许咱们在完全运行流水线和 [共享库](./shared-libraries.md) 之前对其进行 [单元测试](https://en.wikipedia.org/wiki/Unit_testing)。他提供了一个模拟执行环境，其中真实的流水线步骤会被模拟对象取代，咱们可以用他来检查预期行为。这个框架有着新的和略微粗糙的边缘，但很有希望，new and rough around the edges, but promising。这个项目的 [README](https://github.com/jenkinsci/JenkinsPipelineUnit/blob/master/README.md) 包含了一些示例及使用说明。

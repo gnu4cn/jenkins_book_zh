@@ -61,20 +61,48 @@ pipeline {
 ```console
 # 无效 Jenkinsfile 的静态检查器输出
 # 传递一个未包含 `agent` 小节的 Jenkinsfile
-$ jenkins-cli declarative-linter < ./Jenkinsfile
-Jenkinsfile content '#!/usr/bin/env groovy
 
-libnl-3-depeline {
-    agent
-        stages {
-            stage ('Initialize') {
-                steps {
-                    echo 'Placeholder.'
-                }
-            }
-        }
+$ jenkins-cli declarative-linter < ./Jenkinsfile
+Errors encountered validating Jenkinsfile:
+WorkflowScript: 4: Not a valid section definition: "agent". Some extra configuration is required. @ line 4, column 5.
+       agent
+       ^
+
+WorkflowScript: 3: Missing required section "agent" @ line 3, column 1.
+   pipeline {
+   ^
+
+```
+
+在第二个示例中，这个 `Jenkinsfile` 已经被更新，以包括缺少的在 `agent` 上的 `any`。现在静态检查器就会报告说这个流水线脚本是有效的。
+
+
+```groovy
+// Jenkinsfile
+pipeline {
+  agent any
+  stages {
+    stage ('Initialize') {
+      steps {
+        echo 'Placeholder.'
+      }
+    }
+  }
 }
-' did not contain the 'pipeline' step
+```
+
+```console
+# 有效 Jenkinsfile 的静态检查器输出
+
+$ jenkins-cli declarative-linter < ./Jenkinsfile
+Jenkinsfile successfully validated.
 ```
 
 
+## Blue Ocean 编辑器
+
+
+[Blue Ocean 的流水线编辑器](../blue_ocean/pipeline_editor.md) 提供了一种 [WYSIWYG](https://en.wikipedia.org/wiki/WYSIWYG) 方式来创建声明式流水线。该编辑器提供了某个流水线中所有阶段、平行分支及步骤的结构化视图。该编辑器在进行流水线修改时进行验证，在提交之前就消除了许多错误。而在幕后，其仍会生成声明式流水线代码。
+
+
+{{#include ./getting_started.md:56:60}}

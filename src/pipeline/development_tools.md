@@ -106,3 +106,14 @@ Jenkinsfile successfully validated.
 
 
 {{#include ./get_started.md:56:60}}
+
+
+## 带有 “回放” 流水线运行
+
+**"Replay" Pipeline Runs with Modifications**
+
+
+通常情况下，流水线将在经典的 Jenkins Web UI 中定义，或者通过提交到源码控制系统中的 `Jenkinsfile` 定义。不幸的是，这两种方法对于流水线的快速迭代或原型设计都不理想。“回放，Replay” 特性允许快速修改和执行现有的流水线，而无需改变流水线的配置或创建新的提交，commit。
+
+
+### 用法

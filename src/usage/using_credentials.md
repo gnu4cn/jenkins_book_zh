@@ -113,3 +113,16 @@ Jenkins 可以存储以下类型的凭据：
 10. 为凭据指定一个可选的 **描述，Description**;
 
 11. 点击 **Create** 按钮保存凭据。
+
+
+## 在结合 `withCredentials` 与 `ssh-steps` 使用凭据时的一个问题
+
+
+开始使用 `ssh_ed25519` 的凭据时，`sshCommand` 报出了 `invalid private key` 问题，后调查发现，Java 环境下，`JSch` 等 SSH 客户端，不支持常规的 SSH 密钥，应使用命令：
+
+
+```bash
+ssh-keygen -m PEM -t rsa -b 2048
+```
+
+创建出 `id_rsa_pem` 及 `id_rsa_pem.pub` 密钥对，并将私钥添加到 Jenkins 的凭据管理中，随后在 `ssh-steps` 中调用私钥。

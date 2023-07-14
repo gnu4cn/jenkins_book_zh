@@ -76,14 +76,18 @@ pipeline {
 </table>
 
 
-**顶级代理和阶段性代理之间的区别，differences between top level agents and stage level agents**
+**顶级代理和阶段性代理之间的区别**
+
+**differences between top level agents and stage level agents**
 
 
 当应用了 `options` 指令时，在顶层或阶段级别添加某个代理时，会有一些细微的差别。请查看 [选项](#选项) 部分了解更多信息。
 
 
 
-**顶层的代理，Top Level Agents**
+**顶层的代理**
+
+**Top Level Agents**
 
 
 在流水线顶层声明的代理中，某个代理会被分配，然后 `timeout` 选项就会被应用。用于分配代理的时间 **不会包括** 在 `timeout` 选项所设定的限制中。
@@ -108,6 +112,7 @@ pipeline {
 
 **阶段的代理**
 
+**Stage Agents**
 
 在阶段内声明的代理中，选项在分配 `agent` 和检查任何 `when` 条件 **之前** 就会被调用。在这种情况下，当使用 `timeout` 时，其是在 `agent` 分配之前就应用的。用于分配代理的时间会 **包含在** `timeout` 选项所设定的限制中。
 
@@ -133,7 +138,9 @@ pipeline {
 此超时将包括代理配置时间。由于超时包括了代理配置时间，因此在代理分配延迟的情况下，流水线就可能会失败。
 
 
-**参数, Parameters**
+**参数**
+
+**Parameters**
 
 
 

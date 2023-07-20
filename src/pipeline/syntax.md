@@ -272,7 +272,100 @@ spec:
 请参考以下示例：[https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/kaniko.groovy](https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/kaniko.groovy)
 
 
-**常见选项**
+**常用选项**
+
+下面是可用于两种或更多的代理实现的一些选项。除非明确说明，否则这些选项不是必需的。
+
+
+- `label`
+
+一个字符串。运行流水线或单个 `stage` 所依据的标签或标签条件。
+
+该选项适用于 `node`、`docker` 和 `dockerfile`，对于 `node` 则是必需的。
+
+- `customWorkspace`
+
+一个字符串。在此定制工作区中，而非默认的工作区运行此代理所应用到的流水线或单个阶段。可以是相对路径（在这种情况下，定制工作区将位于节点上工作区根目录之下），也可以是绝对路径。例如：
+
+```groovy
+agent {
+    node {
+        label 'my-defined-label'
+        customWorkspace '/some/other/path'
+    }
+}
+```
+
+此选项对 `node`、`docker` 及 `dockerfile` 有效。
+
+- `reuseNode`
+
+一个布尔值，默认为 `false`。如果为 `true`，那么将在流水线顶层指定的节点上，在同一工作区中运行容器，而不是在全新的节点上运行。
+
+此选项对 `docker` 和 `dockerfile` 有效，且仅在某个 `agent` 上对单个 `stage` 使用时有效。
+
+- `args`
+
+一个字符串。传递给 `docker run` 的运行时参数。
+
+
+该选项适用于 `docker` 和 `dockerfile`。
+
+
+*示例 1：Docker 构建代理，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent { docker 'maven:3.9.3-eclipse-temurin-17' } // 1
+
+    stages {
+        stage('Example Build') {
+            steps {
+                sh 'mvn -B clean verify'
+            }
+        }
+    }
+}
+```
+
+1. 在以给定名称及标签（`maven:3.9.3-eclipse-temurin-17`）新创建的容器中执行此流水线中定义的所有步骤。
+
+
+*示例 2：阶段级别的代理小节*
+
+```groovy
+pipeline {
+    agent none // 1
+
+    stages {
+        stage('Example Build') {
+            agent { docker 'maven:3.9.3-eclipse-temurin-17' }  // 2
+
+            steps {
+                echo 'Hello, Maven'
+                sh 'mvn --version'
+            }
+        }
+
+        stage('Example Test') {
+            agent { docker 'openjdk:17-jre' } // 3
+
+            steps {
+                echo 'Hello, JDK'
+                sh 'java -version'
+            }
+        }
+    }
+}
+```
+
+1. 在流水线顶层定义 `agent none` 可确保不会不必要地分配 [执行器，an Executor](../glossary.md#exector)。使用 `agent none` 还能强制各个 `stage` 小节都要包含自己的 `agent` 小节；
+
+2. 在使用这个 Docker 镜像新建出的容器中执行本阶段的步骤；
+
+3. 使用与上一阶段不同的 Docker 镜像而新创建出的容器中执行本阶段的步骤。
+
 
 
 

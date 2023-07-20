@@ -312,6 +312,9 @@ agent {
 该选项适用于 `docker` 和 `dockerfile`。
 
 
+> **注意**：下面两个示例是 `agent` 小节的总体示例，并非 “常用选项” 或 `args` 的示例。
+
+
 *示例 1：Docker 构建代理，声明式流水线*
 
 
@@ -387,4 +390,18 @@ pipeline {
 </table>
 
 
+**后置条件**
 
+**Conditions**
+
+
+- `always`
+- `changed`
+- `fixed`
+- `regression`
+- `aborted`
+- `failure`
+- `success`
+- `unstable`
+- `unsuccessful`
+- `cleanup`

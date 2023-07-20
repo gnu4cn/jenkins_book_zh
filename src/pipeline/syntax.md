@@ -150,8 +150,79 @@ pipeline {
 在任何可用代理上执行流水线或阶段。例如：`agent any`。
 
 - `none`
+
+在 `pipeline` 代码块的顶层应用 `agent none` 时，就不会为整个流水线的运行分配全局代理，而此时每个 `stage` 小节都需要包含自己的 `agent` 小节。例如：`agent none`。
+
 - `label`
+
+在 Jenkins 环境中带有所提供标签的可用代理上执行流水线或阶段。例如： `agent { label 'my-defined-label' }`。
+
+也可以使用标签条件，label conditions： 例如：`agent { label 'my-label1 && my-label2' }` 或 `agent { label 'my-label1 || my-label2' }`。
+
 - `node`
+
+`agent { node { label 'labelName' } }` 的行为与 `agent { label 'labelName' } }` 相同，但 `node` 允许使用其他选项（如 `customWorkspace` 等）。
+
 - `docker`
+
+使用给定的容器执行流水线或阶段，容器将动态配置，be dynamically provisioned, 到预先配置好接受基于 Docker 的流水线的节点上，或者配置到与可选定义 `label` 参数相匹配的节点上。`docker` 还可选地接受 `args` 参数，其中可能包含直接传递给 `docker run` 调用的参数，以及 `alwaysPull` 选项，这时即使镜像名称已经存在，也会强制执行 `docker pull`。例如： `agent { docker 'maven:3.9.3-eclipse-temurin-17' }` 或
+
+```groovy
+agent {
+    docker {
+        image 'maven:3.9.3-eclipse-temurin-17'
+        label 'my-defined-label'
+        args  '-v /tmp:/tmp'
+    }
+}
+```
+
+`docker` 还可选地接受 `registryUrl` 和 `registryCredentialsId` 参数，这有助于指定要使用的 Docker 注册表及其凭据。参数 `registryCredentialsId` 可单独用于 docker 中心的私有存储库。例如：
+
+
+```groovy
+agent {
+    docker {
+        image 'myregistry.com/node'
+        label 'my-defined-label'
+        registryUrl 'https://myregistry.com/'
+        registryCredentialsId 'myPredefinedCredentialsInJenkins'
+    }
+}
+```
+
 - `dockerfile`
+
+使用源代码库中包含的 `Dockerfile` 构建出的容器执行流水线或阶段。要使用此选项，`Jenkinsfile` 必须从 **多分支流水线** 或 **SCM 流水线** 中加载。通常情况下，这是源代码库根目录下的 `Dockerfile`： `agent { dockerfile true }`。如果在其他目录下构建 `Dockerfile`，请使用 `dir` 选项： `agent { dockerfile { dir 'someSubDir' } }`。如果咱们的 `Dockerfile` 有其他名字，可以使用 `filename` 选项指定文件名。咱们可以使用 `additionalBuildArgs` 选项为 `docker build ...` 命令传递额外参数，比如 `agent { dockerfile { additionalBuildArgs '--build-arg foo=bar' } }`。例如，对于有着包含 `build/Dockerfile.build` 文件的某个版本库，其构建参数的 `version` 为：
+
+```groovy
+agent {
+    // Equivalent to "docker build -f Dockerfile.build --build-arg version=1.0.2 ./build/
+    dockerfile {
+        filename 'Dockerfile.build'
+        dir 'build'
+        label 'my-defined-label'
+        additionalBuildArgs  '--build-arg version=1.0.2'
+        args '-v /tmp:/tmp'
+    }
+}
+```
+
+像参数 `docker` 一样，`dockerfile` 也可选择接受 `registryUrl` 和 `registryCredentialsId` 参数，这有助于指定要使用的 Docker 注册表及其凭据。例如：
+
+
+```groovy
+agent {
+    dockerfile {
+        filename 'Dockerfile.build'
+        dir 'build'
+        label 'my-defined-label'
+        registryUrl 'https://myregistry.com/'
+        registryCredentialsId 'myPredefinedCredentialsInJenkins'
+    }
+}
+```
+
 - `kubernetes`
+
+

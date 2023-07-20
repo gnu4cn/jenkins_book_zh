@@ -372,7 +372,7 @@ pipeline {
 
 #### `post`
 
-`post` 小节定义了流水线或阶段运行完成后要运行的一个或多个附加 [步骤](#steps)（取决于 `post` 在流水线中的位置）。`post` 小节可支持以下任何 [后置条件，post-condition](#后置条件) 代码块：`always`、`changed`、`fixed`、`regression`、`aborted`、`failure`、`success`、`unstable`、`unsuccessful` 及 `cleanup`。这些条件代码块允许根据流水线或阶段的完成状态执行各个条件内的步骤。条件代码块的执行顺序如下所示。
+`post` 小节定义了流水线或阶段运行完成后要运行的一个或多个附加 [步骤](#步骤)（取决于 `post` 在流水线中的位置）。`post` 小节可支持以下任何 [后置条件，post-condition](#后置条件) 代码块：`always`、`changed`、`fixed`、`regression`、`aborted`、`failure`、`success`、`unstable`、`unsuccessful` 及 `cleanup`。这些条件代码块允许根据流水线或阶段的完成状态执行各个条件内的步骤。条件代码块的执行顺序如下所示。
 
 <table>
   <tr>
@@ -396,12 +396,74 @@ pipeline {
 
 
 - `always`
+
+无论流水线或阶段运行的完成状态如何，都要运行 `post` 小节中的步骤。
+
 - `changed`
+
+只有在当前的流水线运行的完成状态与上次运行的完成状态不同时，才运行 `post` 小节中的步骤。
+
 - `fixed`
+
+只有在当前的流水线运行成功，而上一次运行失败或不稳定的情况下，才运行 `post` 小节中步骤。
+
 - `regression`
+
+只有当当前流水线运行的或状态为失败、不稳定或中止，且上一次运行成功时，才运行 `post` 小节中步骤。
+
 - `aborted`
+
+只有在当前的流水线运行处于 “中止，aborted” 状态（通常是由于流水线被手动中止）时，才运行 `post` 小节中的步骤。这在网页用户界面中通常以灰色表示。
+
 - `failure`
+
+只有在当前的流水线或阶段运行处于 “失败，failed” 状态（通常在 Web UI 中用红色表示）时，才运行 `post` 小节中步骤。
+
 - `success`
+
+只有在当前的管道或阶段运行处于 “成功，success” 状态（通常在 Web UI 中以蓝色或绿色表示）时，才运行 `post` 小节中的步骤。
+
 - `unstable`
+
+只有在当前的流水线运行处于 “不稳定，unstable” 状态（通常由测试失败、代码违规等引起）时，才运行 `post` 小节中步骤。这种情况在网页用户界面上通常用黄色表示。
+
 - `unsuccessful`
+
+只有在当前的流水线或阶段运行未达到 “成功” 状态时，才运行 `post` 小节中的步骤。这通常会根据前面提到的状态在 Web UI 中显示（对于阶段，如果构建本身不稳定，则可能会触发）。
+
 - `cleanup`
+
+无论流水线或阶段的状态如何，都要在评估完所有其他 `post` 条件后运行此 `post` 条件中的步骤。
+
+
+*示例 3：后置小节，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+
+    post { // 1
+        always { // 2
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+```
+
+1. 按照惯例，`post` 小节应放在流水线的末尾；
+
+2. [后置条件，post-condition](#后置条件) 代码块包含了与 [步骤](#步骤) 小节相同的[步骤](#步骤)。
+
+
+#### `stages`
+
+

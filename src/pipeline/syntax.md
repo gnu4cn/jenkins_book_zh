@@ -225,4 +225,54 @@ agent {
 
 - `kubernetes`
 
+在 Kubernetes 集群上部署的 pod 中执行流水线或阶段。要使用该选项，`Jenkinsfile` 必须从 **多分支流水线** 或 **SCM 流水线** 中加载。Pod 模板是在 `kubernetes { }` 代码块内定义的。例如，如果咱们想要某个其中内含了 Kaniko 容器的 pod，就可以按如下方式定义：
+
+
+```groovy
+agent {
+    kubernetes {
+        defaultContainer 'kaniko'
+        yaml '''
+kind: Pod
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    command:
+    - sleep
+    args:
+    - 99d
+    volumeMounts:
+      - name: aws-secret
+        mountPath: /root/.aws/
+      - name: docker-registry-config
+        mountPath: /kaniko/.docker
+  volumes:
+    - name: aws-secret
+      secret:
+        secretName: aws-secret
+    - name: docker-registry-config
+      configMap:
+        name: docker-registry-config
+'''
+   }
+```
+
+咱们需要为 Kaniko 创建一个 `aws-secret` 密钥，以便能够对 ECR 进行身份验证。该秘密应包含 `~/.aws/credentials` 的内容。另一个卷则是个 `ConfigMap`，其中应包含 ECR 注册表的端点，the endpoint of your ECR registry。例如：
+
+```groovy
+{
+      "credHelpers": {
+        "<your-aws-account-id>.dkr.ecr.eu-central-1.amazonaws.com": "ecr-login"
+      }
+}
+```
+
+请参考以下示例：[https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/kaniko.groovy](https://github.com/jenkinsci/kubernetes-plugin/blob/master/examples/kaniko.groovy)
+
+
+**常见选项**
+
+
 

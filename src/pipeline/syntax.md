@@ -367,5 +367,24 @@ pipeline {
 3. 使用与上一阶段不同的 Docker 镜像而新创建出的容器中执行本阶段的步骤。
 
 
+#### `post`
+
+`post` 小节定义了流水线或阶段运行完成后要运行的一个或多个附加 [步骤](#steps)（取决于 `post` 在流水线中的位置）。`post` 小节可支持以下任何 [后置条件，post-condition](#后置条件) 代码块：`always`、`changed`、`fixed`、`regression`、`aborted`、`failure`、`success`、`unstable`、`unsuccessful` 及 `cleanup`。这些条件代码块允许根据流水线或阶段的完成状态执行各个条件内的步骤。条件代码块的执行顺序如下所示。
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>不是</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 `pipeline` 代码块的顶层及各个 `stage` 代码块中</td>
+  </tr>
+</table>
+
 
 

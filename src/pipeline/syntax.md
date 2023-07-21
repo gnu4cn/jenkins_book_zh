@@ -577,6 +577,92 @@ pipeline {
 **支持的凭据类型**
 
 - **秘密文本，Secret Text**
+
+所指定的环境变量将被设置为秘密文本，Secret Text，内容。
+
 - **秘密文件，Secret File**
+
+所指定的环境变量将被设置为临时创建的 File 文件的位置。
+
 - **用户名与口令，username and password**
+
+所指定的环境变量将被设置为 `username:password`，另外两个环境变量将被自动定义出来： 分别为 `MYVARNAME_USR` 和 `MYVARNAME_PSW`。
+
 - **带有私钥的 SSH**
+
+所指定的环境变量将被设置为临时创建的 SSH 密钥文件的位置，另外两个环境变量将被自动定义出来： `MYVARNAME_USR` 和 `MYVARNAME_PSW`（保存口令）。
+
+> 不支持的凭据类型会导致流水线失败，并显示以下消息：
+
+
+```console
+org.jenkinsci.plugins.credentialsbinding.impl.CredentialNotFoundException: No suitable binding handler could be found for type <unsupportedType>.
+```
+
+
+**示例 6：秘密文本的凭据，声明式流水线**
+
+
+```groovy
+pipeline {
+    agent any
+    environment { // 1
+        CC = 'clang'
+    }
+    stages {
+        stage('Example') {
+            environment { // 2
+                AN_ACCESS_KEY = credentials('my-predefined-secret-text') // 3
+            }
+            steps {
+                sh 'printenv'
+            }
+        }
+    }
+}
+```
+
+
+1. 在顶层 `pipeline` 代码块中使用的 `environment` 指令将适用于流水线中的所有步骤；
+
+2. 在某个 `stage` 中定义的 `environment` 指令只会将给定的环境变量应用于这个 `stage` 中的步骤；
+
+3. 这个 `environment` 代码块定义了一个辅助方法 `credentials()`，可用于通过 Jenkins 环境中的标识符访问预定义的凭据。
+
+
+*示例 7：用户名与密码凭据*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Username/Password') {
+            environment {
+                SERVICE_CREDS = credentials('my-predefined-username-password')
+            }
+            steps {
+                sh 'echo "Service user is $SERVICE_CREDS_USR"'
+                sh 'echo "Service password is $SERVICE_CREDS_PSW"'
+                sh 'curl -u $SERVICE_CREDS https://myservice.example.com'
+            }
+        }
+        stage('Example SSH Username with private key') {
+            environment {
+                SSH_CREDS = credentials('my-predefined-ssh-creds')
+            }
+            steps {
+                sh 'echo "SSH private key is located at $SSH_CREDS"'
+                sh 'echo "SSH user is $SSH_CREDS_USR"'
+                sh 'echo "SSH passphrase is $SSH_CREDS_PSW"'
+            }
+        }
+    }
+}
+```
+
+
+#### `options`
+
+
+

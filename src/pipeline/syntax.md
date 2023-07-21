@@ -724,7 +724,7 @@ pipeline {
 
 - `skipDefaultCheckout`
 
-跳过代理指令中默认的从源代码控制系统中签出代码。例如： `options { skipDefaultCheckout() }`。
+跳过 `agent` 指令中默认的从源代码控制系统中签出代码。例如： `options { skipDefaultCheckout() }`。
 
 - `skipStagesAfterUnstable`
 
@@ -776,4 +776,45 @@ pipeline {
 **`stage` `options`**
 
 
+`stage` 的 `options` 指令与流水线根处的 `options` 指令类似。不过，`stage` 级的 `options` 只能包含 `retry`、`timeout` 或 `timestamps` 等步骤，或与某个 `stage` 相关的声明式选项，如 `skipDefaultCheckout` 等。
 
+
+在某个 `stage` 内，`options` 指令中的步骤会在进入 `agent` 或检查任何 `when` 条件之前被调用。
+
+
+**可用的阶段选项**
+
+**Available Stage Options**
+
+
+{{#include ./syntax.md:725:727}}
+
+- `timeout`
+
+设置该阶段的超时时间，超时后 Jenkins 将终止该阶段。例如： `options { timeout(time: 1, unit: 'HOURS') }`。
+
+
+*示例 9：阶段的超时，声明式流水线*
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example') {
+            options {
+                timeout(time: 1, unit: 'HOURS') // 1
+            }
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+1. 为 `Example` 阶段指定一个小时的执行超时时间，之后 Jenkins 将中止该流水线运行。
+
+{{#include ./syntax:721:723}}
+
+
+{{#include ./syntax:759:761}}

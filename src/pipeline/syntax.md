@@ -814,7 +814,7 @@ pipeline {
 
 1. 为 `Example` 阶段指定一个小时的执行超时时间，之后 Jenkins 将中止该流水线运行。
 
-{{#include ./syntax:721:723}}
+{{#include ./syntax.md:721:723}}
 
 
-{{#include ./syntax:759:761}}
+{{#include ./syntax.md:759:761}}

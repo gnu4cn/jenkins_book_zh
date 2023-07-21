@@ -71,7 +71,7 @@ pipeline {
   </tr>
   <tr>
     <th>在何处允许使用</th>
-    <td>在 `pipeline` 代码块的顶层及各个 `stage` 代码块中</td>
+    <td>在 <code>pipeline</code> 代码块的顶层及各个 <code>stage</code> 代码块中</td>
   </tr>
 </table>
 
@@ -385,7 +385,7 @@ pipeline {
   </tr>
   <tr>
     <th>在何处允许使用</th>
-    <td>在 `pipeline` 代码块的顶层及各个 `stage` 代码块中</td>
+    <td>在 <code>pipeline</code> 代码块的顶层及各个 <code>stage</code> 代码块中</td>
   </tr>
 </table>
 
@@ -480,7 +480,7 @@ pipeline {
   </tr>
   <tr>
     <th>在何处允许使用</th>
-    <td>在 `pipeline` 代码块内部，或某个 `stage` 内部</td>
+    <td>在 <code>pipeline</code> 代码块内部，或某个 <code>stage</code> 内部</td>
   </tr>
 </table>
 
@@ -521,7 +521,7 @@ pipeline {
   </tr>
   <tr>
     <th>在何处允许使用</th>
-    <td>在各个 `stage` 代码块内部</td>
+    <td>在各个 <code>stage</code> 代码块内部</td>
   </tr>
 </table>
 
@@ -569,7 +569,7 @@ pipeline {
   </tr>
   <tr>
     <th>在何处允许使用</th>
-    <td>在 `pipeline` 代码块内，或在 `stage` 指令里面</td>
+    <td>在 <code>pipeline</code> 代码块内，或在 <code>stage</code> 指令里面</td>
   </tr>
 </table>
 

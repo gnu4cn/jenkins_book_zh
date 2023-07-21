@@ -665,4 +665,115 @@ pipeline {
 #### `options`
 
 
+`options` 指令允许在 Pipeline 本身中配置特定于 Pipeline 的选项。Pipeline 提供了许多此类选项，如 `buildDiscarder` 等，但他们也可能是由插件所提供，如 `timestamps` 等。
+
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 <code>pipeline</code> 代码块内，或（附带条件地）在 <code>stage</code> 指令里</td>
+  </tr>
+</table>
+
+
+**可用选项**
+
+- `buildDiscarder`
+
+为最近特定次数的流水线运行保留构建物与控制台输出。例如： `options { buildDiscarder(logRotator(numToKeepStr: '1')) }`。
+
+- `checkoutToSubdirectory`
+
+在工作区的子目录中执行自动源代码控制检出。例如： `options { checkoutToSubdirectory('foo') }`。
+
+- `disableConcurrentBuilds`
+
+禁止流水线的并发执行。这对于防止同时访问共用的资源等方面非常有用。例如：`options { disableConcurrentBuilds() }` 可在流水线已有构建正在执行时排队等待构建；`options { disableConcurrentBuilds(abortPrevious: true) }` 可中止正在运行的构建并启动新的构建。
+
+- `disableResume`
+
+如果控制器重新启动，则不允许流水线恢复。例如：`options { disableResume() }`。
+
+- `newContainerPerStage`
+
+与 `docker` 或 `dockerfile` 的顶级代理一起使用。指定后，每个阶段都将在同一节点上的新容器实例中运行，而不是所有阶段都在同一容器实例中运行。
+
+- `overrideIndexTriggers`
+
+允许覆盖分支索引触发器的默认处理方式，default treatment of branch indexing triggers。如果在多分支或组织标签中禁用了分支索引触发器，那么 `options { overrideIndexTriggers(true) }` 将仅对此任务启用分支索引触发器。否则，`options { overrideIndexTriggers(false) }` 则将仅对此任务禁用分支索引触发器。
+
+- `preserveStashes`
+
+保留已完成构建的存储，stashes from completed builds, 以便在阶段重启时使用。例如：`options { preserveStashes() }` 会保留最近完成构建中的存储，或 `options { preserveStashes(buildCount: 5) }` 则会保留最近完成的五个构建中的存储。
+
+- `quietPeriod`
+
+设置流水线的静默期（以秒为单位），会覆盖全局的默认值。例如： `options { quietPeriod(30) }`。
+
+- `retry`
+
+在失败时，会按所指定的次数重试整个流水线。例如：`options { retry(3) }`。
+
+- `skipDefaultCheckout`
+
+跳过代理指令中默认的从源代码控制系统中签出代码。例如： `options { skipDefaultCheckout() }`。
+
+- `skipStagesAfterUnstable`
+
+一旦构建状态变为 `UNSTABLE`，就跳过各阶段。例如： `options { skipStagesAfterUnstable() }`。
+
+- `timeout`
+
+设置流水线运行的超时时间，超时后 Jenkins 将终止流水线的运行。例如：`options { timeout(time: 1, unit: 'HOURS') }`。
+
+
+*示例 8：全局超时，声明式流水线*
+
+```groovy
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS') // 1
+    }
+    stages {
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+1. 指定一个小时的全局执行超时，超时后 Jenkins 将终止流水线运行。
+
+
+- `timestamps`
+
+在该次流水线运行所生成的全部控制台输出前加上行输出的时间。例如：`options { timestamps() }`。
+
+- `parallelAlwaysFailFast`
+
+对流水线中所有后续并行阶段设置 `failfast` 为 `true`。例如： `options { parallelsAlwaysFailFast() }`。
+
+- `disableRestartFromStage`
+
+完全禁用经典 Jenkins UI 和 Blue Ocean 中可见的 "Restart From Stage" 选项。例如：`options { disableRestartFromStage() }`。该选项不能在阶段内使用。
+
+> 可用选项的完整列表正在等待 [help desk ticket 820](https://github.com/jenkins-infra/helpdesk/issues/820) 的完成。
+
+
+**阶段选项**
+
+**`stage` `options`**
+
+
 

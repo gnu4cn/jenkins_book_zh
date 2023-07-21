@@ -466,4 +466,117 @@ pipeline {
 
 #### `stages`
 
+`stages` 小节包含一个或多个的 [`stage`](#stage) 指令序列，是流水线描述的大部分 “工作” 所在。建议 `stages` 为持续交付流程的每个具体部分（如构建、测试和部署等）至少包含一个 [`stage`](#stage) 指令。
 
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>是</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 `pipeline` 代码块内部，或某个 `stage` 内部</td>
+  </tr>
+</table>
+
+
+*示例 4：阶段，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+
+    stages { // 1
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+阶段部分通常紧随代理、选项等指令之后。}
+```
+
+1. `stages` 小节通常紧随 `agent`、`options` 等指令之后。
+
+
+#### `steps`
+
+
+`steps` 小节定义了在给定的 `stage` 指令中要执行的一系列的一个或多个 [步骤](#声明式步骤)。
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>是</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在各个 `stage` 代码块内部</td>
+  </tr>
+</table>
+
+
+*示例 5：单个步骤，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Example') {
+            steps { // 1
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+1. `steps` 小节必须包含一个或多个步骤。
+
+
+### 指令
+
+**Directives**
+
+
+#### `environment`
+
+`environment` 指令指定了一系列键值对，根据 `environment` 指令在流水线中的位置，这些键值对将被定义为所有步骤或特定阶段步骤的环境变量。
+
+该指令支持一种特殊的辅助方法 `credentials()`，可用于通过 Jenkins 环境中的标识符访问预定义的凭据。
+
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 `pipeline` 代码块内，或在 `stage` 指令里面</td>
+  </tr>
+</table>
+
+
+**支持的凭据类型**
+
+- **秘密文本，Secret Text**
+- **秘密文件，Secret File**
+- **用户名与口令，username and password**
+- **带有私钥的 SSH**

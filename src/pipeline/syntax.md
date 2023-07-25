@@ -814,7 +814,40 @@ pipeline {
 
 1. 为 `Example` 阶段指定一个小时的执行超时时间，之后 Jenkins 将中止该流水线运行。
 
-{{#include ./syntax.md:721:723}}
+- `retry`
 
+在失败时，则重试该阶段指定的次数。例如：`options { retry(3) }`。
 
 {{#include ./syntax.md:759:761}}
+
+
+#### `parameters`
+
+`parameters` 指令提供了在触发流水线时用户应提供的参数列表。这些用户指定的参数值可通过 `params` 对象提供给流水线步骤，具体用法请参阅 下面的 “参数，声明式管道” 示例。
+
+每个参数都有一个 *名称, Name* 与 *值，Value*，具体取决于参数类型。在构建启动时，这些信息将作为环境变量输出，以便该构建配置的后续部分访问这些值。例如，对于 `bash` 和 `ksh` 等 POSIX 的 shell 中使用 `${PARAMETER_NAME}` 语法，在 PowerShell 中使用 `${Env:PARAMETER_NAME}` 语法，而在 Windows 的 `cmd.exe` 中则要使用 `%PARAMETER_NAME%` 语法。
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>仅一次，在 <code>pipeline</code> 代码块里</td>
+  </tr>
+</table>
+
+
+**可用参数**
+
+
+- `string`
+- `text`
+- `booleanParam`
+- `choice`
+- `password`

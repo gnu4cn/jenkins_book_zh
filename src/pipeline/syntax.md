@@ -964,4 +964,29 @@ pipeline {
 
 #### Jenkins 的 `cron` 语法
 
+Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.wikipedia.org/wiki/Cron) （有些许细微差别）的语法。具体来说，每个行都是由 5 个 TAB 或空格分隔开的字段组成：
+
+<table>
+  <tr>
+    <th>分钟（MINUTE）</th>
+    <td>小时里的分钟（0-59）</td>
+  </tr>
+  <tr>
+    <th>小时（HOUR）</th>
+    <td>一天中的小时（0-23）</td>
+  </tr>
+  <tr>
+    <th>DOM</th>
+    <td>一个月中的天（1-31）</td>
+  </tr>
+  <tr>
+    <th>月份（MONTH）</th>
+    <td>几月（1-12）</td>
+  </tr>
+  <tr>
+    <th>周几（DOW）</th>
+    <td>一周中的周几（0-7），其中 0 和 7 都表示周日。</td>
+  </tr>
+</table>
+
 

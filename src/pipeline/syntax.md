@@ -845,9 +845,59 @@ pipeline {
 
 **可用参数**
 
-
 - `string`
+
+字符串类型的参数，比如：`parameters { string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: '') }`。
+
 - `text`
+
+文本参数，可包含多个行，比如：`parameters { text(name: 'DEPLOY_TEXT', defaultValue: 'One\nTwo\nThree\n', description: '') }`。
+
 - `booleanParam`
+
+布尔值参数，比如：`parameters { booleanParam(name: 'DEBUG_BUILD', defaultValue: true, description: '') }`。
+
 - `choice`
+
+单选参数，比如：`parameters { choice(name: 'CHOICES', choices: ['one', 'two', 'three'], description: '') }`。
+
 - `password`
+
+口令参数，比如： `parameters { password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'A secret password') }`。
+
+
+*示例 10， 参数，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+    parameters {
+        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+
+        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+
+        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+
+        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+
+        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    }
+    stages {
+        stage('Example') {
+            steps {
+                echo "Hello ${params.PERSON}"
+
+                echo "Biography: ${params.BIOGRAPHY}"
+
+                echo "Toggle: ${params.TOGGLE}"
+
+                echo "Choice: ${params.CHOICE}"
+
+                echo "Password: ${params.PASSWORD}"
+            }
+        }
+    }
+}
+```
+```

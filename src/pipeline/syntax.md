@@ -969,22 +969,16 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 <table>
   <tr>
     <th>分钟（MINUTE）</th>
-    <td>小时里的分钟（0-59）</td>
-  </tr>
-  <tr>
     <th>小时（HOUR）</th>
-    <td>一天中的小时（0-23）</td>
-  </tr>
-  <tr>
-    <th>DOM</th>
-    <td>一个月中的天（1-31）</td>
-  </tr>
-  <tr>
+    <th>几日（DOM）</th>
     <th>月份（MONTH）</th>
-    <td>几月（1-12）</td>
+    <th>周几（DOW）</th>
   </tr>
   <tr>
-    <th>周几（DOW）</th>
+    <td>小时里的分钟（0-59）</td>
+    <td>一天中的小时（0-23）</td>
+    <td>一个月中的天（1-31）</td>
+    <td>第几月（1-12）</td>
     <td>一周中的周几（0-7），其中 0 和 7 都表示周日。</td>
   </tr>
 </table>

@@ -900,4 +900,68 @@ pipeline {
     }
 }
 ```
+
+> **注意**：可用参数的完整列表正在等待 [help desk ticket 820](https://github.com/jenkins-infra/jenkins.io/issues/5221) 的完成。
+
+
+
+#### `triggers`
+
+`triggers` 指令定义了流水线应以哪些自动方式被再度触发。对于以诸如 GitHub 或 BitBucket 集成的流水线，由于多半已经有了基于 webhooks 的集成，`triggers` 指令就没那么必要。当前可用的触发器有 `cron`、`pollSCM` 与 `upstream`。
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>仅一次，在 <code>pipeline</code> 代码块里</td>
+  </tr>
+</table>
+
+
+- `cron`
+
+接受 `cron` 样式的字符串，来定义出流水线应被重新触发的定期间隔，比如：`triggers { cron('TZ=Asia/Shanghai H(25-40) 8 * * *') }`。
+
+- `pollSCM`
+
+接受 `cron` 样式的字符串，来定义 Jenkins 应检查新的源代码更改的定期间隔。如果存在新的变更，则将重新触发流水线。比如： `triggers { pollSCM('H */4 * * 1-5') }`。
+
+- `upstrem`
+
+接受以逗号分隔的作业字符串以及一个阈值（threshold）。在字符串中的任何作业以最小阈值完成时，该流水线都将被重新触发。比如：`triggers { upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS) }`。
+
+
+> **注意**：`pollSCM` 触发器只在 Jenkins 2.22 及以后版本中可用。
+
+
+*示例 11，触发器，声明式流水线*
+
+
+```groovy
+// Declarative //
+pipeline {
+    agent any
+    triggers {
+        cron('H */4 * * 1-5')
+    }
+    stages {
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
 ```
+
+
+#### Jenkins 的 `cron` 语法
+
+

@@ -1213,22 +1213,50 @@ pipeline {
 
 当正在构建的分支与给定分支模式（[ANT 样式全局路径](https://stackoverflow.com/a/22636142)）匹配时执行该阶段，例如：`when {branch 'master' }`。请注意，这仅适用于多分支流水线。
 
-可选参数 `comparator` 可以添加在属性之后，以指定出如何计算匹配的任何模式：
+可选参数 `comparator` 可以添加在属性之后，以指定出如何计算匹配的任何模式如何计算：
 
 * 可用的 `comparator`:
-
     * `EQUALS` 用于简单的字符串比较；
     * `GLOB`（默认）用于 ANT 样式的全局路径（比如与 `changeset` 用到的全局路径相同）；
     * `REGEXP` 用于正则表达式匹配。
+
+比如：`when { branch pattern: "release-\\d+", comparator: "REGEXP"}`。
 
 - `buildingTag`
 
 当构建为正在构建某个标签时执行该阶段。例如：`when {buildingTag() }`。
 
 - `changelog`
+
+在构建的源代码管理系统（SCM）变更日志，包含了给定正则表达式模式时执行该阶段，例如：`when {changelog '.*^\\[DEPENDENCY\\] .+$' }`。
+
 - `changeset`
+
+在构建的 SCM 变更集，包含一个或多个与给定模式匹配的文件时执行该阶段。示例：`when {changeset "**/*.js" }`。
+
+可选参数 `comparator` 可以添加在属性之后，以指定出如何计算匹配任何的模式如何计算：
+
+* 可用的 `comparator`:
+    * `EQUALS` 用于简单的字符串比较；
+    * `GLOB`（默认）用于 ANT 样式的全局路径（可使用 `caseSensitive` 参数关闭）；
+    * `REGEXP` 用于正则表达式匹配。
+
+比如：`when { changeset pattern: ".TEST\\.java", comparator: "REGEXP" }` 或 `when { changeset pattern: "*/*TEST.java", caseSensitive: true }`。
+
 - `changeRequest`
+
+在当前构建是针对某个“变更请求”（即，GitHub 与 Bitbucket 上的拉取请求，Pull Request、GitLab 上的合并请求，Merge Request、Gerrit 中的更改，Change，等）时，执行该阶段。当没有传递参数时，该阶段会在每个变更请求时运行，例如：`when {changeRequest() }`。
+
+通过向变更请求添加带参数的过滤器属性，adding a filter attribute with parameter to the change request, 可以使阶段仅在匹配的变更请求上运行。可行的属性有 `id`、`target`、`branch`、`fork`、`url`、`title`、`author`、`authorDisplayName` 和 `authorEmail`。其中每个都对应了一个 `CHANGE_*` 环境变量，例如：`when {changeRequest target: 'master' }`。
+
+{{#include ./syntax.md:1216:1221}}
+
+示例：`when { changeRequest authorEmail: "[\\w_-.]+@example.com", comparator: 'REGEXP' }`。
+
 - `environment`
+
+
+
 - `equals`
 - `expression`
 - `tag`

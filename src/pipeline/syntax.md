@@ -1215,10 +1215,11 @@ pipeline {
 
 可选参数 `comparator` 可以添加在属性之后，以指定出如何计算匹配的任何模式：
 
+* 可用的 `comparator`:
 
-    - `EQUALS` 用于简单的字符串比较；
-    - `GLOB`（默认）用于 ANT 样式的全局路径（比如与 `changeset` 用到的全局路径相同）
-    - `REGEXP` 用于正则表达式匹配
+    * `EQUALS` 用于简单的字符串比较；
+    * `GLOB`（默认）用于 ANT 样式的全局路径（比如与 `changeset` 用到的全局路径相同）；
+    * `REGEXP` 用于正则表达式匹配。
 
 - `buildingTag`
 

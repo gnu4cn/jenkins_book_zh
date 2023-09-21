@@ -1099,9 +1099,11 @@ pipeline {
 
 **所支持的工具**
 
-`maven`
-`jdk`
-`gradle`
+- `maven`
+
+- `jdk`
+
+- `gradle`
 
 
 *示例 13，工具，声明式流水线*
@@ -1126,5 +1128,82 @@ pipeline {
 
 
 #### `input`
+
+`stage` 上的 `input` 指令允许咱们使用 [输入步骤, `input` step](https://www.jenkins.io/doc/pipeline/steps/pipeline-input-step/#input-wait-for-interactive-input) 提示输入。在应用任何 `options` 后、进入该 `stage` 的 `agent` 代码块或计算该 `stage` 的 `when` 条件之前，该 `stage` 将暂停。如果 `input` 获得批准，那么该 `stage` 将继续进行。作为 `input` 提交一部分所提供的任何参数，都将在这个 `stage` 其余部分的环境中可用。
+
+
+**配置选项**
+
+- `message`
+
+必需的。当用户提交 `input` 时，该信息将呈现给用户。
+
+- `id`
+
+此 `input` 的可选标识符。其默认值基于 `stage` 的名字。
+
+- `ok`
+
+该 `input` 表单上可选的 “Ok” 按钮文本。
+
+- `submitter`
+
+一个可选的允许提交此 `input` 的用户或外部组名称的逗号分隔列表。默认允许任何用户。
+
+- `submitterParameter`
+
+在提交者名称存在时，与其一起设置的可选环境变量名称。
+
+- `parameters`
+
+提示提交者要提供的一个可选参数列表。请参阅 [`parameters`](#parameters) 以获取更多信息。
+
+
+*示例 14，输入步骤，声明式流水线*
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Example') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "alice,bob"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, nice to meet you."
+            }
+        }
+    }
+}
+```
+
+#### `when`
+
+`when` 指令允许流水线根据所给的条件，确定出是否应执行该阶段。 `when` 指令必须至少包含一个条件。如果 `when` 指令包含多个条件，则所有子条件都必须返回 `true` 才能执行该阶段。这与子条件嵌套在 `allOf` 条件中相同（请参阅下面的示例）。在使用 `anyOf` 条件时，就请注意，一旦找到首个 `true` 条件，这个 `anyOf` 条件就会跳过其余条件测试。
+
+
+可使用嵌套条件 `not`、`allOf` 或 `anyOf`，构建出更为复杂的条件结构。嵌套条件可以嵌套到任意深度。
+
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 <code>stage</code> 指令内。</td>
+  </tr>
+</table>
 
 

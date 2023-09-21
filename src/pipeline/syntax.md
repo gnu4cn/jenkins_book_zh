@@ -1207,3 +1207,31 @@ pipeline {
 </table>
 
 
+**内建条件**
+
+- `branch`
+
+当正在构建的分支与给定分支模式（[ANT 样式全局路径](https://stackoverflow.com/a/22636142)）匹配时执行该阶段，例如：`when {branch 'master' }`。请注意，这仅适用于多分支流水线。
+
+可选参数 `comparator` 可以添加在属性之后，以指定出如何计算匹配的任何模式：
+
+
+    - `EQUALS` 用于简单的字符串比较；
+    - `GLOB`（默认）用于 ANT 样式的全局路径（比如与 `changeset` 用到的全局路径相同）
+    - `REGEXP` 用于正则表达式匹配
+
+- `buildingTag`
+
+当构建为正在构建某个标签时执行该阶段。例如：`when {buildingTag() }`。
+
+- `changelog`
+- `changeset`
+- `changeRequest`
+- `environment`
+- `equals`
+- `expression`
+- `tag`
+- `not`
+- `allOf`
+- `anyOf`
+- `triggeredBy`

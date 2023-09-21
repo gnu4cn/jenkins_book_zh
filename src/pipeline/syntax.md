@@ -1269,7 +1269,34 @@ pipeline {
 
 
 - `tag`
+
+当 `TAG_NAME` 变量与给定模式匹配时，则执行该阶段。例如：`when { tag "release-*" }`。而如果提供了空的模式，则当 `TAG_NAME` 变量存在时，该阶段将执行（这就与 `buildingTag()` 相同了）。
+
+{{#include ./syntax.md:1216:1221}}
+
+例如：`when { tag pattern: "release-\\d+", comparator: "REGEXP" }`。
+
 - `not`
+
+当嵌套的条件为 `false` 时执行该阶段。必须包含一个条件。例如：`when { not { branch 'master' } }`。
+
 - `allOf`
+
+当所有嵌套条件都为真时执行该阶段。必须至少包含一个条件。例如：`when { allOf { branch 'master'; environment name: 'DEPLOY_TO', value：'production' } }`。
+
 - `anyOf`
+
+当至少一个嵌套条件为真时执行该阶段。必须至少包含一个条件。例如：`when { anyOf { branch 'master'; branch 'staging' } }`。
+
 - `triggeredBy`
+
+在当前构建是由给定参数触发的时，执行该阶段。例如：
+
+* `triggeredBy` 参数类型：
+
+    * `when { triggeredBy 'SCMTrigger' }`
+    * `when { triggeredBy 'TimerTrigger' }`
+    * `when { triggeredBy 'BuildUpstreamCause' }`
+    * `when { triggeredBy cause: "UserIdCause", detail: "vlinde" }`
+
+**于某个 `stage` 中在进入 `agent` 前计算 `when**

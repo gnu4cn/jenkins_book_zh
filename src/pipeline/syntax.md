@@ -1004,6 +1004,9 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 
 此外，还支持 `@yearly`、`@annually`、`@monthly`、`@weekly`、`@daily`、`@midnight` 和 `@hourly` 作为方便的别名。他们会使用哈希系统进行自动的负载均衡。例如，`@hourly` 与 `H * * * *` 相同，可以表示一小时内的任何时间。`@midnight` 实际上是指 12:00 AM 到 2:59 AM 之间的某个时间。
 
-| :-- |
+<table>
+<tr><td>
 | 每 15 分钟（也许是在：07、：22、：37、：52）|
-| `triggers{ cron('H/15 * * * *') }` |
+</td></tr><tr><td>
+`triggers{ cron('H/15 * * * *') }`
+</td></tr></table>

@@ -1038,3 +1038,93 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 </table>
 
 *表 1， Jenkins 的 `cron` 语法示例*
+
+
+#### `stage`
+
+`stage` 指令位于 `stages` 小节里，应包含一个 `steps` 小节、可选的 `agent` 小节或其他特定于阶段的指令。实际上，流水线完成的所有具体工作，都将包含在一个或多个 `stage` 指令中。
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>至少一个</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>一个强制性参数，该阶段的名称字符串。</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 <code>stages</code> 小节内。</td>
+  </tr>
+</table>
+
+*示例 12，阶段，声明式流水线*
+
+
+```groovy
+// Declarative //
+pipeline {
+    agent any
+    stages {
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+#### `tools`
+
+定义自动安装并放在 PATH 中工具的小节。如果指定了 `agent none`，则这会被忽略。
+
+
+<table>
+  <tr>
+    <th>是否必需</th>
+    <td>非必需</td>
+  </tr>
+  <tr>
+    <th>参数</th>
+    <td>无</td>
+  </tr>
+  <tr>
+    <th>在何处允许使用</th>
+    <td>在 <code>pipeline</code> 或 <code>stage</code> 代码块内。</td>
+  </tr>
+</table>
+
+
+**所支持的工具**
+
+`maven`
+`jdk`
+`gradle`
+
+
+*示例 13，工具，声明式流水线*
+
+```groovy
+pipeline {
+    agent any
+    tools {
+        maven 'apache-maven-3.0.1' // 1
+    }
+    stages {
+        stage('Example') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+    }
+}
+```
+
+1. 工具名字务必要在 Jenkins 的 **Manage Jenkins -> Tools** 下预先配置好。
+
+
+#### `input`
+
+

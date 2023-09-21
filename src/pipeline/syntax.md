@@ -1006,7 +1006,7 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 
 <table>
 <tr><td>
-每 15 分钟（也许是在：07、：22、：37、：52）。
+每 15 分钟（也许是在 :07、:22、:37、:52）。
 </td></tr>
 <tr><td>
 <code>triggers{ cron('H/15 * * * *') }</code>
@@ -1023,4 +1023,18 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 <tr><td>
 <code>triggers{ cron('45 9-16/2 * * * 1-5') }</code>
 </td></tr>
+<tr><td>
+每个工作日上午 9 点到下午 5 点之间的每两小时时间槽中一次（可能是上午 10:38、中午 12:38、下午 2:38、下午 4:38）。
+</td></tr>
+<tr><td>
+<code>triggers{ cron('H H(9-16)/2 * * * 1-5') }</code>
+</td></tr>
+<tr><td>
+除 12 月外，每个月的 1 日和 15 日每天一次。
+</td></tr>
+<tr><td>
+<code>triggers{ cron('H H 1,15 1-11 *') }</code>
+</td></tr>
 </table>
+
+*表 1， Jenkins 的 `cron` 语法示例*

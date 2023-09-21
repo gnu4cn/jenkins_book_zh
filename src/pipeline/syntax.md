@@ -1006,7 +1006,21 @@ Jenkins 的 `cron` 语法遵循了 [cron 实用工具（utility）](https://en.w
 
 <table>
 <tr><td>
-| 每 15 分钟（也许是在：07、：22、：37、：52）|
-</td></tr><tr><td>
-`triggers{ cron('H/15 * * * *') }`
-</td></tr></table>
+每 15 分钟（也许是在：07、：22、：37、：52）。
+</td></tr>
+<tr><td>
+<code>triggers{ cron('H/15 * * * *') }</code>
+</td></tr>
+<tr><td>
+每个小时的前半段每十分钟一次（三次，可能在 :04, :14, :24）。
+</td></tr>
+<tr><td>
+<code>triggers{ cron('H(0-29)/10 * * * *') }</code>
+</td></tr>
+<tr><td>
+每个工作日从上午 9:45 开始到下午 3:45 结束，每两小时在 45 分时一次。
+</td></tr>
+<tr><td>
+<code>triggers{ cron('45 9-16/2 * * * 1-5') }</code>
+</td></tr>
+</table>

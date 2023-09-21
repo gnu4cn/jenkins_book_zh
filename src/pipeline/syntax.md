@@ -1255,10 +1255,19 @@ pipeline {
 
 - `environment`
 
-
+当所定的环境变量被设置为给定值时，执行该阶段，例如：`when { environment name：'DEPLOY_TO'，value：'production' }`。
 
 - `equals`
+
+当期望值等于实际值时执行该阶段，例如：`when { equals expected: 2, actual: currentBuild.number }`。
+
 - `expression`
+
+当所指定的 Groovy 表达式计算结果为 `true` 时执行该阶段，例如：`when { expression { return params.DEBUG_BUILD } }`。
+
+> **注意**：当从表达式返回字符串时，必须将他们转换为布尔值或返回 `null` 以计算为 `false`。简单地返回 `0` 或 `false` 仍将计算为 `true`。
+
+
 - `tag`
 - `not`
 - `allOf`

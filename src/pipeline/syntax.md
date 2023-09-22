@@ -1559,8 +1559,201 @@ pipeline {
 }
 ```
 
-### 顺序的阶段
+### 顺序式阶段
 
 **Sequential Stages**
+
+声明式流水线中的阶段，可能有一个其中包含要按先后顺序运行的嵌套阶段清单的 `stages` 小节。
+
+
+> 阶段必须有且只有一个 `steps`、`stages`、`parallel` 或 `matrix` 之一。如果 `stage` 指令是嵌套在 `parallel` 或 `matrix` 代码块本身中，则在这个 `stage` 指令中嵌套 `parallel` 或 `matrix` 代码块是不可行的。但是，`parallel` 或 `matrix` 代码块中的 `stage` 指令可以使用 `stage` 的所有其他功能，包括 `agent`、`tools`、`when` 等等。
+
+
+*示例 24，顺序式阶段，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Non-Sequential Stage') {
+            agent {
+                label 'for-non-sequential'
+            }
+            steps {
+                echo "On Non-Sequential Stage"
+            }
+        }
+        stage('Sequential') {
+            agent {
+                label 'for-sequential'
+            }
+            environment {
+                FOR_SEQUENTIAL = "some-value"
+            }
+            stages {
+                stage('In Sequential 1') {
+                    steps {
+                        echo "In Sequential 1"
+                    }
+                }
+                stage('In Sequential 2') {
+                    steps {
+                        echo "In Sequential 2"
+                    }
+                }
+                stage('Parallel In Sequential') {
+                    parallel {
+                        stage('In Parallel 1') {
+                            steps {
+                                echo "In Parallel 1"
+                            }
+                        }
+                        stage('In Parallel 2') {
+                            steps {
+                                echo "In Parallel 2"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+
+### 并行
+
+**Parallel**
+
+
+声明式管道中的阶段，可能有一个其中包含着要并行运行的嵌套阶段列表的 `parallel` 小节。
+
+{{#include ./syntax.md:1569}}
+
+
+此外，咱们可以通过将 `failFast true` 添加到包含 `parallel` 的 `stage` 代码块，从而强制咱们的 `parallel` 阶段在其中任何一个阶段失败时整个 `parallel` 都中止。添加 `failFast` 的另一个选项，是向流水线定义添加一个选项：`parallelsAlwaysFailFast()`。
+
+*示例 25，并行阶段，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Non-Parallel Stage') {
+            steps {
+                echo 'This stage will be executed first.'
+            }
+        }
+        stage('Parallel Stage') {
+            when {
+                branch 'master'
+            }
+            failFast true
+            parallel {
+                stage('Branch A') {
+                    agent {
+                        label "for-branch-a"
+                    }
+                    steps {
+                        echo "On Branch A"
+                    }
+                }
+                stage('Branch B') {
+                    agent {
+                        label "for-branch-b"
+                    }
+                    steps {
+                        echo "On Branch B"
+                    }
+                }
+                stage('Branch C') {
+                    agent {
+                        label "for-branch-c"
+                    }
+                    stages {
+                        stage('Nested 1') {
+                            steps {
+                                echo "In stage Nested 1 within Branch C"
+                            }
+                        }
+                        stage('Nested 2') {
+                            steps {
+                                echo "In stage Nested 2 within Branch C"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+*示例 26，`parallelsAlwaysFailFast`*
+
+
+```groovy
+pipeline {
+    agent any
+    options {
+        parallelsAlwaysFailFast()
+    }
+    stages {
+        stage('Non-Parallel Stage') {
+            steps {
+                echo 'This stage will be executed first.'
+            }
+        }
+        stage('Parallel Stage') {
+            when {
+                branch 'master'
+            }
+            parallel {
+                stage('Branch A') {
+                    agent {
+                        label "for-branch-a"
+                    }
+                    steps {
+                        echo "On Branch A"
+                    }
+                }
+                stage('Branch B') {
+                    agent {
+                        label "for-branch-b"
+                    }
+                    steps {
+                        echo "On Branch B"
+                    }
+                }
+                stage('Branch C') {
+                    agent {
+                        label "for-branch-c"
+                    }
+                    stages {
+                        stage('Nested 1') {
+                            steps {
+                                echo "In stage Nested 1 within Branch C"
+                            }
+                        }
+                        stage('Nested 2') {
+                            steps {
+                                echo "In stage Nested 2 within Branch C"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+
+### 矩阵
+
+**Matrix**
 
 

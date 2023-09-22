@@ -1299,4 +1299,6 @@ pipeline {
     * `when { triggeredBy 'BuildUpstreamCause' }`
     * `when { triggeredBy cause: "UserIdCause", detail: "vlinde" }`
 
-**于某个 `stage` 中在进入 `agent` 前计算 `when**
+**于某个 `stage` 中在进入 `agent` 前计算 `when`**
+
+默认情况下，如果定义了阶段的 `when` 条件，则将会在进入该阶段的 `agent` 后评估该 `when` 条件。但是，可以通过在 `when` 代码块中指定 `beforeAgent` 选项来修改这一点。如果 `beforeAgent` 被设置为 `true`，那么将首先计算 `when` 条件，并且仅当 `when` 条件得出为 `true` 时才会进入代理。

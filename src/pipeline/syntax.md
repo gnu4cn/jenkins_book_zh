@@ -1301,4 +1301,178 @@ pipeline {
 
 **于某个 `stage` 中在进入 `agent` 前计算 `when`**
 
-默认情况下，如果定义了阶段的 `when` 条件，则将会在进入该阶段的 `agent` 后评估该 `when` 条件。但是，可以通过在 `when` 代码块中指定 `beforeAgent` 选项来修改这一点。如果 `beforeAgent` 被设置为 `true`，那么将首先计算 `when` 条件，并且仅当 `when` 条件得出为 `true` 时才会进入代理。
+默认情况下，如果定义了阶段的 `when` 条件，则将会在进入该阶段的 `agent` 后计算该 `when` 条件。但是，可以通过在 `when` 代码块中指定 `beforeAgent` 选项来修改这一点。如果 `beforeAgent` 被设置为 `true`，那么将首先计算 `when` 条件，并且仅当 `when` 条件得出为 `true` 时才会进入代理。
+
+**在 `input` 指令前计算 `when`**
+
+默认情况下，如果定义了阶段的 `when` 条件，则在该阶段的输入之前不会计算阶段的 `when` 条件。但是，可以通过在 `when` 代码块中指定 `beforeInput` 选项来更改这一点。如果 `beforeInput` 设置为 `true`，则将首先计算出 `when` 条件，并且仅当 `when` 条件评估为 `true` 时才会进入输入环节。
+
+`beforeInput true` 优先于 `beforeAgent true`。
+
+**在 `options` 指令前计算 `when`**
+
+默认情况下，如果定义了阶段的 `options` 与 `when` 代码块，那么将在进入该阶段的 `options` 后计算该阶段的 `when` 条件。但是，可以通过在 `when` 代码块中指定 `beforeOptions` 选项来更改此行为。如果 `beforeOptions` 设置为 `true`，则将首先计算 `when` 条件，并且仅当 `when` 条件得出为 `true` 时才会进入 `options` 代码块。
+
+
+`beforeOptions true` 优先于 `beforeInput true` 及 `beforeAgent true`。
+
+
+*示例 15，单一条件，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                branch 'production'
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+*示例 16，多重条件，声明式流水线*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                branch 'production'
+                environment name: 'DEPLOY_TO', value: 'production'
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+*示例 17，嵌套的条件（与上个示例行为一致）*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                allOf {
+                    branch 'production'
+                    environment name: 'DEPLOY_TO', value: 'production'
+                }
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+*示例 18，多重条件与嵌套条件*
+
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                branch 'production'
+                anyOf {
+                    environment name: 'DEPLOY_TO', value: 'production'
+                    environment name: 'DEPLOY_TO', value: 'staging'
+                }
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+*示例 19，表达式条件与嵌套条件*
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                expression { BRANCH_NAME ==~ /(production|staging)/ }
+                anyOf {
+                    environment name: 'DEPLOY_TO', value: 'production'
+                    environment name: 'DEPLOY_TO', value: 'staging'
+                }
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+
+*示例 20，`beforeAgent`*
+
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            agent {
+                label "some-label"
+            }
+            when {
+                beforeAgent true
+                branch 'production'
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```

@@ -1476,3 +1476,91 @@ pipeline {
     }
 }
 ```
+
+*示例 21，`beforeInput`*
+
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                beforeInput true
+                branch 'production'
+            }
+            input {
+                message "Deploy to production?"
+                id "simple-input"
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+
+*示例 22，`beforeOptions`*
+
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                beforeOptions true
+                branch 'testing'
+            }
+            options {
+                lock label: 'testing-deploy-envs', quantity: 1, variable: 'deployEnv'
+            }
+            steps {
+                echo "Deploying to ${deployEnv}"
+            }
+        }
+    }
+}
+```
+
+*示例 23，`triggeredBy`*
+
+
+```groovy
+pipeline {
+    agent none
+    stages {
+        stage('Example Build') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Example Deploy') {
+            when {
+                triggeredBy "TimerTrigger"
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    }
+}
+```
+
+### 顺序的阶段
+
+**Sequential Stages**
+
+

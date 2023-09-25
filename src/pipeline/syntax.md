@@ -1830,3 +1830,163 @@ matrix {
 #### `stages`
 
 `stages` 小节指定了要在每个单元中顺序执行的一个或多个 `stage`。这个小节与任何其他的 [`stages` 小节](#顺序式阶段) 都相同。
+
+
+*示例 30，有着 3 个单元，每个单元会运行三个阶段 -- “构建”、“测试” 与 “部署” 的一维度矩阵*
+
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+    }
+    stages {
+        stage('build') {
+            // ...
+        }
+        stage('test') {
+            // ...
+        }
+        stage('deploy') {
+            // ...
+        }
+    }
+}
+```
+
+*示例 31，有着 12 单元（三乘四）的二维矩阵*
+
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+        axis {
+            name 'BROWSER'
+            values 'chrome', 'edge', 'firefox', 'safari'
+        }
+    }
+    stages {
+        stage('build-and-test') {
+            // ...
+        }
+    }
+}
+```
+
+
+#### `excludes` （可选小节）
+
+
+可选的 `excludes` 小节允许脚本编写者指定一个或多个的 `exclude` 过滤器表达式，这些表达式从扩展的矩阵单元集中，选择一些要排除的单元格（也称为 “稀疏”，sparsening）。过滤器是使用一个或多个排除 `axis` 指令，每个排除轴指令都具有 `name` 和 `values` 列表，的基本指令结构构造出的。
+
+`exclude` 代码块内的 `axis` 指令，会生成一套组合（类似于生成矩阵单元）。与 `exclude` 组合中的所有值匹配的矩阵单元，将从矩阵中移除。如果提供了多个 `exclude` 指令，则会分别计算每个排除指令以移除单元格。
+
+
+当处理长的排除值列表时，排除 `axis` 指令可以使用 `notValues` 而非 `values`。这将排除与传递给 `notValues` 的值之一 **不** 匹配的单元格。
+
+
+*示例 32，有着 24 个单元，排除了 `32-bit, mac`（4 个单元被排除）的三维度矩阵*
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+        axis {
+            name 'BROWSER'
+            values 'chrome', 'edge', 'firefox', 'safari'
+        }
+        axis {
+            name 'ARCHITECTURE'
+            values '32-bit', '64-bit'
+        }
+    }
+    excludes {
+        exclude {
+            axis {
+                name 'PLATFORM'
+                values 'mac'
+            }
+            axis {
+                name 'ARCHITECTURE'
+                values '32-bit'
+            }
+        }
+    }
+    // ...
+}
+```
+
+
+排除 `linux`、`safari` 组合，并排除任何 **不是** 带有 `edge` 浏览器的 `windows` 平台。
+
+*示例 33，带有 24 个单元，排除 `32-bit, mac` 与无效浏览器组合（9 个单元被排除）的三维度矩阵*
+
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+        axis {
+            name 'BROWSER'
+            values 'chrome', 'edge', 'firefox', 'safari'
+        }
+        axis {
+            name 'ARCHITECTURE'
+            values '32-bit', '64-bit'
+        }
+    }
+    excludes {
+        exclude {
+            // 4 cells
+            axis {
+                name 'PLATFORM'
+                values 'mac'
+            }
+            axis {
+                name 'ARCHITECTURE'
+                values '32-bit'
+            }
+        }
+        exclude {
+            // 2 cells
+            axis {
+                name 'PLATFORM'
+                values 'linux'
+            }
+            axis {
+                name 'BROWSER'
+                values 'safari'
+            }
+        }
+        exclude {
+            // 3 more cells and '32-bit, mac' (already excluded)
+            axis {
+                name 'PLATFORM'
+                notValues 'windows'
+            }
+            axis {
+                name 'BROWSER'
+                values 'edge'
+            }
+        }
+    }
+    // ...
+}
+```
+
+#### 矩阵的单元级指令（可选的）
+
+

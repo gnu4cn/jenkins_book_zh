@@ -1989,4 +1989,157 @@ matrix {
 
 #### 矩阵的单元级指令（可选的）
 
+矩阵特性实现了通过在 `matrix` 本身下添加阶段级指令，令到用户有效地配置每个单元的整体环境。这些指令的行为与在阶段上的行为相同，但他们也可以接受矩阵为每个单元提供的值。
+
+`axis` 和 `exclude` 指令定义了组成矩阵的静态单元集。该套组合是在流水线运行开始之前生成的。而另一方面，“各单元” 的指令，则是在运行时计算出的。
+
+这些指令包括：
+
+- [`agent`](#agent)
+
+- [`environment`](#environment)
+
+- [`input`](#input)
+
+- [`options`](#options)
+
+- [`post`](#post)
+
+- [`tools`](#tools)
+
+- [`when`](#when)
+
+
+*示例 34，完整矩阵示例，声明式流水线*
+
+
+```groovy
+pipeline {
+    parameters {
+        choice(name: 'PLATFORM_FILTER', choices: ['all', 'linux', 'windows', 'mac'], description: 'Run on specific platform')
+    }
+    agent none
+    stages {
+        stage('BuildAndTest') {
+            matrix {
+                agent {
+                    label "${PLATFORM}-agent"
+                }
+                when { anyOf {
+                    expression { params.PLATFORM_FILTER == 'all' }
+                    expression { params.PLATFORM_FILTER == env.PLATFORM }
+                } }
+                axes {
+                    axis {
+                        name 'PLATFORM'
+                        values 'linux', 'windows', 'mac'
+                    }
+                    axis {
+                        name 'BROWSER'
+                        values 'firefox', 'chrome', 'safari', 'edge'
+                    }
+                }
+                excludes {
+                    exclude {
+                        axis {
+                            name 'PLATFORM'
+                            values 'linux'
+                        }
+                        axis {
+                            name 'BROWSER'
+                            values 'safari'
+                        }
+                    }
+                    exclude {
+                        axis {
+                            name 'PLATFORM'
+                            notValues 'windows'
+                        }
+                        axis {
+                            name 'BROWSER'
+                            values 'edge'
+                        }
+                    }
+                }
+                stages {
+                    stage('Build') {
+                        steps {
+                            echo "Do Build for ${PLATFORM} - ${BROWSER}"
+                        }
+                    }
+                    stage('Test') {
+                        steps {
+                            echo "Do Test for ${PLATFORM} - ${BROWSER}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+
+### 步骤
+
+**Steps**
+
+声明式流水线可以使用 [流水线步骤参考，Pipeline Steps reference](https://www.jenkins.io/doc/pipeline/steps/) 中，所记录的所有可用步骤，其中包含了完整的步骤列表，此外还附带了下面列出的仅在声明式流水线中支持的步骤。
+
+
+#### `script`
+
+`script` 步骤取 [脚本化流水线，Scripted Pipeline](#脚本化流水线) 的一个代码块，并在声明式流水线中执行。对于大多数用例，声明式流水线中的 `script` 步骤应是不必要的，但他可以提供有用的 “逃生舱口，escape hatch”。规模和/或复杂性较大的 `script` 代码块块，应移至 [共享库](./shared-libraries.md) 中。
+
+
+*示例 35，声明式流水线中的脚本代码块*
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+
+                script {
+                    def browsers = ['chrome', 'firefox']
+                    for (int i = 0; i < browsers.size(); ++i) {
+                        echo "Testing the ${browsers[i]} browser"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+## 脚本化流水线
+
+**Scripted Pipeline**
+
+脚本化流水线，与 [声明式流水线](#声明式流水线) 一样，是构建在底层所采用的流水线子系统之上的。与声明式不同，脚本化流水线实际上是以 [Groovy](http://groovy-lang.org/syntax.html) 构建的通用 DSL <sup>[1]</sup>。 Groovy 语言提供的大部分功能，都可供脚本流水线用户使用，这意味着他可以是一种非常具有表现力和灵活的工具，人们可以用他来编写持续交付的流水线。
+
+
+### 流程控制
+
+**Flow Control**
+
+
+脚本化流水线从 `Jenkinsfile` 的顶部向下串行执行，就像 Groovy 或其他语言中的大多数传统脚本一样。因此，提供流程控制取决于 Groovy 表达式，譬如 `if/else` 条件，例如：
+
+*示例 36，条件语句 `if`，脚本化流水线*
+
+```groovy
+node {
+    stage('Example') {
+        if (env.BRANCH_NAME == 'master') {
+            echo 'I only execute on the master branch'
+        } else {
+            echo 'I execute elsewhere'
+        }
+    }
+}
+```
+
 

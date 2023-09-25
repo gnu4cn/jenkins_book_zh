@@ -2179,3 +2179,22 @@ node {
 ## 语法比较
 
 [![脚本化与声明式流水线之间的区别](https://img.youtube.com/vi/GJBlskiaRrI/0.jpg)](https://www.youtube.com/watch?v=GJBlskiaRrI)
+
+
+这个视频分享了脚本式流水线和声明式流水线语法之间的一些差异。
+
+
+在创建 Jenkins 流水线之初，Groovy 被选为基础。长期以来，Jenkins 都附带了一个内嵌的 Groovy 引擎，为管理员和用户提供高级脚本功能。此外，Jenkins 流水线的实现人员，发现 Groovy 是一个坚实的基础，可以在此基础上构建现在被称为 "脚本化流水线 "的 DSL。<sup>[1]</sup>
+
+作为一个功能齐全的编程环境，脚本化流水线为 Jenkins 用户提供了极大的灵活性和可扩展性。Groovy 的学习曲线，通常并不适合特定团队的所有成员，因此，声明式流水线应运而生，为编写 Jenkins 流水线提供了一种更简单、更有主见的语法。
+
+从根本上说，两者都属于同样的流水线子系统。他们都是 “流水线即代码，Pipeline as code” 的持久化实现，durable implementation。他们都能使用流水线内置的，或插件所提供的步骤。两者都能利用上 [共享库](./shared-libraries.md)。
+
+然而，他们在语法和灵活性方面有着差异。声明式以更严格和预定义的结构，来限制用户可用的内容，使其成为更简单的持续交付流水线的理想选择。脚本化的限制很少，因为对结构和语法的唯一限制，往往是由 Groovy 本身定义的，而不是任何特定于流水线的系统，这使他成为强大用户和有更复杂需求的用户的理想选择。顾名思义，声明式流水线鼓励使用声明式编程模型。<sup>[2]</sup>而脚本化流水线，则遵循的是命令式编程模式。<sup>[3]</sup>
+
+
+1. [领域专用语言](https://en.wikipedia.org/wiki/Domain-specific_language)；
+
+2. [声明式变成模型](https://en.wikipedia.org/wiki/Declarative_programming)；
+
+3. [命令式编程模型](https://en.wikipedia.org/wiki/Imperative_programming)。

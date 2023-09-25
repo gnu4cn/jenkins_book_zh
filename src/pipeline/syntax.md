@@ -1756,10 +1756,77 @@ pipeline {
 
 **Matrix**
 
-声明式流水线中的阶段可能会有一个定义出要并行运行的名称-值组合多维矩阵的 `matix` 小节。我们将这些组合称为矩阵中的“单元”。矩阵中的每个单元均可包括一个或多个要使用该单元配置的顺序运行的阶段，stages in Declarative Pipeline may have a `matrix` section defining a multi-dimensional matix of name-value combinations to be run in parallel. We'll refer these combinations as "cells" in a matrix. Each cell in a matrix can include one or more stages to be run sequentially using the configuration for that cell。
+声明式流水线中的阶段可能会有一个定义出要并行运行的名称-值组合多维矩阵的 `matix` 小节。我们将这些组合称为矩阵中的“单元”。矩阵中的每个单元均可包括一个或多个要使用该单元配置的顺序运行的阶段，stages in Declarative Pipeline may have a `matrix` section defining a multi-dimensional matrix of name-value combinations to be run in parallel. We'll refer these combinations as "cells" in a matrix. Each cell in a matrix can include one or more stages to be run sequentially using the configuration for that cell。
 
 {{#include ./syntax.md:1569}}
 
 此外，咱们可以通过将 `failFast true` 添加到包含着 `matrix` 的 `stage`，强制 `matrix` 的单元在其中任何一个失败时全部中止。添加 `failFast` 的另一选项，是向流水线定义添加一个选项：`parallelsAlwaysFailFast()`。
 
 `matrix` 小节必须包括 `axes` 小节和 `stages` 小节。`axes` 小节定义出矩阵中每个 `axis` 的值。`stages` 小节定义出在各个单元中按顺序运行的 `stage` 列表。`matrix` 可能会有一个 `excludes` 小节，用于从矩阵中移除无效单元。`stage` 上可用的许多指令，包括 `agent`、`tools`、`when` 等等，也可以添加到 `matrix`，以控制各个单元的行为。
+
+#### `axes`
+
+`axes` 小节指定一或多个 `axis` 指令。各条 `axis` 有一个 `name` 及 `values` 清单构成。各个维度（轴向）的全部值，会与其他维度（轴向）结合，以产生出那些单元。
+
+
+*示例 27，有 3 个单元的一维度（轴向）矩阵*
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+    }
+    // ...
+}
+```
+
+
+*示例 28，有着 12 个单元的两维度（轴向）矩阵*
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+        axis {
+            name 'BROWSER'
+            values 'chrome', 'edge', 'firefox', 'safari'
+        }
+    }
+    // ...
+}
+```
+
+
+*示例 29，有着 24 个单元的三维度（轴向）矩阵*
+
+
+```groovy
+matrix {
+    axes {
+        axis {
+            name 'PLATFORM'
+            values 'linux', 'mac', 'windows'
+        }
+        axis {
+            name 'BROWSER'
+            values 'chrome', 'edge', 'firefox', 'safari'
+        }
+        axis {
+            name 'ARCHITECTURE'
+            values '32-bit', '64-bit'
+        }
+    }
+    // ...
+}
+```
+
+
+#### `stages`
+
+`stages` 小节指定了要在每个单元中顺序执行的一个或多个 `stage`。这个小节与任何其他的 [`stages` 小节](#顺序式阶段) 都相同。

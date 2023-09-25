@@ -47,6 +47,6 @@
     - [Windows 系统支持政策](./administration/windows_support_policy.md)
     - [Linux 系统支持政策](./administration/linux_support_policy.md)
 
-
+- [词汇表](./glossary.md)
 
 - [备忘录](memos.md)

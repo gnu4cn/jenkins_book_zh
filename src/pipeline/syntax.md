@@ -2142,4 +2142,40 @@ node {
 }
 ```
 
+管理脚本化流水线流程控制的另一种方法，是使用 Groovy 的异常处理支持。当 [步骤-脚本化流水线](#步骤) 由于某种原因失败时，他们会抛出异常。处理错误时的行为必须使用 Groovy 中的 `try/catch/finally` 块，例如：
 
+
+*示例 37，Try-Catch 代码块，脚本化流水线*
+
+```groovy
+node {
+    stage('Example') {
+        try {
+            sh 'exit 1'
+        }
+        catch (exc) {
+            echo 'Something failed, I should sound the klaxons!'
+            throw
+        }
+}
+```
+
+### 步骤
+
+**Steps**
+
+正如本章开头所讨论的，流水线最基本的部分是“步骤”。从根本上讲，步骤告诉 Jenkins 要做什么，并作为声明式和脚本化流水线语法的基本构建代码块。
+
+脚本化流水线 **未** 引入任何特定于其语法的步骤；[流水线步骤参考](https://www.jenkins.io/doc/pipeline/steps) 包含流水线及插件所提供的步骤完整列表。
+
+
+
+### 与普通 Groovy 的区别
+
+
+为了提供 *持久性，durability*，即运行中的流水线在 Jenkins [控制器](../glossary.md#控制器) 重启后仍能存活，脚本化流水线必须将数据序列化并返回控制器。由于这一设计要求，某些 Groovy 习惯做法（如 `collection.each { item → /* perform operation */ }`）并不完全受支持。有关详细信息，请参阅 [JENKINS-27421](https://issues.jenkins.io/browse/JENKINS-27421) 和 [JENKINS-26481](https://issues.jenkins.io/browse/JENKINS-26481)。
+
+
+## 语法比较
+
+[![脚本化与声明式流水线之间的区别](https://img.youtube.com/vi/GJBlskiaRrI/0.jpg)](https://www.youtube.com/watch?v=GJBlskiaRrI)

@@ -67,3 +67,8 @@
 
 
 ![文件夹计算-主页](../images/folder-computation-main.png)
+
+这个页面提供了上次尝试计算文件夹的日志。如果文件夹计算结果与预期的代码仓库集合不符，日志中可能就会有诊断问题的有用信息。
+
+
+![文件夹计算-日志页面](../images/folder-computation-log.png)

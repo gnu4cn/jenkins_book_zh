@@ -16,4 +16,43 @@
 
 - *流水线，Pipeline*： 常规流水线作业在指定流水线时，有一个 "使用 SCM "选项。
 
+从根本上说，组织的代码仓库，可以被视为一个层次结构，其中每个代码仓库都可能有分支和拉取请求等子元素。
+
+
+```sh
+代码仓库结构示例
+
++--- GitHub Organization
+    +--- Project 1
+        +--- master
+        +--- feature-branch-a
+        +--- feature-branch-b
+    +--- Project 2
+        +--- master
+        +--- pull-request-1
+        +--- etc...
+```
+
+
+在 _Multibranch Pipeline_ 作业和 _Organization Folders_ 之前，插件：[cloudbees-folder](https://plugins.jenkins.io/cloudbees-folder/) 可用于在 Jenkins 中创建出此层次结构，方法是把代码仓库组织到包含了各个单独分支作业的文件夹中。
+
+*多分支管道* 和 *组织文件夹* 可分别检测到分支和代码仓库，并自动在 Jenkins 中创建出包含作业的适当文件夹，从而消除了手动流程。
+
+
+## `Jenkinsfile`
+
+如果 `Jenkinsfile` 位于代码仓库的根目录，Jenkins 就能根据代码仓库的分支，自动管理和执行作业。
+
+
+`Jenkinsfile` 应包含一个指定了执行作业的步骤的流水线脚本。该脚本具有有着流水线的所有可用功能，从简单的调用 Maven 构建器，到一系列相互依存的步骤，这些步骤与部署和验证阶段一起协调并行执行。
+
+
+开始使用流水线的一个简单方法，便是使用 Jenkins 流水线作业配置屏幕中的 *片段生成器*。使用 *片段生成器*，咱们就可以通过如同其他 Jenkins 作业中的下拉菜单那样，创建出流水线脚本来。
+
+
+## 文件夹的计算
+
+**Folder Computation**
+
+
 

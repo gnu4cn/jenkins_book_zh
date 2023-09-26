@@ -2193,8 +2193,8 @@ node {
 然而，他们在语法和灵活性方面有着差异。声明式以更严格和预定义的结构，来限制用户可用的内容，使其成为更简单的持续交付流水线的理想选择。脚本化的限制很少，因为对结构和语法的唯一限制，往往是由 Groovy 本身定义的，而不是任何特定于流水线的系统，这使他成为强大用户和有更复杂需求的用户的理想选择。顾名思义，声明式流水线鼓励使用声明式编程模型。<sup>[2]</sup>而脚本化流水线，则遵循的是命令式编程模式。<sup>[3]</sup>
 
 
-1. [领域专用语言, domain-specific language, DSL](https://en.wikipedia.org/wiki/Domain-specific_language)；
+1. [领域专用语言, domain-specific language, DSL](https://en.wikipedia.org/wiki/Domain-specific_language)
 
-2. [声明式编程模型，declarative programming](https://en.wikipedia.org/wiki/Declarative_programming)；
+2. [声明式编程模型，declarative programming](https://en.wikipedia.org/wiki/Declarative_programming)
 
-3. [命令式编程模型, imperative programming](https://en.wikipedia.org/wiki/Imperative_programming)。
+3. [命令式编程模型, imperative programming](https://en.wikipedia.org/wiki/Imperative_programming)

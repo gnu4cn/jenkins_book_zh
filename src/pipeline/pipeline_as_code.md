@@ -183,4 +183,54 @@ Jenkins 属于软件交付工具链中的瑞士军刀。开发人员和运维 (D
 持续交付是个过程，而不是一种工具，他需要一种思想和文化，这种思想和文化必须在组织内自上而下地贯穿。一旦机构接受了这一理念，接下来最困难的部分，就是绘制出软件从开发到投入生产的流程图。
 
 
+这样的流水线的根基，始终是 Jenkins 这种协调工具，但流水线这类整体，必须满足一些关键要求，才能承担起对于企业至关重要流程的任务：
+
+- **零停机或低停机时间的灾难恢复，zero or low downtime disaster recovery**：提交就像神话中的英雄一样，在流水线上会遇到更难、更长的挑战。流水线执行持续数天的情况并不少见。在为期七天的流水线中，如果在第六天出现硬件或 Jenkins 故障，就会对产品的按时交付造成严重后果；
+
+- **审计运行情况与调试能力, audit runs and debug ability**：构建经理希望看到流水线的确切执行流程，这样他们就能轻松调试问题。
+
+
+为确保工具能够与组织一起扩展，并在不改变现有交付流水线的情况下，实现适当的自动化，工具还应支持：
+
+
+- **复杂的流水线**：交付流水线通常比典型示例（线性流程：开发 → 测试 → 部署，每个阶段都有几项操作）更复杂。构建经理要的是，能帮助并行处理流程各部分、运行循环、完成重试等的架构。换句话说，构建经理需要对架构进行编程，来定义出流水线，build managers want constructs that help parallelize parts of the flow, run loops, perform retries and so forth. Stated differently, build managers want programming constructs to define pipelines；
+
+- **手动干预，manual interventions**：跨越组织内部各部门边界的流水线，需要人工交接与干预。构建经理寻求包括暂停管道这类的能力，以便人工干预并做出人工决策。
+
+
+流水线插件就允许用户通过名为 “流水线，Pipeline” 的新作业类型，创建出流水线。流程，the flow，定义通过 Groovy 脚本被捕获到，从而带来了循环、分叉和重试等控制流的能力。流水线允许带选项的阶段设置并发，以及防止同一流水线的多个构建，同时尝试访问同一资源。
+
+
+### 一些概念
+
+
+#### 流水线作业类型
+
+**Pipeline Job Type**
+
+
+捕获组织中整个软件交付流水线的作业只有一项。当然，如果咱们愿意，也可以将两种流水线作业类型连接在一起。流水线作业类型，使用基于 Groovy 的 DSL 进行作业定义。该 DSL 提供了以编程方式定义作业的优势：
+
+```groovy
+node('linux'){
+  git url: 'https://github.com/jglick/simple-maven-project-with-tests.git'
+  def mvnHome = tool 'M3'
+  env.PATH = "${mvnHome}/bin:${env.PATH}"
+  sh 'mvn -B clean verify'
+}
+```
+
+#### 阶段
+
+
+**Stages**
+
+
+组织内（或概念上）的边界，是通过一种称为 “阶段” 的原语，a primitive called "stages"，来捕获到的。部署流水线由多个阶段构成，其中每个后续阶段，都建立在前一阶段的基础上。这样做的目的，是在流水线的早期阶段，花费尽可能少的资源来发现明显的问题，而不是花费大量的计算资源，来处理最终发现的问题。
+
+![阶段的并发](../images/stage-concurrency.png)
+
+*图 1，使用流水线的节流阶段并发，throttled stage concurrency with Pipeline*
+
+
 

@@ -233,4 +233,35 @@ node('linux'){
 *图 1，使用流水线的节流阶段并发，throttled stage concurrency with Pipeline*
 
 
-请设想某个有着三个阶段的简单流水线。该流水线的简单实现，可以在每次代码提交时，顺序地触发每个阶段。因此，部署步骤就会在 Selenium 测试步骤完成后，立即触发。然而，这意味着提交二的部署，会覆盖提交一的最后一次部署。正确的做法是，提交二和提交三等待提交一的部署完成，合并提交一之后发生的所有更改，然后触发部署。如果出现问题，开发人员可以轻松找出问题是在提交二还是提交三中引入的。
+请设想有着三个阶段的一个简单流水线。该流水线的简单实现，可以在每次代码提交时，顺序地触发每个阶段。因此，部署步骤就会在 Selenium 测试步骤完成后，立即触发。然而，这意味着提交二的部署，会覆盖提交一的最后一次部署。正确的做法是，对于提交二和提交三，要等待提交一的部署完成，合并了提交一之后所发生的全部更改，并触发部署。如果出现问题，开发人员就可以轻松找出，问题是在提交二还是提交三中引入的。
+
+
+通过增强阶段原语，stage primitive，流水线提供了这一功能。例如，阶段可以定义一个并发级别，以表示在任何时候，都只有一个线程在该阶段运行。这就实现了以最快速度运行部署的理想状态。
+
+
+```groovy
+ stage name: 'Production', concurrency: 1
+ node {
+     unarchive mapping: ['target/x.war' : 'x.war']
+     deploy 'target/x.war', 'production'
+     echo 'Deployed to http://localhost:8888/production/'
+ }
+```
+
+#### 门槛与审批
+
+**Gates and Approvals**
+
+
+持续交付是指二进制文件处于发布就绪状态，而持续部署，continuous deployment，则是指将二进制文件推送到生产环境 -- 或者说自动部署，automated depolyment。尽管持续部署是一个颇具魅力的术语，也是一种理想状态，但在现实中，企业仍然会希望在将二进制文件推送到生产环境之前，由人工进行最终审批。这可以通过流水线中的 “输入” 原语，the "input" primitive，来实现。输入步骤可以无限期等待人工干预。
+
+
+```groovy
+input message: "Does http://localhost:8888/staging/ look good?"
+```
+
+#### 到暂存/生产环境的构件部署
+
+**Deployment of Artifacts to Staging/Production**
+
+

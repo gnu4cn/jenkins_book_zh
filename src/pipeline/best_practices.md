@@ -53,3 +53,27 @@
 ### 减少重复的相似流水线步骤
 
 **Reducing repitition of similar Pipeline steps**
+
+
+尽可能地将多个流水线步骤，合并为单一步骤，以减少流水线执行引擎本身造成的开销。例如，如果连续运行三个 shell 步骤，每个步骤都必须启动和停止，这就需要创建和清理 Jenkins 代理与控制器上的连接和资源。但是，如果将所有命令放在一个 shell 步骤中，则只需启动和停止一个步骤。
+
+示例：与其创建一系列 `echo` 或 `sh` 步骤，不如将他们合并为一个步骤或脚本。
+
+
+### 避免对 `Jenkins.getInstance` 的调用
+
+**Avoiding calls to `Jenkins.getInstance`**
+
+
+在流水线或共享库中，使用 `Jenkins.instance` 或其访问器方法，表明在该流水线/共享库中存在代码滥用。在无沙箱的共享库中使用 Jenkins API，意味着该共享库既是一个共享库，也是某种 Jenkins 插件。在流水线种与 Jenkins API 交互时，咱们需要非常小心，以避免严重的安全与性能问题。如果咱们必须在构建中使用 Jenkins API，建议的方法是使用流水线的步骤 API，Pipeline's Step API, 以 Java 语言创建一个对咱们打算访问的 Jenkins API 进行安全封装的最小插件。直接从沙箱化的 `Jenkinsfile` 中使用 Jenkins API，意味着咱们很可能必须将一些方法列入白名单，这些方法允许任何能修改流水线的人，绕过沙箱保护，这是一个重大的安全风险。白名单方法以系统用户身份运行，拥有总体管理员权限，这可能导致开发人员拥有比预期更高的权限。
+
+
+解决方案：最好的解决方案是绕过正在进行的调用，但如果必须调用，则最好实现一个能够收集所需数据的 Jenkins 插件。
+
+
+### 清理旧的 Jenkins 构建
+
+**Cleaning up old Jenkins builds**
+
+
+

@@ -32,6 +32,7 @@
     - [流水线开发工具](./pipeline/development_tools.md)
     - [流水线语法](./pipeline/syntax.md)
     - [流水线即代码](./pipeline/pipeline_as_code.md)
+    - [流水线最佳实践](./pipeline/best_practices.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 
 

@@ -76,4 +76,8 @@
 **Cleaning up old Jenkins builds**
 
 
+作为 Jenkins 管理员，删除旧的或不需要的构建，可保持 Jenkins 控制器高效运行。如果不删除旧的构建，就会减少用于当前相关构建的资源。本视频介绍了在单个流水线作业中，使用 `buildDiscarder` 指令的情况。视频还回顾了保留特定历史构建的过程。
 
+*如何清理早先的 Jenkins 构建*
+
+[![如何清理早先的 Jenkins 构建](https://img.youtube.com/vi/_Z7BlaTTGlo/0.jpg)](https://www.youtube.com/watch?v=_Z7BlaTTGlo)

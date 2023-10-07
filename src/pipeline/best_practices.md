@@ -129,3 +129,52 @@
 
 
 **另外，请注意，这两种方法都比为每个作业使用唯一资源，会更慢地产生构建结果**。
+
+
+## 避免使用 `NotSerializableException`
+
+
+流水线代码会经过CPS转换，以便在 Jenkins 重新启动后，能够恢复流水线的执行。也就是说，当流水线运行咱们的脚本时，咱们可以关闭 Jenkins 或失去与代理的连接。当其恢复运行时，Jenkins 会记住其正在进行的工作，咱们的流水线脚本将继续执行，就好像从未中断过一样。一种称为 [“继续传递式（continuation-passing style, CPS）”](https://en.wikipedia.org/wiki/Continuation-passing_style) 执行的技巧，在恢复流水线方面起着关键作用。然而，由于 CPS 转换的结果，一些 Groovy 表达式会无法正确工作。
+
+
+在底层，CPS 依赖于能够将流水线的当前状态，以及待执行的其余部分进行序列化。这意味着在流水线中使用不可序列化的对象，将在流水线尝试持久化其状态时触发 `NotSerializableException` 异常。
+
+
+请参阅 [流水线 CPS 方法不匹配](./CPS_method_mismatches.md) 小节，了解更多详情以及可能存在问题的一些示例。
+
+
+以下内容将介绍确保流水线能够按预期运行的技巧。
+
+
+### 确保持久化变量可序列化
+
+**Ensure Persisted Variables Are Serializable**
+
+
+在序列化过程中，本地变量会作为流水线状态的一部分而被捕获。这意味着，如果在流水线执行过程中，将不可序列化的对象存储到变量中，就会产生 `NotSerializableException` 异常。
+
+
+### 请勿将不可序列化的对象赋值给变量
+
+**Do not assign non-serializable objects to variables**
+
+
+利用不可序列化的对象的一种策略，便是始终在需要时才推断出他们的值，而不是计算出他们的值并将该值存储在变量中，one strategy to make use of non-serializable objects to always infer their value "just-in-time" instead of calculating their value and storing that value in a variable。
+
+
+### 使用 `@NonCPS`
+
+如果有必要，咱们可以使用 `@NonCPS` 注解，来禁用特定方法的 CPS 转换，若对该方法进行 CPS 转换，其主体将无法正确执行时。需要注意的是，这也意味着这个 Groovy 函数必须整个重启，因为其没有经过转换。
+
+> 一些异步流水线步骤（如 `sh` 和 `sleep`）总是经过了 CPS 转换，而不得在注解为 `@NonCPS` 的方法中使用。一般来说，应避免在注解为 `@NonCPS` 的方法中，使用流水线步骤。
+
+
+
+### 流水线持久性
+
+**Pipeline Durability**
+
+值得注意的是，改变流水线的持久性，可能会导致原本会抛出 `NotSerializableException` 异常的情况不再抛出。这是因为通过 `PERFORMANCE_OPTIMIZED` 降低流水线的持久性，意味着流水线的当前状态不会被频繁持久化。因此，流水线不会尝试序列化不可序列化的值，因此不会抛出异常。
+
+
+> **注意**：这条说明旨在告知用户，此行为的根本原因。不建议将流水线的持久性设置，纯粹为了避免可序列化问题而设置为性能优化，Performance Optimized。

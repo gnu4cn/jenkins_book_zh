@@ -126,3 +126,33 @@ echo "${x}"
 **Overrides of non-CPS-transformed methods**
 
 
+用户可在 Pipeline 脚本中，创建出某个对该 Pipeline 脚本外部定义的，例如 Java 或 Groovy 标准库中的已有类，进行扩展的类。这样做时，子类就必须确保，任何重载方法都以 `@NonCPS` 进行了注解，并且这些重载方法内部，都不得使用任何 CPS 转换代码。否则，如果从非 CPS 上下文中调用，这些重写方法就将失效。例如，以下方法将不起作用：
+
+
+```groovy
+class Test {
+  @Override
+  public String toString() {
+    return "Test"
+  }
+}
+def builder = new StringBuilder()
+builder.append(new Test())
+echo(builder.toString())
+```
+
+从比如 `StringBuilder.append` 等非 CPS 转换代码中，调用 `toString` 的 CPS 转换重写，是不允许的，而且在大多数情况下，都不会按预期运行。运行此脚本时日志中的警告如下：
+
+
+> *expected to call java.lang.StringBuilder.append but wound up catching Test.toString*
+
+
+要解决这种情况，可在覆盖方法中添加 `@NonCPS` 注解，并从方法中移除任何 CPS 转换代码的使用，如 Pipeline 步骤。
+
+
+### `GString` 中的闭包
+
+**Closures inside `GString`**
+
+
+

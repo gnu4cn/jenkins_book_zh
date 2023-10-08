@@ -95,4 +95,7 @@ Blue Ocean 这一名称，来自 [“蓝海策略，Blue Ocean Strategy”](http
 **Does Blue Ocean support freestyle jobs**?
 
 
+Blue Ocean 的目标是提供与流水线相关的出色体验，并与 Jenkins 实例中已配置的任何自由风格作业相兼容。不过，咱们将无法受益于为流水线构建的一些功能，例如流水线的可视化。
+
+
 

@@ -58,7 +58,7 @@ compileOnPlatforms()
 在这个方法中，使用 `node` 或 `sh` 步骤是非法的，会导致行为异常。运行此脚本时，日志中的警告如下：
 
 
-> `expected to call WorkflowScript.compileOnPlatforms but wound up catching node`
+> *expected to call WorkflowScript.compileOnPlatforms but wound up catching node*
 
 
 要修复这种情况，只需删除那个注解即可，因为不需要他。(在修正 [JENKINS-26481](https://issues.jenkins.io/browse/JENKINS-26481) 之前，流水线的长期用户，可能认为其是必要的）。
@@ -84,7 +84,7 @@ echo(sorted.toString())
 传递给 `Iterable.toSorted` 的闭包是经过 CPS 转换的，但 `Iterable.toSorted` 本身在内部却并没有经过 CPS 转换，因此这不会按预期的方式工作。当前的行为是，调用 `toSorted` 的返回值，将是第一次调用闭包的返回值。在示例中，这导致了 `sorted` 被设置为 `-1`，日志中的警告信息如下：
 
 
-> `expected to call java.util.ArrayList.toSorted but wound up catching org.jenkinsci.plugins.workflow.cps.CpsClosure2.call`
+> *expected to call java.util.ArrayList.toSorted but wound up catching org.jenkinsci.plugins.workflow.cps.CpsClosure2.call*
 
 
 要修复这种情况，传递给这些方法的任何参数，都不得进行 CPS 转换。而要做到这一点，可以将有问题的方法（示例中的 `Iterable.toSorted`）封装在另一个方法中，并用 `@NonCPS` 注解外部方法，或者为闭包创建一个显式的类定义，并用 `@NonCPS` 注解该类中的全部方法。
@@ -95,5 +95,34 @@ echo(sorted.toString())
 
 **Constructors**
 
+有时，用户可能会尝试在 Pipeline 脚本的构造函数中，使用 CPS 转换了的代码，如 Pipeline 步骤。遗憾的是，通过 Groovy 中的 `new` 运算符构建对象，并不能进行 CPS 转换（ [JENKINS-26313](https://issues.jenkins.io/browse/JENKINS-26313) ），因此这种做法不会管用。下面是一个在构造函数中，调用 CPS 转换方法的示例：
+
+
+```groovy
+class Test {
+  def x
+  public Test() {
+    setX()
+  }
+  private void setX() {
+    this.x = 1;
+  }
+}
+def x = new Test().x
+echo "${x}"
+```
+
+`Test` 的构造，将在调用 `Test.setX` 时失败，因为 `setX` 是一个 CPS 转换方法。运行此脚本时日志中的警告如下：
+
+
+> *expected to call Test.<init> but wound up catching Test.setX*
+
+
+要解决这种情况，就要确保在 Pipeline 脚本中定义的、从构造器内部调用到的任何方法，都以 `@NonCPS` 进行了注解，并且构造器没有调用任何 Pipeline 步骤。如果必须在构造函数中调用 CPS 转换代码（如流水线步骤），则需要将与那些 CPS 转换方法相关的逻辑，移出构造函数，例如移入调用了 CPS 转换代码的静态工程方法中，然后将结果传递给构造函数。
+
+
+### 非 CPS 转换方法的重写
+
+**Overrides of non-CPS-transformed methods**
 
 

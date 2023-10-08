@@ -30,4 +30,70 @@ Jenkins 流水线使用了一个名为 Groovy CPS 的库，来运行流水线脚
 - 少数几个不需要代码块，且立即执行的 Pipeline 步骤，例如 `echo` 或 `properties`。
 
 
+CPS 转换了的代码可调用非 CPS 转换代码，或其他 CPS 转换代码，非 CPS 转换代码可调用其他非 CPS 转换代码，但非 CPS 转换代码 **不得** 调用 CPS 转换代码。如果咱们尝试从非 CPS 转换代码调用 CPS 转换代码，CPS 解释器将无法正确运行，从而造成不正确及经常混乱的结果。
+
+
+## 常见问题及解决方案
+
+**Common problems and solutions**
+
+
+### 在 `@NonCPS` 中使用 Pipeline 步骤
+
+
+有时，用户会对方法定义应用 `@NonCPS` 注解，以绕过该方法内部的 CPS 转换。这样做的目的，可能是绕过 Groovy 语言覆盖范围的限制（因为方法的主体将用到原生 Groovy 语义执行），或者是为了获得更好的性能（解释器会带来很大的开销）。不过，此类方法就不得调用 CPS 转换的代码了，比如如 Pipeline 步骤。例如，以下代码将无法运行：
+
+```groovy
+@NonCPS
+def compileOnPlatforms() {
+  ['linux', 'windows'].each { arch ->
+    node(arch) {
+      sh 'make'
+    }
+  }
+}
+compileOnPlatforms()
+```
+
+在这个方法中，使用 `node` 或 `sh` 步骤是非法的，会导致行为异常。运行此脚本时，日志中的警告如下：
+
+
+> `expected to call WorkflowScript.compileOnPlatforms but wound up catching node`
+
+
+要修复这种情况，只需删除那个注解即可，因为不需要他。(在修正 [JENKINS-26481](https://issues.jenkins.io/browse/JENKINS-26481) 之前，流水线的长期用户，可能认为其是必要的）。
+
+
+
+### 以 CPS 转换了的参数调用非 CPS 转换方法
+
+**Calling non-CPS-transformed methods with CPS-transformed arguments**
+
+
+一些 Groovy 和 Java 方法，会将复杂类型作为参数，以支持动态的行为。一个常见的例子，便是是排序方法，其允许调用者指定用于比较对象的方法 ( [JENKINS-44924](https://issues.jenkins.io/browse/JENKINS-44924) )。在修正 [JENKINS-26481](https://issues.jenkins.io/browse/JENKINS-26481) 之后，Groovy 标准库中的许多类似方法就都能正确工作了，但仍有些方法未被修正。例如，以下方法将无法工作：
+
+
+```groovy
+def sortByLength(List<String> list) {
+  list.toSorted { a, b -> Integer.valueOf(a.length()).compareTo(b.length()) }
+}
+def sorted = sortByLength(['333', '1', '4444', '22'])
+echo(sorted.toString())
+```
+
+传递给 `Iterable.toSorted` 的闭包是经过 CPS 转换的，但 `Iterable.toSorted` 本身在内部却并没有经过 CPS 转换，因此这不会按预期的方式工作。当前的行为是，调用 `toSorted` 的返回值，将是第一次调用闭包的返回值。在示例中，这导致了 `sorted` 被设置为 `-1`，日志中的警告信息如下：
+
+
+> `expected to call java.util.ArrayList.toSorted but wound up catching org.jenkinsci.plugins.workflow.cps.CpsClosure2.call`
+
+
+要修复这种情况，传递给这些方法的任何参数，都不得进行 CPS 转换。而要做到这一点，可以将有问题的方法（示例中的 `Iterable.toSorted`）封装在另一个方法中，并用 `@NonCPS` 注解外部方法，或者为闭包创建一个显式的类定义，并用 `@NonCPS` 注解该类中的全部方法。
+
+
+
+### 构造器
+
+**Constructors**
+
+
 

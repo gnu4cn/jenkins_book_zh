@@ -86,3 +86,13 @@ Blue Ocean 就是为了满足当时这种需求而诞生的。然而，随着时
 
 **Where is the name from**?
 
+Blue Ocean 这一名称，来自 [“蓝海策略，Blue Ocean Strategy”](https://en.wikipedia.org/wiki/Blue_Ocean_Strategy) 一书。这种策略涉及在更大的无竞争空间，而不是在有竞争的空间内，看待战略问题。更简单地说，可以引用冰球传奇人物韦恩-格雷茨基（Wayne Gretzky）的名言： “滑向冰球即将出现的地方，而不是冰球已经出现的地方”。
+
+
+### Blue Ocean 支持自由风格的作业吗？
+
+
+**Does Blue Ocean support freestyle jobs**?
+
+
+

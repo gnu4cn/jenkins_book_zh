@@ -33,7 +33,7 @@
     - [流水线语法](./pipeline/syntax.md)
     - [流水线即代码](./pipeline/pipeline_as_code.md)
     - [流水线最佳实践](./pipeline/best_practices.md)
-    - [扩大流水线规模](./pipeline/scaling_pipelines.md)
+    - [调整流水线](./pipeline/scaling_pipelines.md)
     - [CPS 方法不匹配](./pipeline/CPS_method_mismatches.md)
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 

@@ -38,6 +38,9 @@
     - [Pipeline: 节点与进程](./pipeline/nodes_and_processes.md)
 
 
+- [Blue Ocean](./blue_ocean.md)
+
+
 - [管理 Jenkins](./managing.md)
     - [Jenkins 命令行界面](./managing/jenkins_cli.md)
 

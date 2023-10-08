@@ -77,4 +77,34 @@
 
 + 对于下面所列出的 **全部** 流水线插件，必须至少安装指定的最低版本：
 
-    -
+    - Pipeline: API (`workflow-api`) v2.25；
+
+    - Pipeline: Groovy (`workflow-cps`) v2.43；
+
+    - Pipeline: 作业 (`workflow-job`) v2.17；
+
+    - Pipeline: 支持性 APIs (`workflow-support`) v2.17；
+
+    - Pipeline: 多分支 (`workflow-multibranch`) v2.17 - 可选的，只有在启用此设置以用于多分支流水线时才需要。
+
+
+- 重新启动控制器，使用更新后的插件 -- 注意：需要全部插件才能使用。
+
+
+## 持久性设置都是些什么？
+
+**What Are The Durability Settings?**
+
+- 性能优化模式（`PERFORMANCE_OPTIMIZED`）-- 大大减少磁盘 I/O。如果流水线没有完成，Jenkins 也没有优雅地关闭，那么他们就可能会丢失数据，并表现得像 Freestyle 项目一样 -- 详见上文；
+
+- 最大持久性（ `MAX_SURVIVABILITY` ） - 其行为与之前的流水线相同，速度最慢的选项。用于运行最关键的流水线；
+
+- 持久性较低，速度稍快（ `SURVIVABLE_NONATOMIC` ） -- 每一步都写入数据，但会避免原子写入。这比最大持久性模式更快，尤其在 NFS 上。但他会带来一点额外风险（详情见上文 [“我放弃了什么：原子写入”](#在持久性设置的-权衡-中我放弃了什么) ）。
+
+
+## 建议的持久性设置最佳实践与技巧
+
+**Suggested Best Practices And Tips for Durability Settings**
+
+
+

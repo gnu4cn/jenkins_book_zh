@@ -155,4 +155,36 @@ echo(builder.toString())
 **Closures inside `GString`**
 
 
+在 Groovy 里， 使用位处 `GString` 中的某个闭包是可行的，这样每次将 `GString` 作为 `String` 使用时，都会对这个闭包进行计算。然而，在 Pipeline 脚本中，这不会像预期的那样起作用，因为 `GString` 中的闭包将被 CPS 转换。下面是一个示例：
 
+
+```groovy
+def x = 1
+def s = "x = ${-> x}"
+x = 2
+echo(s)
+```
+
+在本例中，使用 `GString` 内的闭包将不起作用。运行此脚本时日志中的警告如下：
+
+
+> *expected to call WorkflowScript.echo but wound up catching org.jenkinsci.plugins.workflow.cps.CpsClosure2.call*
+
+
+要解决这种情况，可以一个用到普通表达式，而不是闭包，返回 `GString` 的闭包，替换原来的 `GString`，然后在用到原来的 `GString` 的地方，调用这个闭包，如下所示：
+
+
+```groovy
+def x = 1
+def s = { -> x = "${x}" }
+x = 2
+echo(s())
+```
+
+
+## 误报问题（假阳性）
+
+**False Positives**
+
+
+不幸的是，某些表达式即使执行正确，也可能错误地触发此类警告。如果遇到这种情况，请为 `workflow-cps-plugin` [提交一个新问题](https://www.jenkins.io/participate/report-issue/redirect/#21713)（请首先检查是否有重复）。

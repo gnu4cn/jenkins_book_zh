@@ -46,7 +46,7 @@ Blue Ocean 可让咱们轻松地在 Jenkins 中，创建流水线项目。
 在 **连接到 Git 仓库** 部分，于 **仓库 URL** 字段中输入 Git 仓库的 URL。
 
 
-![连接到 Git 仓库](connect-to-a-git-repository.png)
+![连接到 Git 仓库](../images/connect-to-a-git-repository.png)
 
 
 现在，咱们必须指定一个 [本地](#本地代码仓库) 或 [远端](#远端代码仓库) 的代码仓库，以便从中构建 Pipeline 项目。

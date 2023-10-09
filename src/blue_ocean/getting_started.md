@@ -16,7 +16,7 @@
 咱们可以使用以下方法，安装 Blue Ocean：
 
 
-- 作为 [现有 Jenkins 实例]() 上的一套插件；
+- 作为 [现有 Jenkins 实例](#在现有的-jenkins-实例上) 上的一套插件；
 
 - 作为 [Docker 中 Jenkins]() 的一部分。
 
@@ -46,4 +46,21 @@
 > - 无需选择此列表中的其他插件。Blue Ocean 主插件会自动选择并安装所有依赖插件，从而组成 Blue Ocean 插件套件；
 > - 如果仅选择了 **安装** 选项，则必须重启 Jenkins 才能获得 Blue Ocean 的全部功能。
 
+更多信息，请参阅 [插件管理](../managing/plugins.md) 页面。Blue Ocean 安装后无需额外配置。现有流水线及项目将照常运行。
 
+> 在 Blue Ocean 中首次为特定 Git 服务器创建流水线时，Blue Ocean 会提示咱们提供 Git 凭据，以便在仓库中创建流水线。这是必须的，因为 Blue Ocean 才可以将 `Jenkinsfile`，添加到咱们的代码仓库中。
+
+
+### 作为 Docker 中的 Jenkins 的一部分
+
+Blue Ocean 插件套件并未与可从 [Docker Hub 仓库](https://hub.docker.com/) 中，获取的 Jenkins 官方 Docker 映像 [jenkins/jenkins](https://hub.docker.com/r/jenkins/jenkins/) 捆绑。
+
+有关在 Docker 内运行 Jenkins 以及 Blue Ocean 的更多信息，请参阅安装 Jenkins 页面的 [Docker](../installation/docker.md) 小节。
+
+
+## 访问 Blue Ocean
+
+
+一旦 Jenkins 环境安装了 Blue Ocean，并登入了 Jenkins 经典用户界面，就可以通过选择屏幕左侧的 **打开 Blue Ocean**，访问到 Blue Ocean 的用户界面。
+
+![打开 Blue Ocean 链接](../images/open-blue-ocean-link.png)

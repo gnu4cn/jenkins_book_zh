@@ -39,6 +39,7 @@
 
 
 - [Blue Ocean](./blue_ocean.md)
+    - [Blue Ocean 入门](./blue_ocean/getting_started.md)
 
 
 - [管理 Jenkins](./managing.md)

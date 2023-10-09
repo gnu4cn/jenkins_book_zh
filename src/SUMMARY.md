@@ -40,6 +40,7 @@
 
 - [Blue Ocean](./blue_ocean.md)
     - [Blue Ocean 入门](./blue_ocean/getting_started.md)
+    - [创建流水线](./blue_ocean/create_a_pipeline.md)
 
 
 - [管理 Jenkins](./managing.md)

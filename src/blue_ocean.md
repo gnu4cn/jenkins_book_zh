@@ -4,7 +4,7 @@
 
 - [Blue Ocean 入门](./blue_ocean/getting_started.md)，内容包括如何在 Jenkins 中设置 Blue Ocean，以及访问 Blue Ocean 界面；
 
-- 在 Blue Ocean 中 [创建一个新的 Pipeline 项目](./blue_ocean/create_a_new_pipeline_project.md)；
+- 在 Blue Ocean 中 [创建一个新的 Pipeline 项目](./blue_ocean/create_a_pipeline.md)；
 
 - 使用 Blue Ocean 的 [仪表盘](./blue_ocean/dashboard.md)。
 

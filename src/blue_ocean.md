@@ -98,4 +98,48 @@ Blue Ocean 这一名称，来自 [“蓝海策略，Blue Ocean Strategy”](http
 Blue Ocean 的目标是提供与流水线相关的出色体验，并与 Jenkins 实例中已配置的任何自由风格作业相兼容。不过，咱们将无法受益于为流水线构建的一些功能，例如流水线的可视化。
 
 
+Blue Ocean 的设计具有可扩展性，因此 Jenkins 社区可以扩展 Blue Ocean 的功能。虽然 Blue Ocean 不会再添加任何其他功能，但他仍提供了流水线可视化，以及用户认为有价值的其他一些功能。
 
+
+### 这对咱们的插件有什么影响？
+
+**What does this mean for my plugins**?
+
+
+可扩展性是 Jenkins 的核心功能之一，而能够扩展 Blue Ocean UI 也同样重要。`<ExtensionPoint name=...>` 可用于 Blue Ocean 的标记中，为插件对用户界面作出贡献，留下了空间。这意味着插件可以拥有自己的 Blue Ocean 扩展点。Blue Ocean 本身就是使用这些扩展点实现的。
+
+
+扩展照常由插件提供。插件必须包含一些额外的 JavaScript，才能连接到 Blue Ocean 的扩展点。为 Blue Ocean 用户体验做出贡献的开发者，会相应地添加这些 JavaScript。
+
+
+### 目前用到的技术有哪些？
+
+**What technologies are currently in use**?
+
+
+Blue Ocean 是作为一组 Jenkins 插件构建的。与其他插件的关键区别在于，Blue Ocean 提供了自己的 HTTP 请求端点，在不使用现有的 Jenkins UI 标记或脚本，而是通过不同路径来提供 HTML/JavaScript。Blue Ocean 的 JavaScript 组件使用 React.js 和 ES6 构建。受 React.js 这个优秀开源项目的启发，咱们可以在 [构建 React 应用插件](https://nylas.com/blog/react-plugins) 这篇博文中，找到相关信息，建立了一个允许来自任何带有 JavaScript 的 Jenkins 插件的扩展的 `<ExtensionPoint>` 模式。如果扩展加载失败，其故障将被隔离。
+
+
+### 在哪里可以找到源代码？
+
+源码可在 GitHub 上找到：
+
+
+- [Blue Ocean](https://github.com/jenkinsci/blueocean-plugin)
+
+- [Jenkins 设计语言](https://github.com/jenkinsci/jenkins-design-language)
+
+
+### 加入 Blue Ocean 社区
+
+
+由于 “Blue Ocean” 的开发工作已经冻结，我们预计不会再为其代码库的新功能再做出贡献。不过，咱们仍然可以通过以下几种方式加入社区：
+
+
+- 在 Gitter 上与社区和开发团队交谈 [chat on gitter](https://app.gitter.im/#/room/#jenkinsci_blueocean-plugin:gitter.im)；
+
+- [在 JIRA 中针对 `blueocean-plugin` 组件](https://issues.jenkins.io/)，发起功能请求或报告错误；
+
+- 订阅 [Jenkins 用户邮件列表](https://groups.google.com/g/jenkinsci-users) 并提问；
+
+- 开发人员？我们已经 [标注了一些问题](https://issues.jenkins.io/issues/?filter=16142)，非常适合想要开始开发 Blue Ocean 的人。别忘了来 Gitter 聊天室做个自我介绍！

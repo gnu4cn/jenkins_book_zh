@@ -64,3 +64,22 @@ Blue Ocean 插件套件并未与可从 [Docker Hub 仓库](https://hub.docker.co
 一旦 Jenkins 环境安装了 Blue Ocean，并登入了 Jenkins 经典用户界面，就可以通过选择屏幕左侧的 **打开 Blue Ocean**，访问到 Blue Ocean 的用户界面。
 
 ![打开 Blue Ocean 链接](../images/open-blue-ocean-link.png)
+
+
+咱们也可以在 Jenkins 服务器的 URL 末尾，添加 `/blue` 直接访问 Blue Ocean。例如 `https://jenkins-server-url/blue`。
+
+若咱们的 Jenkins 实例：
+
+- 已有流水线或其他项目，则会显示 [Blue Ocean 控制面板](./dashboard.md)；
+
+- 如果 Jenkins 实例是全新的，或尚未配置一些项目或其他条目，那么 Blue Ocean 会显示一个带有 **创建新流水线** 按钮的 **欢迎使用 Jenkins** 窗格。咱们可以选择这个按钮，来开始创建一个新的流水线项目。有关在 Blue Ocean 中创建流水线项目的更多信息，请参阅 [创建流水线](./creating_a_pipeline.md) 页面。
+
+![创建流水线对话框](../images/create-a-new-pipeline-box.png)
+
+
+## 导航栏
+
+**Navigation bar**
+
+
+

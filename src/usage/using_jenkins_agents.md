@@ -196,6 +196,9 @@ docker: Error response from daemon: network jenkins not found.
 
 ![配置新节点/代理的表单](../images/node-2.png)
 
+
+> **注意**：除了 “Dashboard” -> “系统管理” -> “全局安全设置” - > "Git Host Key Verification Configuration" 下，有 "Host Key Verification Strategy" 设置外，每个 Jenkins 代理下，也有此设置。如遇到连接不上代理节点，就需要将这个主机密钥验证策略，设置为 “Manually trusted key Verification Strategy”。
+
 7. 按 “保存”按钮，`linux-agent-01` 将被注册，但暂时处于离线状态。点击他;
 
 ![代理节点列表](../images/node-3.png)

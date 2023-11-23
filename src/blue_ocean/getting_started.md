@@ -7,7 +7,7 @@
 
 
 
-{{#include ./pipeline/get_started.md:56:58}}
+{{#include ../pipeline/get_started.md:56:58}}
 
 
 ## 安装 Blue Ocean

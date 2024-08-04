@@ -1,0 +1,23 @@
+[book]
+authors = ["Lenny Peng"]
+language = "zh"
+multilingual = false
+src = "src"
+title = "又一本 Jenkins 书。"
+description = "又一本 Jenkins 书，Yet another Chinese Jenkins book。"
+
+[preprocessor.pagetoc]
+[output.html]
+additional-css = ["theme/pagetoc.css"]
+additional-js  = ["theme/pagetoc.js"]
+git-repository-url = "https://github.com/gnu4cn/jenkins_book_zh"
+git-repository-icon = "fa-github"
+
+[output.html.print]
+enable = false
+
+[output.html.search]
+enable = false
+
+[output.html.favicon]
+png = true

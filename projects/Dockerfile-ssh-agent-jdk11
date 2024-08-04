@@ -1,0 +1,5 @@
+FROM jenkins/ssh-agent:jdk11
+USER root
+RUN apt update && apt install -y wget build-essential
+RUN mkdir /opt/nds32le-elf-mculib-v5
+RUN wget https://gitlab.xfoss.com/it-group/nds-toolchain/-/raw/21aade02c2d51747017b73d15bc03ee3e4ebc298/nds32le-elf-mculib-v5.tar.gz -O - | tar -xzvf - -C /opt/nds32le-elf-mculib-v5

@@ -26,12 +26,14 @@ Jenkins项目使用以下JDK/JREs执行完整的测试流程：
 
 ### 在 Jenkins 上运行基于 Java 的工具和构建
 
-用于构建基于 Java 项目的 JDK 版本，或用于运行基于 Java 工具的 Java 版本独立于用于运行 Jenkins 控制器和代理进程的 Java 版本。在构建过程中，可以启动任何版本的 JRE 或 JDK，只要他与运行构建的系统兼容即可。这包括：
+用于构建基于 Java 项目的 JDK 版本，或用于运行基于 Java 工具的 Java 版本，独立于用来运行 Jenkins 控制器及代理进程的 Java 版本。在构建过程中，咱们可以启动任何版本的 JRE 或 JDK，只要他与运行构建的系统平台兼容即可。这包括：
 
-- 在 shell 构建步骤中执行 `java` 或 `javac`，以及类似的情况;
-- 使用由 JDK 工具安装程序管理的 JDK 执行 Maven/Ant/... 等构建步骤。
+- 在 `shell` 构建步骤（`sh`）中，执行 `java` 或 `javac`，以及其他类似情况;
 
-少数插件有更严格的要求，一般要求构建的 Java 版本与运行 Jenkins 控制器和代理所用的版本相同。一个明显的例子是 Maven 集成插件，他要求用于 Maven 构建的 JDK 版本必须与用于 Jenkins 控制器的版本至少相同。这些情况一般在插件的文档中都有记载。
+- 使用由 JDK 工具安装程序管理的 JDK，执行 Maven/Ant/... 等构建步骤。
+
+
+少数插件有更严格要求，一般会要求构建的 Java 版本，与运行 Jenkins 控制器和代理所用的版本相同。一个明显的例子就是 [Maven 集成插件](https://plugins.jenkins.io/maven-plugin/)，他就要求用于 Maven 构建的 JDK 版本，必须与用于 Jenkins 控制器的版本至少相同。这些情况一般会在插件的文档中都有记载。
 
 ### 监控 Java 版本
 

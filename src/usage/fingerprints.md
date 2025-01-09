@@ -92,3 +92,8 @@ $JENKINS_HOME/fingerprints
 4. 点击他，咱们就将被带到相应的 TOP-TEST 构建页面，这将显示测试报告；
 
 5. 如果没有显示 TOP-TEST 构建，那就意味着 TOP-TEST 构建没有针对 TOP #7 运行。也许他跳过了 TOP #7（如果在很短的时间内有大量的 TOP 构建，这种情况可能发生），或者也许一个新的 TOP-TEST 构建正在进行。
+
+
+（End）
+
+

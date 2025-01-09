@@ -326,3 +326,8 @@ archiveArtifacts artifacts: '**', fingerprint: true
 *图 3，某个 `.WAR` 文件的指纹*
 
 请访问 [指纹文档](https://www.jenkins.io/doc/book/using/fingerprints/) 了解更多信息。
+
+
+（End）
+
+

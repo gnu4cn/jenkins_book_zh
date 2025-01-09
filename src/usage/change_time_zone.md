@@ -10,3 +10,8 @@
 咱们可能想改变显示的时区，以符合咱们自己的时区。通过进入用户配置页面，咱们可以设置 **用户定义的时区，User Defined Time Zone** 来匹配咱们自己的时区。
 
 ![修改时区](../images/change-time-zone.png)
+
+
+（End）
+
+

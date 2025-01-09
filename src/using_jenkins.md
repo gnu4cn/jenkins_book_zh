@@ -33,3 +33,8 @@ Turn on the configuration under **Manage Jenkins** -→ **Configure System** -�
 
 
 参见：[Not sending mail to unregistered user because your SCM claimed this was associated with a user ID which your security realm does not recognize](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/not-sending-mail-to-unregistered-user-associated-with-scm)。
+
+
+（End）
+
+

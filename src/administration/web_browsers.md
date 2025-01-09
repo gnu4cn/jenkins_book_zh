@@ -29,3 +29,8 @@ Jenkins 的 web 浏览器支持分为三类：
 - 2022-02-01 - 移除对 Internet Explorer 的支持，增加 Edge（ [开发者邮件列表中的讨论](https://groups.google.com/g/jenkinsci-dev/c/piANoeohdik) ）；
 - 2019-11-19 - 政策更新（[开发者邮件列表中的讨论](https://groups.google.com/forum/#!topic/jenkinsci-dev/TV_pLEah9B4) ）；
 - 2014-09-03 - Jenkins 1.579 的最初政策（ [治理会议记录](http://meetings.jenkins-ci.org/jenkins/2014/jenkins.2014-09-03-18.01.html) ）。
+
+
+（End）
+
+

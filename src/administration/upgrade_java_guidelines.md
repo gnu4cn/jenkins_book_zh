@@ -61,3 +61,8 @@ Java Web Start 已从 Java 11 中移除。当 Jenkins 控制器在 Java 11 上�
 Oracle JDK 11 的授权使 Jenkins 社区无法列出 Oracle JDK。由于这一许可限制，Oracle JDK 11 不能被 Jenkins 自动安装。这个问题在 [issue JENKINS-54305](https://issues.jenkins.io/browse/JENKINS-54305) 中进行了追踪。
 
 作为替代方案，我们鼓励你使用其中包含了构建所需的所有工具的基于镜像的容器。
+
+
+（End）
+
+

@@ -10,3 +10,8 @@ Scripts not permitted to use staticMethod org.codehaus.groovy.runtime.DefaultGro
 ```
 
 原因是这个 `sh` 步骤中，包含了多个 `.` 符合，违反了 Jenkins 的相关限制。
+
+
+（End）
+
+

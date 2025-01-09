@@ -749,3 +749,8 @@ evenOrOdd(currentBuild.getNumber())
 
 
 到目前为止，只有整个的 `pipeline` 可以在共享库中定义。这只能在 `vars/*.groovy` 中进行，而且只能在 `call` 方法中进行。在一次构建中只能执行一条声明式流水线，如果咱们试图执行第二条，咱们的构建将因此而失败。
+
+
+（End）
+
+

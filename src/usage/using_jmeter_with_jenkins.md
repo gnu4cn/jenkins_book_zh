@@ -227,3 +227,8 @@ C:\ProgramData\chocolatey\bin\jmeter.cmd -j $env:OUT=xml -n -t $env:JMX -l $env:
 ![在 Jenkins 中查看到 JMeter 的报告数据](../images/jmeter-13.png)
 
 咱们现在已经在 Jenkins 中运行了 JMeter，并且可以使用其所提供的数据。
+
+
+（End）
+
+

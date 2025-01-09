@@ -77,3 +77,8 @@ Jenkins网络配置一般由命令行参数控制。网络配置的参数有：
 ### Windows 下的 HTTPS 证书问题
 
 <略>, 请参考 [HTTPS certificates with Windows](https://www.jenkins.io/doc/book/installing/initial-settings/#https-certificates-with-windows)。
+
+
+（End）
+
+

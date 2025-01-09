@@ -727,3 +727,8 @@ Jenkins Operator 很容易安装，只需应用几个 `yaml` 清单或使用 Hel
 在 Kubernetes 环境中，pod 或节点的删除可能随时发生。他可能是一个打补丁的活动，也可能是一个缩减的活动，a downscaling activity。
 
 希望这个分步指南能帮助咱们学习和理解在 Kubernetes 集群上设置 Jenkins 服务器所涉及的组件。
+
+
+（End）
+
+

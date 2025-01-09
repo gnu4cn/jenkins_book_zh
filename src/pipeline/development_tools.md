@@ -246,3 +246,8 @@ Eclipse 的 `Jenkins Editor` 插件可以在 [Eclipse Marketplace](https://marke
 
 
 [流水线的单元测试框架](https://github.com/jenkinsci/JenkinsPipelineUnit) 允许咱们在完全运行流水线和 [共享库](./shared-libraries.md) 之前对其进行 [单元测试](https://en.wikipedia.org/wiki/Unit_testing)。他提供了一个模拟执行环境，其中真实的流水线步骤会被模拟对象取代，咱们可以用他来检查预期行为。这个框架有着新的和略微粗糙的边缘，但很有希望，new and rough around the edges, but promising。这个项目的 [README](https://github.com/jenkinsci/JenkinsPipelineUnit/blob/master/README.md) 包含了一些示例及使用说明。
+
+
+（End）
+
+

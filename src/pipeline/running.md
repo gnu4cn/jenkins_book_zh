@@ -154,3 +154,8 @@ pipeline {
 6. 在 Jenkinsfile 中配置的 `triggers`，只有在构建一次后，才会生效；
 
 7. 在以分钟为粒度的 `cron` 无法满足咱们的需要时，就要使用具有秒级认知的系统，比如 rest api 调用，或 Jenkins CLI 来满足咱们的目标。
+
+
+（End）
+
+

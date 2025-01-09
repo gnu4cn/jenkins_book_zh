@@ -117,3 +117,8 @@ Blue Ocean 不支持 Jenkins 的某些传统或管理性功能，而这些功能
 ![前往经典界面图标](../images/go-to-classic-icon.png)
 
 选择该按钮后，咱们将进入 Jenkins 经典用户界面中的相应页面，或与 Blue Ocean 中当前页面最相关的经典用户界面页面。
+
+
+（End）
+
+

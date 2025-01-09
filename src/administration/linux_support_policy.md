@@ -38,3 +38,8 @@
 ### 版本历史
 
 - 2022 年三月 - 首个版本（[邮件列表中的讨论](https://groups.google.com/g/jenkinsci-dev/c/cYi4GyG7Il8/m/oQ2m0C3UAgAJ)、[治理会议记录和录音](https://community.jenkins.io/t/governance-meeting-jan-26-2022/1348)）。
+
+
+（End）
+
+

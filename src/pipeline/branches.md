@@ -154,3 +154,8 @@
 - [GitLab 分支源](https://plugins.jenkins.io/gitlab-branch-source) 插件中的 GitLab；
 
 - [Gitea](https://plugins.jenkins.io/gitea) 插件中的 Gitea。
+
+
+（End）
+
+

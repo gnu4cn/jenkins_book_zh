@@ -143,3 +143,8 @@ Blue Ocean 是作为一组 Jenkins 插件构建的。与其他插件的关键区
 - 订阅 [Jenkins 用户邮件列表](https://groups.google.com/g/jenkinsci-users) 并提问；
 
 - 开发人员？我们已经 [标注了一些问题](https://issues.jenkins.io/issues/?filter=16142)，非常适合想要开始开发 Blue Ocean 的人。别忘了来 Gitter 聊天室做个自我介绍！
+
+
+（End）
+
+

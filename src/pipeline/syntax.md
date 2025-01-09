@@ -2198,3 +2198,8 @@ node {
 2. [声明式编程模型，declarative programming](https://en.wikipedia.org/wiki/Declarative_programming)
 
 3. [命令式编程模型, imperative programming](https://en.wikipedia.org/wiki/Imperative_programming)
+
+
+（End）
+
+

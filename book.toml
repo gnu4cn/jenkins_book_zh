@@ -6,6 +6,10 @@ src = "src"
 title = "又一本 Jenkins 书。"
 description = "又一本 Jenkins 书，Yet another Chinese Jenkins book。"
 
+[preprocessor.last-changed]
+command = "mdbook-last-changed"
+renderer = ["html"]
+
 [preprocessor.pagetoc]
 [output.html]
 additional-css = ["theme/pagetoc.css"]

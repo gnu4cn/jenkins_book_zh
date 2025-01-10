@@ -14,6 +14,7 @@ renderer = ["html"]
 [output.html]
 additional-css = ["theme/pagetoc.css"]
 additional-js  = ["theme/pagetoc.js"]
+additional-js  = ["theme/groovy.min.js"]
 git-repository-url = "https://github.com/gnu4cn/jenkins_book_zh"
 git-repository-icon = "fa-github"
 
